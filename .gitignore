@@ -1,0 +1,17 @@
+web-scrapper/.idea/compiler.xml
+web-scrapper/.idea/discord.xml
+web-scrapper/.idea/jarRepositories.xml
+web-scrapper/.idea/workspace.xml
+web-scrapper/.idea/uiDesigner.xml
+
+data-server/.idea/compiler.xml
+data-server/.idea/discord.xml
+data-server/.idea/jarRepositories.xml
+data-server/.idea/workspace.xml
+data-server/.idea/uiDesigner.xml
+
+web-scrapper/.logs/
+web-scrapper/target/
+
+data-server/.logs/
+data-server/target/

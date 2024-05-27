@@ -1,0 +1,6 @@
+server:
+  port: 4361
+
+spring:
+  main:
+    banner-mode: off
