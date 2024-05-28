@@ -1,0 +1,7 @@
+.angular/
+.vscode/
+out-tsc/
+node_modules/
+dist/
+.gitignore
+package-lock.json

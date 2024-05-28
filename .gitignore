@@ -15,3 +15,8 @@ web-scrapper/target/
 
 data-server/.logs/
 data-server/target/
+
+web-ui/.angular
+web-ui/coverage
+web-ui/node_modules/
+web-ui/dist/
