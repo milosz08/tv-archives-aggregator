@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.webscrapper;
+package pl.miloszgilga.tvarchiver.webscrapper.gui;
 
-import lombok.extern.slf4j.Slf4j;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.GuiThread;
-
-@Slf4j
-public class WebScrapperEntrypoint {
-	public static void main(String[] args) {
-		final GuiThread guiThread = new GuiThread();
-		guiThread.initAndStartThread();
+public class InoperableException extends RuntimeException {
+	public InoperableException(Throwable cause) {
+		super(cause);
 	}
 }
