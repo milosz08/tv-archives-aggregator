@@ -39,11 +39,14 @@ public abstract class AbstractDisposableProvider {
 		subscriptionsPool.put(UUID.randomUUID(), disposable);
 	}
 
-	public void disposableAllSubscriptions() {
+	public void cleanupAndDisposableSubscription() {
 		for (final Map.Entry<UUID, Disposable> entry : subscriptionsPool.entrySet()) {
 			entry.getValue().dispose();
 			log.debug("Dispose subscription {}", entry.getKey().toString());
 		}
 		log.info("Dispose all subscriptions: {}", subscriptionsPool.size());
+		onCleanup();
 	}
+
+	public abstract void onCleanup();
 }

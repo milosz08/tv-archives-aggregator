@@ -35,7 +35,7 @@ public class GuiWindowAdapter extends WindowAdapter {
 		final int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit?", "Exit",
 			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if (result == JOptionPane.YES_OPTION) {
-			disposableProvider.disposableAllSubscriptions();
+			disposableProvider.cleanupAndDisposableSubscription();
 			System.exit(0);
 		}
 	}

@@ -17,6 +17,7 @@
 package pl.miloszgilga.tvarchiver.webscrapper.gui;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.ConnectToDbWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import javax.swing.*;
@@ -45,8 +46,8 @@ public class GuiThread implements Runnable {
 	public void run() {
 		log.info("Starting GUI thread");
 		try {
-			final RootWindow rootWindow = new RootWindow(rootState);
-			rootWindow.initAndShow();
+			final ConnectToDbWindow rootWindow = new ConnectToDbWindow(rootState);
+			rootWindow.createWindow();
 			log.info("Initialized application GUI.");
 		} catch (InoperableException ex) {
 			log.error(ex.getMessage());
