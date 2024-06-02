@@ -43,8 +43,11 @@
 		</encoder>
 	</appender>
 
+	<appender name="SWING" class="pl.miloszgilga.tvarchiver.webscrapper.log.LogbackTextAreaAppender"/>
+
 	<root level="info">
 		<appender-ref ref="STDOUT"/>
 		<appender-ref ref="FILE"/>
+		<appender-ref ref="SWING"/>
 	</root>
 </configuration>
