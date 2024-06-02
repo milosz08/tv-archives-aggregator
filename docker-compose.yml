@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  tv-scrapper-mysql-db:
+    container_name: tv-scrapper-mysql-db
+    image: mysql:8.0.32
+    ports:
+      - '${TV_SCRAPPER_MYSQL_PORT}:3306'
+    environment:
+      - 'MYSQL_ROOT_PASSWORD=${TV_SCRAPPER_MYSQL_PASSWORD}'
+      - 'MYSQL_DATABASE=aggregator-db'
+    volumes:
+      - ./.volumes/mysql/mysql-volume:/var/lib/mysql
+    healthcheck:
+      test: "mysqladmin ping -u root -p$root"
+    networks:
+      - tv-scrapper-network
+
+networks:
+  tv-scrapper-network:
+    driver: bridge
