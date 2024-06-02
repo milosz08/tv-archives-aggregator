@@ -16,5 +16,56 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.state;
 
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import lombok.Setter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import pl.miloszgilga.tvarchiver.webscrapper.db.DataSource;
+import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Setter
 public class RootState extends AbstractDisposableProvider {
+	private final BehaviorSubject<List<TvChannel>> tvChannels$;
+	private final BehaviorSubject<TvChannel> selectedChannel$;
+
+	private DataSource dataSource;
+
+	public RootState() {
+		tvChannels$ = BehaviorSubject.createDefault(new ArrayList<>());
+		selectedChannel$ = BehaviorSubject.createDefault(new TvChannel());
+	}
+
+	public void updateTvChannels(List<TvChannel> channels) {
+		this.tvChannels$.onNext(channels);
+	}
+
+	public void updateSelectedChannel(TvChannel channel) {
+		this.selectedChannel$.onNext(channel);
+	}
+
+	public Observable<List<TvChannel>> getTvChannels$() {
+		return this.tvChannels$.hide();
+	}
+
+	public Observable<TvChannel> getSelectedChannel$() {
+		return this.selectedChannel$.hide();
+	}
+
+	public List<TvChannel> getTvChannels() {
+		return this.tvChannels$.getValue();
+	}
+
+	public JdbcTemplate getJdbcTemplate() {
+		return dataSource.getJdbcTemplate();
+	}
+
+	@Override
+	public void onCleanup() {
+		if (dataSource != null) {
+			dataSource.closeConnection();
+		}
+	}
 }
