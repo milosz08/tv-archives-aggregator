@@ -33,10 +33,11 @@ public class TvChannelsSource extends AbstractUrlSource {
 	public List<TvChannel> getAllTvChannels() {
 		final Elements channels = rootNode.select("a.atomsTvChannelList__link");
 		final List<TvChannel> tvChannels = new ArrayList<>();
+		int i = 1;
 		for (Element channel : channels) {
 			final String name = channel.text();
 			final String slug = channel.attr("href").replace(UrlSource.TV_CHANNELS + "/", "");
-			tvChannels.add(new TvChannel(0, name, slug));
+			tvChannels.add(new TvChannel(i++, name, slug));
 		}
 		Collections.sort(tvChannels);
 		log.info("Fetched {} TV channels", tvChannels.size());
