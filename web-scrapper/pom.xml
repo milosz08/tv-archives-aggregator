@@ -39,6 +39,7 @@
 		<commonsLang.version>3.13.0</commonsLang.version>
 		<migLayout.version>11.3</migLayout.version>
 		<dotenv.version>5.2.2</dotenv.version>
+		<commonsIo.version>2.16.1</commonsIo.version>
 	</properties>
 
 	<dependencies>
@@ -102,6 +103,11 @@
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>java-dotenv</artifactId>
 			<version>${dotenv.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commonsIo.version}</version>
 		</dependency>
 	</dependencies>
 </project>

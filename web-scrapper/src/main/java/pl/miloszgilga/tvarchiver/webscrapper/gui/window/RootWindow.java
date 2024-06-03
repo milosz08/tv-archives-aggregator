@@ -17,10 +17,7 @@
 package pl.miloszgilga.tvarchiver.webscrapper.gui.window;
 
 import lombok.Getter;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelDetailsPanel;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelsListPanel;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ConsolePanel;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.UnselectedChannelPanel;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.*;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import javax.swing.*;
@@ -36,6 +33,7 @@ public class RootWindow extends AbstractWindow {
 	private final UnselectedChannelPanel unselectedChannelPanel;
 	private final ChannelDetailsPanel channelDetailsPanel;
 	private final ConsolePanel consolePanel;
+	private final BottomBarPanel bottomBarPanel;
 
 	public RootWindow(RootState rootState) {
 		super("TV Scrapper", 1280, 720, rootState);
@@ -47,6 +45,7 @@ public class RootWindow extends AbstractWindow {
 		unselectedChannelPanel = new UnselectedChannelPanel();
 		channelDetailsPanel = new ChannelDetailsPanel(rootState);
 		consolePanel = new ConsolePanel();
+		bottomBarPanel = new BottomBarPanel(rootState);
 	}
 
 	@Override
@@ -68,12 +67,15 @@ public class RootWindow extends AbstractWindow {
 		splitPane.setResizeWeight(0.25);
 		splitPane.setDividerLocation(250);
 
-		rootPanel.add(splitPane);
+		rootPanel.setLayout(new BorderLayout());
+		rootPanel.add(splitPane, BorderLayout.CENTER);
+		rootPanel.add(bottomBarPanel, BorderLayout.SOUTH);
+
 		initObservables();
 	}
 
 	private void initObservables() {
-		rootState.wrapAsDisposable(rootState.getSelectedChannel$(), channel -> {
+		rootState.asDisposable(rootState.getSelectedChannel$(), channel -> {
 			final CardLayout cardLayout = (CardLayout) tvChannelContainerPanel.getLayout();
 			cardLayout.show(tvChannelContainerPanel, channel.id() == 0 ? "unselected" : "selected");
 		});
