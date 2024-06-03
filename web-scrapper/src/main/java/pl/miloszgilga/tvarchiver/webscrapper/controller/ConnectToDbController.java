@@ -24,6 +24,7 @@ import pl.miloszgilga.tvarchiver.webscrapper.gui.window.RootWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
 
 @RequiredArgsConstructor
 public class ConnectToDbController {
@@ -37,12 +38,14 @@ public class ConnectToDbController {
 		final String dbName = connectToDbWindow.getDbNameField().getText();
 		try {
 			final int parsedPort = Integer.parseInt(port);
+			final InetSocketAddress address = new InetSocketAddress(host, parsedPort);
 			final RootState rootState = connectToDbWindow.getRootState();
-			final DataSource dataSource = new DataSource(host, parsedPort, username, password, dbName);
+			final DataSource dataSource = new DataSource(address, username, password, dbName);
 			if (!dataSource.isSuccessfullyConnected()) {
 				throw new ConnectException();
 			}
 			rootState.setDataSource(dataSource);
+			rootState.updateDbHost(address);
 			final RootWindow rootWindow = new RootWindow(rootState);
 			rootWindow.createWindow();
 			connectToDbWindow.closeWindow();
