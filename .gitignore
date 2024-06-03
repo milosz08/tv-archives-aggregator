@@ -12,9 +12,11 @@ data-server/.idea/uiDesigner.xml
 
 web-scrapper/.logs/
 web-scrapper/target/
+Web-scrapper/.env
 
 data-server/.logs/
 data-server/target/
+data-server/.env
 
 web-ui/.angular
 web-ui/coverage

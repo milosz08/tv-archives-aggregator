@@ -16,6 +16,7 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.state;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import lombok.Setter;
@@ -28,12 +29,15 @@ import java.util.List;
 
 @Setter
 public class RootState extends AbstractDisposableProvider {
+	private Dotenv dotenv;
+
 	private final BehaviorSubject<List<TvChannel>> tvChannels$;
 	private final BehaviorSubject<TvChannel> selectedChannel$;
 
 	private DataSource dataSource;
 
 	public RootState() {
+		dotenv = Dotenv.load();
 		tvChannels$ = BehaviorSubject.createDefault(new ArrayList<>());
 		selectedChannel$ = BehaviorSubject.createDefault(new TvChannel());
 	}
@@ -60,6 +64,10 @@ public class RootState extends AbstractDisposableProvider {
 
 	public JdbcTemplate getJdbcTemplate() {
 		return dataSource.getJdbcTemplate();
+	}
+
+	public String getEnvValue(EnvKey key) {
+		return dotenv.get(key.name(), key.getDefaultValue());
 	}
 
 	@Override

@@ -38,6 +38,7 @@
 		<mySqlConnector.version>8.4.0</mySqlConnector.version>
 		<commonsLang.version>3.13.0</commonsLang.version>
 		<migLayout.version>11.3</migLayout.version>
+		<dotenv.version>5.2.2</dotenv.version>
 	</properties>
 
 	<dependencies>
@@ -96,6 +97,11 @@
 			<groupId>com.miglayout</groupId>
 			<artifactId>miglayout-swing</artifactId>
 			<version>11.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.cdimascio</groupId>
+			<artifactId>java-dotenv</artifactId>
+			<version>${dotenv.version}</version>
 		</dependency>
 	</dependencies>
 </project>

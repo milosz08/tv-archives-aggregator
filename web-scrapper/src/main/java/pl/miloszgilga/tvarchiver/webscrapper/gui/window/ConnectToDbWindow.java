@@ -18,6 +18,7 @@ package pl.miloszgilga.tvarchiver.webscrapper.gui.window;
 
 import lombok.Getter;
 import pl.miloszgilga.tvarchiver.webscrapper.controller.ConnectToDbController;
+import pl.miloszgilga.tvarchiver.webscrapper.state.EnvKey;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import javax.swing.*;
@@ -51,15 +52,15 @@ public class ConnectToDbWindow extends AbstractWindow {
 		inputFieldsPanel = new JPanel();
 
 		hostLabel = new JLabel("Host");
-		hostField = new JTextField("localhost");
+		hostField = new JTextField(rootState.getEnvValue(EnvKey.DB_HOST));
 		portLabel = new JLabel("Port");
-		portField = new JTextField("4850");
+		portField = new JTextField(rootState.getEnvValue(EnvKey.DB_PORT));
 		usernameLabel = new JLabel("Username");
-		usernameField = new JTextField("root");
+		usernameField = new JTextField(rootState.getEnvValue(EnvKey.DB_USERNAME));
 		passwordLabel = new JLabel("Password");
-		passwordField = new JPasswordField("admin");
+		passwordField = new JPasswordField(rootState.getEnvValue(EnvKey.DB_PASSWORD));
 		dbNameLabel = new JLabel("DB name");
-		dbNameField = new JPasswordField("aggregator-db");
+		dbNameField = new JPasswordField(rootState.getEnvValue(EnvKey.DB_NAME));
 
 		confirmButton = new JButton("Connect to DB");
 		confirmButton.addActionListener(e -> controller.onClickConnectToDb());
