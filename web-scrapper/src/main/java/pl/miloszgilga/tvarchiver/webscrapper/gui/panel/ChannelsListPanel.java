@@ -80,6 +80,11 @@ public class ChannelsListPanel extends JPanel {
 	}
 
 	private void initObservables() {
-		rootState.wrapAsDisposable(rootState.getTvChannels$(), channelListModel::addAll);
+		rootState.asDisposable(rootState.getTvChannels$(), channelListModel::addAll);
+		rootState.asDisposable(rootState.getAppState$(), state -> {
+			reFetchChannelsButton.setEnabled(state.isIdle());
+			removeSelectionButton.setEnabled(state.isIdle());
+			channels.setEnabled(state.isIdle());
+		});
 	}
 }

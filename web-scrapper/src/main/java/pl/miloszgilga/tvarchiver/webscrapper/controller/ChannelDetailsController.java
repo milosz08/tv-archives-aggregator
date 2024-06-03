@@ -18,8 +18,25 @@ package pl.miloszgilga.tvarchiver.webscrapper.controller;
 
 import lombok.RequiredArgsConstructor;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelDetailsPanel;
+import pl.miloszgilga.tvarchiver.webscrapper.state.AppState;
 
 @RequiredArgsConstructor
 public class ChannelDetailsController {
 	private final ChannelDetailsPanel channelDetailsPanel;
+
+	public void startScrapping() {
+		updateAppState(AppState.SCRAPPING);
+	}
+
+	public void stopScrapping() {
+		updateAppState(AppState.IDLE);
+	}
+
+	public void onUpdateRandomness() {
+		channelDetailsPanel.getRootState().updateRandomness(channelDetailsPanel.getRandomnessValueSlider().getValue());
+	}
+
+	private void updateAppState(AppState state) {
+		channelDetailsPanel.getRootState().updateAppState(state);
+	}
 }
