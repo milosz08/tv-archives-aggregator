@@ -79,13 +79,12 @@ public class ChannelsListController {
 	}
 
 	public void onListSelection(ListSelectionEvent event) {
-		if (event.getValueIsAdjusting()) {
-			return;
-		}
-		final RootState rootState = channelsListPanel.getRootState();
-		final JList<TvChannel> tvChannels = channelsListPanel.getChannels();
-		if (tvChannels.getSelectedIndex() != -1) {
-			rootState.updateSelectedChannel(tvChannels.getSelectedValue());
+		if (!event.getValueIsAdjusting()) {
+			final RootState rootState = channelsListPanel.getRootState();
+			final JList<TvChannel> tvChannels = channelsListPanel.getChannels();
+			if (tvChannels.getSelectedIndex() != -1) {
+				rootState.updateSelectedChannel(tvChannels.getSelectedValue());
+			}
 		}
 	}
 
