@@ -17,6 +17,7 @@
 package pl.miloszgilga.tvarchiver.webscrapper.db;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -28,13 +29,17 @@ import java.sql.Statement;
 @Slf4j
 public class DataSource {
 	private final HikariDataSource dataSource;
+	@Getter
 	private final InetSocketAddress dbHost;
+	@Getter
+	private final String dbName;
 
 	public DataSource(String username, String password, String dbName) {
 		this(new InetSocketAddress("localhost", 3306), username, password, dbName);
 	}
 
 	public DataSource(InetSocketAddress addr, String username, String password, String dbName) {
+		this.dbName = dbName;
 		dataSource = new HikariDataSource();
 		dbHost = new InetSocketAddress(addr.getHostString(), addr.getPort());
 		dataSource.setJdbcUrl(String.format("jdbc:mysql://%s:%d/%s", addr.getHostString(), addr.getPort(), dbName));

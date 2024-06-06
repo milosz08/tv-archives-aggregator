@@ -23,7 +23,6 @@ import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.InetSocketAddress;
 
 @Getter
 public class BottomBarPanel extends JPanel {
@@ -42,7 +41,7 @@ public class BottomBarPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
 		stateLabel = new JLabel(AppState.IDLE.createState());
-		dbHostLabel = new JLabel(controller.parseToDbHost(new InetSocketAddress("localhost", 3306)));
+		dbHostLabel = new JLabel(controller.parseToDbHost());
 		dbSizeLabel = new JLabel(controller.parseToDbSize(0L));
 		memUsageLabel = new JLabel(controller.getMemoryUsage());
 
@@ -51,6 +50,10 @@ public class BottomBarPanel extends JPanel {
 		addComponentWithBreadcrumb(dbHostLabel);
 		addComponentWithBreadcrumb(dbSizeLabel);
 		addComponentWithBreadcrumb(memUsageLabel);
+
+		controller.updateMemoryUsage();
+		controller.fetchDatabaseSize();
+		controller.getJvmMeasurementsTimer().start();
 
 		initObservables();
 	}
@@ -62,8 +65,14 @@ public class BottomBarPanel extends JPanel {
 	}
 
 	private void initObservables() {
-		rootState.asDisposable(rootState.getAppState$(), appState -> stateLabel.setText(appState.createState()));
-		rootState.asDisposable(rootState.getDbHost$(), dbHost -> dbHostLabel.setText(controller.parseToDbHost(dbHost)));
-		rootState.asDisposable(rootState.getDbSize$(), dbSize -> dbSizeLabel.setText(controller.parseToDbSize(dbSize)));
+		rootState.asDisposable(rootState.getAppState$(), appState -> {
+			stateLabel.setText(appState.createState());
+			final Timer dbSizeMeasurementsTimer = controller.getDbSizeMeasurementsTimer();
+			if (appState.isIdle()) {
+				dbSizeMeasurementsTimer.start();
+			} else {
+				dbSizeMeasurementsTimer.stop();
+			}
+		});
 	}
 }

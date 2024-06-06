@@ -16,20 +16,26 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.controller;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.BottomBarPanel;
+import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import javax.swing.*;
 import java.net.InetSocketAddress;
 
 @RequiredArgsConstructor
 public class BottomBarController {
-	private final Timer jvmMeasurementsTimer;
+	private final BottomBarPanel bottomBarPanel;
+	@Getter
+	private final Timer jvmMeasurementsTimer, dbSizeMeasurementsTimer;
 
 	public BottomBarController(BottomBarPanel bottomBarPanel) {
-		jvmMeasurementsTimer = new Timer(5000, e -> bottomBarPanel.getMemUsageLabel().setText(getMemoryUsage()));
-		jvmMeasurementsTimer.start();
+		this.bottomBarPanel = bottomBarPanel;
+		jvmMeasurementsTimer = new Timer(5000, e -> updateMemoryUsage());
+		dbSizeMeasurementsTimer = new Timer(10000, e -> fetchDatabaseSize());
 	}
 
 	public String getMemoryUsage() {
@@ -40,8 +46,26 @@ public class BottomBarController {
 		return parseBytes("DB size", bytes);
 	}
 
-	public String parseToDbHost(InetSocketAddress address) {
+	public String parseToDbHost() {
+		final InetSocketAddress address = bottomBarPanel.getRootState().getDataSource().getDbHost();
 		return String.format("DB: %s:%s", address.getHostString(), address.getPort());
+	}
+
+	public void updateMemoryUsage() {
+		bottomBarPanel.getMemUsageLabel().setText(getMemoryUsage());
+	}
+
+	public void fetchDatabaseSize() {
+		final RootState rootState = bottomBarPanel.getRootState();
+		// fetch only when is running and after took first size
+		final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
+		final String sql = """
+			SELECT SUM(data_length + index_length) FROM information_schema.TABLES WHERE table_schema = ?
+			""";
+		final Long dbSize = jdbcTemplate.queryForObject(sql, Long.class, rootState.getDataSource().getDbName());
+		if (dbSize != null) {
+			bottomBarPanel.getDbSizeLabel().setText(parseToDbSize(dbSize));
+		}
 	}
 
 	private String parseBytes(String prefix, long bytes) {

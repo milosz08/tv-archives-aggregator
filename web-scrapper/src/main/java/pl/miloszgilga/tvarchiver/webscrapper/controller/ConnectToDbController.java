@@ -45,7 +45,6 @@ public class ConnectToDbController {
 				throw new ConnectException();
 			}
 			rootState.setDataSource(dataSource);
-			rootState.updateDbHost(address);
 			final RootWindow rootWindow = new RootWindow(rootState);
 			rootWindow.createWindow();
 			connectToDbWindow.closeWindow();

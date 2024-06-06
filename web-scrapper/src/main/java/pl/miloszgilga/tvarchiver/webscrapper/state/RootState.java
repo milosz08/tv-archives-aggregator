@@ -39,6 +39,7 @@ public class RootState extends AbstractDisposableProvider {
 	private final BehaviorSubject<Integer> progressBar$;
 
 	private Dotenv dotenv;
+	@Getter
 	private DataSource dataSource;
 
 	public RootState() {
