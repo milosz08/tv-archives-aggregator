@@ -119,10 +119,6 @@ public class RootState extends AbstractDisposableProvider {
 		return this.randomness$.getValue();
 	}
 
-	public AppState getAppState() {
-		return this.appState$.getValue();
-	}
-
 	public JdbcTemplate getJdbcTemplate() {
 		return dataSource.getJdbcTemplate();
 	}
