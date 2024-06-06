@@ -18,8 +18,10 @@ package pl.miloszgilga.tvarchiver.webscrapper.util;
 
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class Constant {
 	public static final DecimalFormat PF = new DecimalFormat("#.##");
 	public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	public static final Locale D_LC = new Locale("pl", "PL");
 }

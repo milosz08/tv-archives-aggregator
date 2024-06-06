@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.InoperableException;
+import pl.miloszgilga.tvarchiver.webscrapper.util.Constant;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -27,13 +28,10 @@ import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Slf4j
 public class TvChannelCalendarSource extends AbstractUrlSource {
-	private final Locale locale = new Locale("pl", "PL");
 	private final String channelSlug;
-
 	private Elements dateNodes;
 
 	public TvChannelCalendarSource(String channelSlug) {
@@ -86,7 +84,7 @@ public class TvChannelCalendarSource extends AbstractUrlSource {
 
 		Month selectedMonth = null;
 		for (final Month month : Month.values()) {
-			if (month.getDisplayName(TextStyle.FULL_STANDALONE, locale).equalsIgnoreCase(monthName)) {
+			if (month.getDisplayName(TextStyle.FULL_STANDALONE, Constant.D_LC).equalsIgnoreCase(monthName)) {
 				selectedMonth = month;
 				break;
 			}
