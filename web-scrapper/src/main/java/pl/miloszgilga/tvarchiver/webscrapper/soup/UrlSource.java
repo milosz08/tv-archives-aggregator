@@ -17,15 +17,19 @@
 package pl.miloszgilga.tvarchiver.webscrapper.soup;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
 public enum UrlSource {
 	TV_CHANNELS("https://telemagazyn.pl/stacje"),
+	TV_CHANNEL_CALENDAR("https://telemagazyn.pl/stacje/%s/archiwum"),
+	TV_CHANNEL_DAY_SCHEDULE("https://telemagazyn.pl/stacje/%s?dzien=%s"),
 	;
 
 	private final String url;
+
+	public String getUrl(Object... args) {
+		return String.format(url, args);
+	}
 
 	@Override
 	public String toString() {

@@ -16,25 +16,8 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.soup;
 
-import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.InoperableException;
+import java.time.LocalDate;
+import java.util.List;
 
-import java.io.IOException;
-
-@Slf4j
-abstract class AbstractUrlSource {
-	protected Document rootNode;
-
-	public AbstractUrlSource(UrlSource urlSource, Object... args) {
-		try {
-			rootNode = Jsoup.connect(urlSource.getUrl(args))
-				.userAgent("Mozilla")
-				.get();
-			log.debug("Successfully connected to: {}", urlSource);
-		} catch (IOException ex) {
-			throw new InoperableException(ex);
-		}
-	}
+public record TvChannelDetails(List<TvChannelYearData> years, LocalDate startDate, LocalDate endDate, long daysCount) {
 }
