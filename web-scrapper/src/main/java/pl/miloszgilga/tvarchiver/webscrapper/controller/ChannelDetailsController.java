@@ -17,26 +17,98 @@
 package pl.miloszgilga.tvarchiver.webscrapper.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
+import pl.miloszgilga.tvarchiver.webscrapper.db.YearWithPersistedDto;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.FrameTaskbar;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelDetailsPanel;
+import pl.miloszgilga.tvarchiver.webscrapper.scrap.DataScrapperThread;
+import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
+import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelCalendarSource;
+import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelDetails;
+import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelYearData;
 import pl.miloszgilga.tvarchiver.webscrapper.state.AppState;
+import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
+import java.awt.*;
+import java.util.List;
+
+@Slf4j
 @RequiredArgsConstructor
 public class ChannelDetailsController {
 	private final ChannelDetailsPanel channelDetailsPanel;
+	private DataScrapperThread dataScrapperThread;
+
+	public void removeSelectedYear() {
+		final RootState rootState = channelDetailsPanel.getRootState();
+		rootState.updateSelectedYear(StringUtils.EMPTY);
+		log.info("Expand search content for: {}", rootState.getSelectedChannel().name());
+	}
 
 	public void startScrapping() {
-		updateAppState(AppState.SCRAPPING);
+		final RootState rootState = channelDetailsPanel.getRootState();
+		dataScrapperThread = new DataScrapperThread(rootState, 0);
+		dataScrapperThread.start();
+		rootState.updateAppState(AppState.SCRAPPING);
+		updateProgressState(Taskbar.State.NORMAL);
 	}
 
 	public void stopScrapping() {
-		updateAppState(AppState.IDLE);
+		final RootState rootState = channelDetailsPanel.getRootState();
+		dataScrapperThread.stopScrapping();
+		rootState.updateAppState(AppState.IDLE);
+		updateProgressState(Taskbar.State.PAUSED);
 	}
 
 	public void onUpdateRandomness() {
 		channelDetailsPanel.getRootState().updateRandomness(channelDetailsPanel.getRandomnessValueSlider().getValue());
 	}
 
-	private void updateAppState(AppState state) {
-		channelDetailsPanel.getRootState().updateAppState(state);
+	public void onSwitchChannel(TvChannel channel) {
+		if (channel.name().isBlank()) {
+			return;
+		}
+		final RootState rootState = channelDetailsPanel.getRootState();
+		final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
+
+		// check count of saved programs and compare with all dates
+		Long persistedTvPrograms = jdbcTemplate
+			.queryForObject("SELECT COUNT(*) FROM tv_programs_data WHERE channel_id = ?", Long.class, channel.id());
+		if (persistedTvPrograms == null) {
+			persistedTvPrograms = 0L;
+		}
+
+		// fetch already persisted count rows per year
+		final String sql = """
+			SELECT YEAR(schedule_date) as year, COUNT(*) AS count FROM tv_programs_data
+			WHERE channel_id = ? GROUP BY YEAR(schedule_date)
+			""";
+		final List<YearWithPersistedDto> alreadyPersistedPerYear = jdbcTemplate
+			.query(sql, (rs, rowNum) -> new YearWithPersistedDto(rs.getInt("year"), rs.getInt("count")), channel.id());
+
+		// scrap tv channel details (count of records, start and end date)
+		final TvChannelCalendarSource tvChannelCalendarSource = new TvChannelCalendarSource(channel.slug());
+		final TvChannelDetails details = tvChannelCalendarSource.getSelectedTvChannelDetails();
+
+		final List<String> persistedYears = alreadyPersistedPerYear.stream()
+			.map(String::valueOf).toList();
+
+		// assign existing data to persisted years
+		for (int i = 0; i < details.years().size(); i++) {
+			final TvChannelYearData yearData = details.years().get(i);
+			if (persistedYears.contains(yearData.getYear())) {
+				yearData.setFetchedCount(alreadyPersistedPerYear.get(i).count());
+			}
+		}
+		// compare remaining data with saved rows and all to persisted
+		final double remainingRecordsToWrite = ((double) persistedTvPrograms / details.daysCount()) * 100;
+
+		rootState.updateProgressBar(remainingRecordsToWrite);
+		rootState.updateChannelDetails(details);
+	}
+
+	private void updateProgressState(Taskbar.State state) {
+		FrameTaskbar.setProgressState(channelDetailsPanel.getRootWindow(), state);
 	}
 }

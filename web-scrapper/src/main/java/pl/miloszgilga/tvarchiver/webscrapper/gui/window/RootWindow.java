@@ -43,7 +43,7 @@ public class RootWindow extends AbstractWindow {
 		rightCombinePanel = new JPanel();
 		tvChannelContainerPanel = new JPanel();
 		unselectedChannelPanel = new UnselectedChannelPanel();
-		channelDetailsPanel = new ChannelDetailsPanel(rootState);
+		channelDetailsPanel = new ChannelDetailsPanel(rootState, this);
 		consolePanel = new ConsolePanel();
 		bottomBarPanel = new BottomBarPanel(rootState);
 	}

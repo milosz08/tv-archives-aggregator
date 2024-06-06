@@ -19,12 +19,14 @@ package pl.miloszgilga.tvarchiver.webscrapper.state;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.miloszgilga.tvarchiver.webscrapper.db.DataSource;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
+import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelDetails;
 
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +35,10 @@ public class RootState extends AbstractDisposableProvider {
 	private final BehaviorSubject<List<TvChannel>> tvChannels$;
 	private final BehaviorSubject<TvChannel> selectedChannel$;
 	private final BehaviorSubject<AppState> appState$;
-	private final BehaviorSubject<InetSocketAddress> dbHost$;
-	private final BehaviorSubject<Long> dbSize$;
 	private final BehaviorSubject<Integer> randomness$;
-	private final BehaviorSubject<Integer> progressBar$;
+	private final BehaviorSubject<Double> progressBar$;
+	private final BehaviorSubject<TvChannelDetails> channelDetails$;
+	private final BehaviorSubject<String> selectedYear$;
 
 	private Dotenv dotenv;
 	@Getter
@@ -47,10 +49,10 @@ public class RootState extends AbstractDisposableProvider {
 		tvChannels$ = BehaviorSubject.createDefault(new ArrayList<>());
 		selectedChannel$ = BehaviorSubject.createDefault(new TvChannel());
 		appState$ = BehaviorSubject.createDefault(AppState.IDLE);
-		dbHost$ = BehaviorSubject.createDefault(new InetSocketAddress("localhost", 3306));
-		dbSize$ = BehaviorSubject.createDefault(0L);
-		randomness$ = BehaviorSubject.createDefault(0);
-		progressBar$ = BehaviorSubject.createDefault(0);
+		randomness$ = BehaviorSubject.createDefault(1);
+		progressBar$ = BehaviorSubject.createDefault(0.0);
+		channelDetails$ = BehaviorSubject.create();
+		selectedYear$ = BehaviorSubject.createDefault(StringUtils.EMPTY);
 	}
 
 	public void updateTvChannels(List<TvChannel> channels) {
@@ -65,20 +67,20 @@ public class RootState extends AbstractDisposableProvider {
 		this.appState$.onNext(state);
 	}
 
-	public void updateDbHost(InetSocketAddress host) {
-		this.dbHost$.onNext(host);
-	}
-
-	public void updateDbSize(long size) {
-		this.dbSize$.onNext(size);
-	}
-
 	public void updateRandomness(int randomness) {
 		this.randomness$.onNext(randomness);
 	}
 
-	public void updateProgressBar(int percentage) {
+	public void updateProgressBar(double percentage) {
 		this.progressBar$.onNext(percentage);
+	}
+
+	public void updateChannelDetails(TvChannelDetails details) {
+		this.channelDetails$.onNext(details);
+	}
+
+	public void updateSelectedYear(String year) {
+		this.selectedYear$.onNext(year);
 	}
 
 	public Observable<List<TvChannel>> getTvChannels$() {
@@ -93,24 +95,32 @@ public class RootState extends AbstractDisposableProvider {
 		return this.appState$.hide();
 	}
 
-	public Observable<InetSocketAddress> getDbHost$() {
-		return this.dbHost$.hide();
-	}
-
-	public Observable<Long> getDbSize$() {
-		return this.dbSize$.hide();
-	}
-
-	public Observable<Integer> getProgressBar$() {
+	public Observable<Double> getProgressBar$() {
 		return this.progressBar$.hide();
+	}
+
+	public Observable<TvChannelDetails> getChannelDetails$() {
+		return this.channelDetails$.hide();
+	}
+
+	public Observable<String> getSelectedYear$() {
+		return this.selectedYear$.hide();
 	}
 
 	public List<TvChannel> getTvChannels() {
 		return this.tvChannels$.getValue();
 	}
 
+	public TvChannel getSelectedChannel() {
+		return this.selectedChannel$.getValue();
+	}
+
 	public Integer getRandomness() {
 		return this.randomness$.getValue();
+	}
+
+	public AppState getAppState() {
+		return this.appState$.getValue();
 	}
 
 	public JdbcTemplate getJdbcTemplate() {

@@ -18,7 +18,9 @@ package pl.miloszgilga.tvarchiver.webscrapper.gui.panel;
 
 import lombok.Getter;
 import pl.miloszgilga.tvarchiver.webscrapper.controller.ChannelDetailsController;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.FrameTaskbar;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
+import pl.miloszgilga.tvarchiver.webscrapper.util.Constant;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -31,28 +33,31 @@ public class ChannelDetailsPanel extends JPanel {
 	private static final int STEP = 1;
 
 	private final RootState rootState;
+	private final JFrame rootWindow;
 	private final ChannelDetailsController controller;
-
 	private final JPanel controlPanel;
+	private final ScrappingDetailsPanel scrappingDetailsPanel;
 
-	private final JLabel label;
 	private final JSlider randomnessValueSlider;
 	private final Border sliderFrame, sliderMargin;
+	private final JButton removeSelectedYearButton;
 	private final JButton startScrappingButton;
 	private final JButton stopScrappingButton;
 	private final JPanel progressBarPanel;
 	private final JProgressBar progressBar;
 
-	public ChannelDetailsPanel(RootState rootState) {
+	public ChannelDetailsPanel(RootState rootState, JFrame rootWindow) {
 		this.rootState = rootState;
+		this.rootWindow = rootWindow;
 		controller = new ChannelDetailsController(this);
 
 		controlPanel = new JPanel();
+		scrappingDetailsPanel = new ScrappingDetailsPanel(rootState);
 
-		label = new JLabel();
-		randomnessValueSlider = new JSlider(JSlider.VERTICAL, 1, SIZE, 2);
+		randomnessValueSlider = new JSlider(JSlider.VERTICAL, rootState.getRandomness(), SIZE, 2);
 		sliderFrame = BorderFactory.createTitledBorder("Randomness");
 		sliderMargin = BorderFactory.createEmptyBorder(0, 20, 0, 20);
+		removeSelectedYearButton = new JButton("Remove selection");
 		startScrappingButton = new JButton("Start scrapping");
 		stopScrappingButton = new JButton("Stop scrapping");
 		progressBarPanel = new JPanel();
@@ -73,6 +78,7 @@ public class ChannelDetailsPanel extends JPanel {
 		progressBar.setStringPainted(true);
 		progressBar.setString(progressBar.getValue() + "%");
 
+		removeSelectedYearButton.addActionListener(e -> controller.removeSelectedYear());
 		startScrappingButton.addActionListener(e -> controller.startScrapping());
 		stopScrappingButton.addActionListener(e -> controller.stopScrapping());
 
@@ -80,13 +86,14 @@ public class ChannelDetailsPanel extends JPanel {
 		progressBarPanel.add(progressBar);
 
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.X_AXIS));
+		controlPanel.add(removeSelectedYearButton);
+		controlPanel.add(progressBarPanel);
 		controlPanel.add(startScrappingButton);
 		controlPanel.add(stopScrappingButton);
-		controlPanel.add(progressBarPanel);
 
 		setLayout(new BorderLayout());
 
-		add(label, BorderLayout.CENTER);
+		add(scrappingDetailsPanel, BorderLayout.CENTER);
 		add(randomnessValueSlider, BorderLayout.EAST);
 		add(controlPanel, BorderLayout.SOUTH);
 
@@ -103,16 +110,20 @@ public class ChannelDetailsPanel extends JPanel {
 		return labelsTable;
 	}
 
-	private void updateProgress(int percentage) {
+	private void updateProgress(double percentage) {
 		SwingUtilities.invokeLater(() -> {
-			progressBar.setValue(percentage);
-			progressBar.setString(percentage + "%");
+			progressBar.setValue((int) percentage);
+			progressBar.setString(Constant.PF.format(percentage) + "%");
 		});
 	}
 
 	private void initObservables() {
-		rootState.asDisposable(rootState.getSelectedChannel$(), channel -> label.setText(channel.name()));
-		rootState.asDisposable(rootState.getProgressBar$(), this::updateProgress);
+		rootState.asDisposable(rootState.getSelectedChannel$(), controller::onSwitchChannel);
+		rootState.asDisposable(rootState.getSelectedYear$(), y -> removeSelectedYearButton.setEnabled(!y.isEmpty()));
+		rootState.asDisposable(rootState.getProgressBar$(), percentage -> {
+			updateProgress(percentage);
+			FrameTaskbar.setProgress(rootWindow, percentage);
+		});
 		rootState.asDisposable(rootState.getAppState$(), state -> {
 			randomnessValueSlider.setEnabled(state.isIdle());
 			startScrappingButton.setEnabled(state.isIdle());

@@ -44,6 +44,7 @@ public class ChannelsListController {
 		}
 		channelsListPanel.getChannelListModel().clear();
 		rootState.updateTvChannels(new ArrayList<>());
+		rootState.updateSelectedChannel(new TvChannel());
 		// firstly, select data from persisted DB
 		final List<TvChannel> fetchedTvChannels = jdbcTemplate.query("SELECT * FROM tv_channels", (rs, rowNum) ->
 			new TvChannel(rs.getLong("id"), rs.getString("name"), rs.getString("slug"))

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.webscrapper.gui;
+package pl.miloszgilga.tvarchiver.webscrapper.util;
 
-public class InoperableException extends RuntimeException {
-	public InoperableException(Throwable cause) {
-		super(cause);
-	}
+import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
 
-	public InoperableException(String message) {
-		super(message);
-	}
+public class Constant {
+	public static final DecimalFormat PF = new DecimalFormat("#.##");
+	public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 }
