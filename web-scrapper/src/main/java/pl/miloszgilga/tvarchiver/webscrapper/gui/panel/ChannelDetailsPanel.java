@@ -16,7 +16,9 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.gui.panel;
 
+import io.reactivex.rxjava3.core.Observable;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import pl.miloszgilga.tvarchiver.webscrapper.controller.ChannelDetailsController;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.FrameTaskbar;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.window.AbstractWindow;
@@ -43,6 +45,7 @@ public class ChannelDetailsPanel extends JPanel {
 	private final JSlider randomnessValueSlider;
 	private final Border sliderFrame, sliderMargin;
 	private final JButton removeSelectedYearButton;
+	private final JButton removeRowDataButton;
 	private final JButton startScrappingButton;
 	private final JButton stopScrappingButton;
 	private final JPanel progressBarPanel;
@@ -60,6 +63,7 @@ public class ChannelDetailsPanel extends JPanel {
 		sliderFrame = BorderFactory.createTitledBorder("Randomness");
 		sliderMargin = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 		removeSelectedYearButton = new JButton("Remove selection");
+		removeRowDataButton = new JButton("Remove row data");
 		startScrappingButton = new JButton("Start scrapping");
 		stopScrappingButton = new JButton("Stop scrapping");
 		progressBarPanel = new JPanel();
@@ -81,6 +85,7 @@ public class ChannelDetailsPanel extends JPanel {
 		progressBar.setString(progressBar.getValue() + "%");
 
 		removeSelectedYearButton.addActionListener(e -> controller.removeSelectedYear());
+		removeRowDataButton.addActionListener(e -> controller.removeRowData());
 		startScrappingButton.addActionListener(e -> controller.startScrapping());
 		stopScrappingButton.addActionListener(e -> controller.stopScrapping());
 
@@ -89,6 +94,7 @@ public class ChannelDetailsPanel extends JPanel {
 
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.X_AXIS));
 		controlPanel.add(removeSelectedYearButton);
+		controlPanel.add(removeRowDataButton);
 		controlPanel.add(progressBarPanel);
 		controlPanel.add(startScrappingButton);
 		controlPanel.add(stopScrappingButton);
@@ -112,19 +118,32 @@ public class ChannelDetailsPanel extends JPanel {
 		return labelsTable;
 	}
 
-	private void updateProgress(double percentage) {
+	private void updateProgress(double percentage, long fetched, long total) {
 		SwingUtilities.invokeLater(() -> {
 			progressBar.setValue((int) percentage);
-			progressBar.setString(Constant.PF.format(percentage) + "%");
+			progressBar.setString(String.format("%s%% (%d/%d)", Constant.PF.format(percentage), fetched, total));
 		});
 	}
 
 	private void initObservables() {
+		final Observable<ChannelDetailsTotalFetchedAggregator> aggregator = Observable.combineLatest(
+			rootState.getChannelDetails$(),
+			rootState.getTotalFetchedCount$(),
+			ChannelDetailsTotalFetchedAggregator::new
+		);
 		rootState.asDisposable(rootState.getSelectedChannel$(), controller::onSwitchChannel);
-		rootState.asDisposable(rootState.getSelectedYear$(), y -> removeSelectedYearButton.setEnabled(!y.isEmpty()));
-		rootState.asDisposable(rootState.getProgressBar$(), percentage -> {
-			updateProgress(percentage);
-			FrameTaskbar.setProgress(rootWindow, percentage);
+		rootState.asDisposable(rootState.getSelectedYear$(), year -> {
+			startScrappingButton.setText("Start scrapping" + (year != -1 ? " (" + year + ")" : StringUtils.EMPTY));
+			removeSelectedYearButton.setEnabled(year != -1);
+			removeRowDataButton.setEnabled(year != -1);
+		});
+		rootState.asDisposable(aggregator, state -> {
+			if (state.details() != null) {
+				final long total = state.details().daysCount();
+				final double percentage = ((double) state.totalFetched() / total) * 100;
+				updateProgress(percentage, state.totalFetched(), total);
+				FrameTaskbar.setProgress(rootWindow, percentage);
+			}
 		});
 		rootState.asDisposable(rootState.getAppState$(), state -> {
 			randomnessValueSlider.setEnabled(state.isIdle());

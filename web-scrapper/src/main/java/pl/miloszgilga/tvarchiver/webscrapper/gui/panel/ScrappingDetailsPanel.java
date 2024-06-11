@@ -16,11 +16,13 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.gui.panel;
 
+import io.reactivex.rxjava3.core.Observable;
 import lombok.Getter;
 import pl.miloszgilga.tvarchiver.webscrapper.controller.ScrappingDetailsController;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.renderer.ColoredYearsTableRenderer;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.renderer.ProgressCellRenderer;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelYearData;
+import pl.miloszgilga.tvarchiver.webscrapper.state.ChannelDetailsTotalFetchedAggregator;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import javax.swing.*;
@@ -90,6 +92,17 @@ public class ScrappingDetailsPanel extends JPanel {
 	}
 
 	private void initObservables() {
+		final Observable<ChannelDetailsTotalFetchedAggregator> aggregator = Observable.combineLatest(
+			rootState.getChannelDetails$(),
+			rootState.getTotalFetchedCount$(),
+			ChannelDetailsTotalFetchedAggregator::new
+		);
+		rootState.asDisposable(aggregator, state -> {
+			if (state.details() != null && (state.details().daysCount() == state.totalFetched())) {
+				detailsTable.clearSelection();
+				rootState.updateSelectedYear(-1);
+			}
+		});
 		rootState.asDisposable(rootState.getSelectedChannel$(), channel -> channelTitle
 			.setText(parseChannelName(channel.name(), channel.id())));
 		rootState.asDisposable(rootState.getSelectedYear$(), year -> {

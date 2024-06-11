@@ -50,9 +50,50 @@ public class ChannelDetailsController {
 		log.info("Expand search content for: {}", rootState.getSelectedChannel().name());
 	}
 
+	public void removeRowData() {
+		final RootState rootState = channelDetailsPanel.getRootState();
+		final int selectedYear = rootState.getSelectedYear();
+		final TvChannel selectedChannel = rootState.getSelectedChannel();
+		if (selectedYear == -1 || selectedChannel == null) {
+			return; // not selected specific year, skipping
+		}
+		final TvChannelYearData yearData = rootState.getTvChannelDetails().years().get(selectedYear);
+		final int response = messageDialog.showConfirm(
+			"Are you sure to remove %d data from year %d",
+			yearData.getFetchedCount(), selectedYear
+		);
+		if (response == JOptionPane.YES_OPTION) {
+			final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
+			final Long channelId = jdbcTemplate.queryForObject(
+				"SELECT id FROM tv_channels WHERE slug = ?",
+				Long.class,
+				selectedChannel.slug());
+			final int rowsAffected = jdbcTemplate.update(
+				"DELETE FROM tv_programs_data WHERE YEAR(schedule_date) = ? AND channel_id = ?",
+				selectedYear,
+				channelId);
+			messageDialog.showInfo("Successfully deleted %s rows.", rowsAffected);
+			rootState.updateSelectedYear(-1);
+			yearData.setFetchedCount(0);
+			rootState.updateSelectedChannel(selectedChannel);
+		}
+	}
+
 	public void startScrapping() {
 		final RootState rootState = channelDetailsPanel.getRootState();
-		dataScrapperThread = new DataScrapperThread(rootState, 0);
+		final int selectedYear = rootState.getSelectedYear();
+		boolean alreadyScrapper;
+		if (selectedYear != -1) { // fetched all data from selected year
+			final var yearDetails = rootState.getTvChannelDetails().years().get(selectedYear);
+			alreadyScrapper = yearDetails.getFetchedCount() == yearDetails.getTotalCount();
+		} else { // fetched all data for selected channel
+			alreadyScrapper = rootState.getTvChannelDetails().daysCount() == rootState.getTotalFetchedCount();
+		}
+		if (alreadyScrapper) {
+			messageDialog.showInfo("All data for year %s was already fetched.", selectedYear);
+			return;
+		}
+		dataScrapperThread = new DataScrapperThread(rootState, messageDialog, 0);
 		dataScrapperThread.start();
 		rootState.updateAppState(AppState.SCRAPPING);
 		updateProgressState(Taskbar.State.NORMAL);
