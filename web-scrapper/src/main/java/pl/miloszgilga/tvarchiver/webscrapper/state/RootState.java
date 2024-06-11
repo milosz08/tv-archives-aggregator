@@ -48,7 +48,7 @@ public class RootState extends AbstractDisposableProvider {
 		tvChannels$ = BehaviorSubject.createDefault(new ArrayList<>());
 		selectedChannel$ = BehaviorSubject.createDefault(new TvChannel());
 		appState$ = BehaviorSubject.createDefault(AppState.IDLE);
-		randomness$ = BehaviorSubject.createDefault(1);
+		randomness$ = BehaviorSubject.createDefault(10);
 		totalFetchedCount$ = BehaviorSubject.createDefault(0L);
 		channelDetails$ = BehaviorSubject.create();
 		selectedYear$ = BehaviorSubject.createDefault(-1);

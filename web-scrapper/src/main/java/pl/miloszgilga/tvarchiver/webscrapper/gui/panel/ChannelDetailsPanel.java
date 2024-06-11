@@ -33,8 +33,8 @@ import java.util.Hashtable;
 
 @Getter
 public class ChannelDetailsPanel extends JPanel {
-	private static final int SIZE = 20;
-	private static final int STEP = 1;
+	private static final int SIZE = 60;
+	private static final int STEP = 5;
 
 	private final RootState rootState;
 	private final JFrame rootWindow;
@@ -59,7 +59,7 @@ public class ChannelDetailsPanel extends JPanel {
 		controlPanel = new JPanel();
 		scrappingDetailsPanel = new ScrappingDetailsPanel(rootState);
 
-		randomnessValueSlider = new JSlider(JSlider.VERTICAL, rootState.getRandomness(), SIZE, 2);
+		randomnessValueSlider = new JSlider(JSlider.VERTICAL, 5, SIZE, rootState.getRandomness());
 		sliderFrame = BorderFactory.createTitledBorder("Randomness");
 		sliderMargin = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 		removeSelectedYearButton = new JButton("Remove selection");
