@@ -35,7 +35,7 @@ public class RootState extends AbstractDisposableProvider {
 	private final BehaviorSubject<TvChannel> selectedChannel$;
 	private final BehaviorSubject<AppState> appState$;
 	private final BehaviorSubject<Integer> randomness$;
-	private final BehaviorSubject<Double> progressBar$;
+	private final BehaviorSubject<Long> totalFetchedCount$;
 	private final BehaviorSubject<TvChannelDetails> channelDetails$;
 	private final BehaviorSubject<Integer> selectedYear$;
 
@@ -49,7 +49,7 @@ public class RootState extends AbstractDisposableProvider {
 		selectedChannel$ = BehaviorSubject.createDefault(new TvChannel());
 		appState$ = BehaviorSubject.createDefault(AppState.IDLE);
 		randomness$ = BehaviorSubject.createDefault(1);
-		progressBar$ = BehaviorSubject.createDefault(0.0);
+		totalFetchedCount$ = BehaviorSubject.createDefault(0L);
 		channelDetails$ = BehaviorSubject.create();
 		selectedYear$ = BehaviorSubject.createDefault(-1);
 	}
@@ -70,8 +70,8 @@ public class RootState extends AbstractDisposableProvider {
 		this.randomness$.onNext(randomness);
 	}
 
-	public void updateProgressBar(double percentage) {
-		this.progressBar$.onNext(percentage);
+	public void updateTotalFetchedCount(long totalFetchedCount) {
+		this.totalFetchedCount$.onNext(totalFetchedCount);
 	}
 
 	public void updateChannelDetails(TvChannelDetails details) {
@@ -94,8 +94,8 @@ public class RootState extends AbstractDisposableProvider {
 		return this.appState$.hide();
 	}
 
-	public Observable<Double> getProgressBar$() {
-		return this.progressBar$.hide();
+	public Observable<Long> getTotalFetchedCount$() {
+		return this.totalFetchedCount$.hide();
 	}
 
 	public Observable<TvChannelDetails> getChannelDetails$() {
@@ -124,6 +124,18 @@ public class RootState extends AbstractDisposableProvider {
 
 	public String getEnvValue(EnvKey key) {
 		return dotenv.get(key.name(), key.getDefaultValue());
+	}
+
+	public Integer getSelectedYear() {
+		return this.selectedYear$.getValue();
+	}
+
+	public TvChannelDetails getTvChannelDetails() {
+		return this.channelDetails$.getValue();
+	}
+
+	public Long getTotalFetchedCount() {
+		return this.totalFetchedCount$.getValue();
 	}
 
 	@Override
