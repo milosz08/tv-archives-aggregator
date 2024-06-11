@@ -47,7 +47,7 @@ public class ConnectToDbWindow extends AbstractWindow {
 	public ConnectToDbWindow(RootState rootState) {
 		super("Connect to DB", 300, 150, rootState);
 		this.rootState = rootState;
-		controller = new ConnectToDbController(this);
+		controller = new ConnectToDbController(this, getMessageDialog());
 
 		inputFieldsPanel = new JPanel();
 

@@ -16,23 +16,28 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.gui.window;
 
+import lombok.Getter;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.GuiWindowAdapter;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.MessageDialog;
 import pl.miloszgilga.tvarchiver.webscrapper.state.AbstractDisposableProvider;
 
 import javax.swing.*;
 import java.awt.*;
 
-abstract class AbstractWindow extends JFrame {
+public abstract class AbstractWindow extends JFrame {
 	private final String title;
 	private final Dimension size;
 	private final GuiWindowAdapter guiWindowAdapter;
 	private final JPanel rootPanel;
+	@Getter
+	private final MessageDialog messageDialog;
 
 	public AbstractWindow(String title, int width, int height, AbstractDisposableProvider disposableProvider) {
 		this.title = title;
 		rootPanel = new JPanel();
 		size = new Dimension(width, height);
-		guiWindowAdapter = new GuiWindowAdapter(this, disposableProvider);
+		messageDialog = new MessageDialog(this);
+		guiWindowAdapter = new GuiWindowAdapter(this, messageDialog, disposableProvider);
 	}
 
 	public void createWindow() {

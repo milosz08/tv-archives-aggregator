@@ -28,12 +28,12 @@ import java.awt.event.WindowEvent;
 @RequiredArgsConstructor
 public class GuiWindowAdapter extends WindowAdapter {
 	private final JFrame frame;
+	private final MessageDialog messageDialog;
 	private final AbstractDisposableProvider disposableProvider;
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		final int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit?", "Exit",
-			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		final int result = messageDialog.showConfirm("Are you sure you want to exit?");
 		if (result == JOptionPane.YES_OPTION) {
 			disposableProvider.cleanupAndDisposableSubscription();
 			System.exit(0);

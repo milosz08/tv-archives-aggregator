@@ -34,6 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChannelsListController {
 	private final ChannelsListPanel channelsListPanel;
+	private final MessageDialog messageDialog;
 
 	public void fetchChannelsList() {
 		final RootState rootState = channelsListPanel.getRootState();
@@ -71,7 +72,7 @@ public class ChannelsListController {
 
 	public void reFetchChannels() {
 		fetchChannelsList();
-		MessageDialog.showInfo("TV channels list was restored.");
+		messageDialog.showInfo("TV channels list was restored.");
 	}
 
 	public void removeSelection() {

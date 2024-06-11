@@ -39,12 +39,12 @@ public class RootWindow extends AbstractWindow {
 		super("TV Scrapper", 1280, 720, rootState);
 		this.rootState = rootState;
 
-		channelsListPanel = new ChannelsListPanel(rootState);
+		channelsListPanel = new ChannelsListPanel(rootState, this);
 		rightCombinePanel = new JPanel();
 		tvChannelContainerPanel = new JPanel();
 		unselectedChannelPanel = new UnselectedChannelPanel();
 		channelDetailsPanel = new ChannelDetailsPanel(rootState, this);
-		consolePanel = new ConsolePanel();
+		consolePanel = new ConsolePanel(this);
 		bottomBarPanel = new BottomBarPanel(rootState);
 	}
 

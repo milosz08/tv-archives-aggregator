@@ -19,6 +19,8 @@ package pl.miloszgilga.tvarchiver.webscrapper.gui.panel;
 import lombok.Getter;
 import pl.miloszgilga.tvarchiver.webscrapper.controller.ChannelDetailsController;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.FrameTaskbar;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.AbstractWindow;
+import pl.miloszgilga.tvarchiver.webscrapper.state.ChannelDetailsTotalFetchedAggregator;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 import pl.miloszgilga.tvarchiver.webscrapper.util.Constant;
 
@@ -46,10 +48,10 @@ public class ChannelDetailsPanel extends JPanel {
 	private final JPanel progressBarPanel;
 	private final JProgressBar progressBar;
 
-	public ChannelDetailsPanel(RootState rootState, JFrame rootWindow) {
+	public ChannelDetailsPanel(RootState rootState, AbstractWindow rootWindow) {
 		this.rootState = rootState;
 		this.rootWindow = rootWindow;
-		controller = new ChannelDetailsController(this);
+		controller = new ChannelDetailsController(this, rootWindow.getMessageDialog());
 
 		controlPanel = new JPanel();
 		scrappingDetailsPanel = new ScrappingDetailsPanel(rootState);

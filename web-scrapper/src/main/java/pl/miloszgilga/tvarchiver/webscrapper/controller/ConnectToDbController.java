@@ -29,6 +29,7 @@ import java.net.InetSocketAddress;
 @RequiredArgsConstructor
 public class ConnectToDbController {
 	private final ConnectToDbWindow connectToDbWindow;
+	private final MessageDialog messageDialog;
 
 	public void onClickConnectToDb() {
 		final String host = connectToDbWindow.getHostField().getText();
@@ -49,9 +50,9 @@ public class ConnectToDbController {
 			rootWindow.createWindow();
 			connectToDbWindow.closeWindow();
 		} catch (NumberFormatException ex) {
-			MessageDialog.showError("Incorrect port");
+			messageDialog.showError("Incorrect port");
 		} catch (ConnectException ex) {
-			MessageDialog.showError("Unable to connect to DB");
+			messageDialog.showError("Unable to connect to DB");
 		}
 	}
 }

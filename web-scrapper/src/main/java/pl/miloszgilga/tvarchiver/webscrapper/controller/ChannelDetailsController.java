@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.miloszgilga.tvarchiver.webscrapper.db.YearWithPersistedDto;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.FrameTaskbar;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.MessageDialog;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelDetailsPanel;
 import pl.miloszgilga.tvarchiver.webscrapper.scrap.DataScrapperThread;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
@@ -30,6 +31,7 @@ import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelYearData;
 import pl.miloszgilga.tvarchiver.webscrapper.state.AppState;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
@@ -39,11 +41,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChannelDetailsController {
 	private final ChannelDetailsPanel channelDetailsPanel;
+	private final MessageDialog messageDialog;
 	private DataScrapperThread dataScrapperThread;
 
 	public void removeSelectedYear() {
 		final RootState rootState = channelDetailsPanel.getRootState();
-		rootState.updateSelectedYear(StringUtils.EMPTY);
+		rootState.updateSelectedYear(-1);
 		log.info("Expand search content for: {}", rootState.getSelectedChannel().name());
 	}
 

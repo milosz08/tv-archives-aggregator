@@ -20,6 +20,7 @@ import lombok.Getter;
 import pl.miloszgilga.tvarchiver.webscrapper.controller.ConsolePanelController;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.AppIcon;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.component.JAppIconButton;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.AbstractWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,8 +38,8 @@ public class ConsolePanel extends JPanel {
 	private final JAppIconButton clearButton;
 	private final JAppIconButton printToFileButton;
 
-	public ConsolePanel() {
-		controller = new ConsolePanelController(this);
+	public ConsolePanel(AbstractWindow rootWindow) {
+		controller = new ConsolePanelController(this, rootWindow.getMessageDialog());
 
 		setLayout(new BorderLayout());
 
