@@ -18,23 +18,19 @@ package pl.miloszgilga.tvarchiver.webscrapper.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Optional;
 
 public class FrameTaskbar {
-	private static final Optional<Taskbar> taskbar = getTaskbar();
-
-	private static Optional<Taskbar> getTaskbar() {
-		if (Taskbar.isTaskbarSupported()) {
-			return Optional.of(Taskbar.getTaskbar());
-		}
-		return Optional.empty();
-	}
+	private static final Taskbar taskbar = Taskbar.getTaskbar();
 
 	public static void setProgressState(JFrame rootFrame, Taskbar.State state) {
-		taskbar.ifPresent(taskbar -> taskbar.setWindowProgressState(rootFrame, state));
+		if (taskbar != null) {
+			taskbar.setWindowProgressState(rootFrame, state);
+		}
 	}
 
 	public static void setProgress(JFrame rootFrame, Double percentage) {
-		taskbar.ifPresent(taskbar -> taskbar.setWindowProgressValue(rootFrame, percentage.intValue()));
+		if (taskbar != null) {
+			taskbar.setWindowProgressValue(rootFrame, percentage.intValue());
+		}
 	}
 }
