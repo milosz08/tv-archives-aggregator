@@ -18,7 +18,6 @@ package pl.miloszgilga.tvarchiver.webscrapper.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.miloszgilga.tvarchiver.webscrapper.db.YearWithPersistedDto;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.FrameTaskbar;
@@ -33,6 +32,8 @@ import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -91,20 +92,17 @@ public class ChannelDetailsController {
 		final TvChannelCalendarSource tvChannelCalendarSource = new TvChannelCalendarSource(channel.slug());
 		final TvChannelDetails details = tvChannelCalendarSource.getSelectedTvChannelDetails();
 
-		final List<String> persistedYears = alreadyPersistedPerYear.stream()
-			.map(String::valueOf).toList();
+		final Map<Integer, Long> persistedYears = alreadyPersistedPerYear.stream()
+			.collect(Collectors.toMap(YearWithPersistedDto::year, YearWithPersistedDto::count));
 
 		// assign existing data to persisted years
-		for (int i = 0; i < details.years().size(); i++) {
-			final TvChannelYearData yearData = details.years().get(i);
-			if (persistedYears.contains(yearData.getYear())) {
-				yearData.setFetchedCount(alreadyPersistedPerYear.get(i).count());
+		for (final Map.Entry<Integer, TvChannelYearData> year : details.years().entrySet()) {
+			if (persistedYears.containsKey(year.getKey())) {
+				year.getValue().setFetchedCount(persistedYears.get(year.getKey()));
 			}
 		}
-		// compare remaining data with saved rows and all to persisted
-		final double remainingRecordsToWrite = ((double) persistedTvPrograms / details.daysCount()) * 100;
-
-		rootState.updateProgressBar(remainingRecordsToWrite);
+		rootState.updateSelectedYear(-1);
+		rootState.updateTotalFetchedCount(persistedTvPrograms);
 		rootState.updateChannelDetails(details);
 	}
 

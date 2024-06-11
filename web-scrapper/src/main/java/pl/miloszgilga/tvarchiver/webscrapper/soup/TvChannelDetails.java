@@ -17,7 +17,12 @@
 package pl.miloszgilga.tvarchiver.webscrapper.soup;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.TreeMap;
 
-public record TvChannelDetails(List<TvChannelYearData> years, LocalDate startDate, LocalDate endDate, long daysCount) {
+public record TvChannelDetails(
+	TreeMap<Integer, TvChannelYearData> years,
+	LocalDate startDate,
+	LocalDate endDate,
+	long daysCount
+) {
 }

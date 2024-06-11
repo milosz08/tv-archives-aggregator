@@ -26,6 +26,7 @@ import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.Map;
 
 @Getter
 public class ScrappingDetailsPanel extends JPanel {
@@ -92,16 +93,17 @@ public class ScrappingDetailsPanel extends JPanel {
 		rootState.asDisposable(rootState.getSelectedChannel$(), channel -> channelTitle
 			.setText(parseChannelName(channel.name(), channel.id())));
 		rootState.asDisposable(rootState.getSelectedYear$(), year -> {
-			if (year.isEmpty()) {
+			if (year == -1) {
 				detailsTable.clearSelection();
 			}
 		});
 		rootState.asDisposable(rootState.getAppState$(), state -> detailsTable.setEnabled(state.isIdle()));
 		rootState.asDisposable(rootState.getChannelDetails$(), details -> {
 			detailsTableModel.setRowCount(0);
-			for (final TvChannelYearData data : details.years()) {
+			for (final Map.Entry<Integer, TvChannelYearData> entry : details.years().entrySet()) {
+				final TvChannelYearData data = entry.getValue();
 				detailsTableModel.addRow(new Object[]{
-					data.getYear(),
+					entry.getKey(),
 					data.getFetchedCount(),
 					data.getTotalCount(),
 					data.getTotalCount() - data.getFetchedCount(),

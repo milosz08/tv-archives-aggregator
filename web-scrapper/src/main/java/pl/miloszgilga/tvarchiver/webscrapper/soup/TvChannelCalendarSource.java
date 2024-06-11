@@ -26,8 +26,9 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeMap;
 
 @Slf4j
 public class TvChannelCalendarSource extends AbstractUrlSource {
@@ -52,7 +53,7 @@ public class TvChannelCalendarSource extends AbstractUrlSource {
 		final LocalDate endDate = findDateBaseCalendarNode(false);
 
 		// fetch all days per single year
-		final List<TvChannelYearData> fetchedYearsData = new ArrayList<>();
+		final TreeMap<Integer, TvChannelYearData> fetchedYearsData = new TreeMap<>(Comparator.reverseOrder());
 		for (final Integer year : years) {
 			LocalDate yearStart = LocalDate.of(year, 1, 1);
 			if (yearStart.isBefore(startDate)) {
@@ -62,10 +63,10 @@ public class TvChannelCalendarSource extends AbstractUrlSource {
 			if (yearEnd.isAfter(endDate)) {
 				yearEnd = endDate;
 			}
-			final long daysBetween = ChronoUnit.DAYS.between(yearStart, yearEnd) + 1;
-			fetchedYearsData.add(new TvChannelYearData(String.valueOf(year), daysBetween));
+			final long daysBetween = daysBetweenInclusive(yearStart, yearEnd);
+			fetchedYearsData.put(year, new TvChannelYearData(daysBetween));
 		}
-		final long daysCount = ChronoUnit.DAYS.between(startDate, endDate);
+		final long daysCount = daysBetweenInclusive(startDate, endDate);
 		log.info("Channel: {}. Found: {} days with start: {} and end: {}", channelSlug, daysCount, startDate, endDate);
 		return new TvChannelDetails(fetchedYearsData, startDate, endDate, daysCount);
 	}
@@ -95,5 +96,9 @@ public class TvChannelCalendarSource extends AbstractUrlSource {
 		// for first date, get last day of last month, for end date get first day of first month
 		final int selectedDay = Integer.parseInt(monthDayNodes.get(isStartDate ? 0 : monthDayNodes.size() - 1).text());
 		return LocalDate.of(selectedYear, selectedMonth, selectedDay);
+	}
+
+	private long daysBetweenInclusive(LocalDate start, LocalDate end) {
+		return ChronoUnit.DAYS.between(start, end) + 1;
 	}
 }

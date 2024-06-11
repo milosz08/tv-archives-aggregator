@@ -21,7 +21,6 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.miloszgilga.tvarchiver.webscrapper.db.DataSource;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
@@ -38,7 +37,7 @@ public class RootState extends AbstractDisposableProvider {
 	private final BehaviorSubject<Integer> randomness$;
 	private final BehaviorSubject<Double> progressBar$;
 	private final BehaviorSubject<TvChannelDetails> channelDetails$;
-	private final BehaviorSubject<String> selectedYear$;
+	private final BehaviorSubject<Integer> selectedYear$;
 
 	private Dotenv dotenv;
 	@Getter
@@ -52,7 +51,7 @@ public class RootState extends AbstractDisposableProvider {
 		randomness$ = BehaviorSubject.createDefault(1);
 		progressBar$ = BehaviorSubject.createDefault(0.0);
 		channelDetails$ = BehaviorSubject.create();
-		selectedYear$ = BehaviorSubject.createDefault(StringUtils.EMPTY);
+		selectedYear$ = BehaviorSubject.createDefault(-1);
 	}
 
 	public void updateTvChannels(List<TvChannel> channels) {
@@ -79,7 +78,7 @@ public class RootState extends AbstractDisposableProvider {
 		this.channelDetails$.onNext(details);
 	}
 
-	public void updateSelectedYear(String year) {
+	public void updateSelectedYear(int year) {
 		this.selectedYear$.onNext(year);
 	}
 
@@ -103,7 +102,7 @@ public class RootState extends AbstractDisposableProvider {
 		return this.channelDetails$.hide();
 	}
 
-	public Observable<String> getSelectedYear$() {
+	public Observable<Integer> getSelectedYear$() {
 		return this.selectedYear$.hide();
 	}
 

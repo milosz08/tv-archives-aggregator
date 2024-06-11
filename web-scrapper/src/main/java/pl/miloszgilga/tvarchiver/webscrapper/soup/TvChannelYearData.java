@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class TvChannelYearData {
-	private final String year;
 	private final long totalCount;
 	private long fetchedCount;
 }

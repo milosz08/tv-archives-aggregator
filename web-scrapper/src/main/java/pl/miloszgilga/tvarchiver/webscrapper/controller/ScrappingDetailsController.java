@@ -39,7 +39,7 @@ public class ScrappingDetailsController {
 		if (selectedRowIndex == -1) {
 			return;
 		}
-		final String selectedYear = (String) detailsTable.getValueAt(selectedRowIndex, 0);
+		final int selectedYear = (Integer) detailsTable.getValueAt(selectedRowIndex, 0);
 		rootState.updateSelectedYear(selectedYear);
 		log.info("Narrow search content for: {} to year: {}", rootState.getSelectedChannel().name(), selectedYear);
 	}
