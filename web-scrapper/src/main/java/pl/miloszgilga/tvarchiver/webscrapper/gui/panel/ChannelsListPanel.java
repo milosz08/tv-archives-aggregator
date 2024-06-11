@@ -64,10 +64,10 @@ public class ChannelsListPanel extends JPanel {
 		reFetchChannelsButton.addActionListener(e -> controller.reFetchChannels());
 		removeSelectionButton.addActionListener(e -> controller.removeSelection());
 
-		buttonWithTextPanel.setLayout(new BorderLayout());
-		buttonWithTextPanel.add(reFetchChannelsButton, BorderLayout.NORTH);
-		buttonWithTextPanel.add(removeSelectionButton, BorderLayout.CENTER);
-		buttonWithTextPanel.add(fetchedChannelsLabel, BorderLayout.SOUTH);
+		buttonWithTextPanel.setLayout(new GridLayout(3, 1));
+		buttonWithTextPanel.add(reFetchChannelsButton);
+		buttonWithTextPanel.add(removeSelectionButton);
+		buttonWithTextPanel.add(fetchedChannelsLabel);
 
 		setLayout(new BorderLayout());
 		add(searchField, BorderLayout.NORTH);

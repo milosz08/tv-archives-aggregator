@@ -16,5 +16,8 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.db;
 
-public record YearWithPersistedDto(int year, long count) {
+public record YearWithPersistedDto(
+	int year,
+	long count
+) {
 }
