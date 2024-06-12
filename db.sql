@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS tv_programs_data (
 	program_type VARCHAR(255) NOT NULL,
 	season INT UNSIGNED DEFAULT NULL,
 	episode INT UNSIGNED DEFAULT NULL,
+	badge VARCHAR(255) DEFAULT NULL,
 	hour_start VARCHAR(5) NOT NULL,
 	schedule_date DATE NOT NULL,
 	weekday INT UNSIGNED NOT NULL,
