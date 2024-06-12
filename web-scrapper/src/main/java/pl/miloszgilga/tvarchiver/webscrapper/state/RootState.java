@@ -16,6 +16,7 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.state;
 
+import io.github.cdimascio.dotenv.DotEnvException;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -43,7 +44,7 @@ public class RootState extends AbstractDisposableProvider {
 	@Getter
 	private DataSource dataSource;
 
-	public RootState() {
+	public RootState() throws DotEnvException {
 		dotenv = Dotenv.load();
 		tvChannels$ = BehaviorSubject.createDefault(new ArrayList<>());
 		selectedChannel$ = BehaviorSubject.createDefault(new TvChannel());
