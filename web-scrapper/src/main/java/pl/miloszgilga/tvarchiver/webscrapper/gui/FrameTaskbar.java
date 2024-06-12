@@ -16,19 +16,23 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.gui;
 
+import lombok.RequiredArgsConstructor;
+
 import javax.swing.*;
 import java.awt.*;
 
+@RequiredArgsConstructor
 public class FrameTaskbar {
 	private static final Taskbar taskbar = Taskbar.getTaskbar();
+	private final JFrame rootFrame;
 
-	public static void setProgressState(JFrame rootFrame, Taskbar.State state) {
+	public void setProgressState(Taskbar.State state) {
 		if (taskbar != null) {
 			taskbar.setWindowProgressState(rootFrame, state);
 		}
 	}
 
-	public static void setProgress(JFrame rootFrame, Double percentage) {
+	public void setProgress(Double percentage) {
 		if (taskbar != null) {
 			taskbar.setWindowProgressValue(rootFrame, percentage.intValue());
 		}

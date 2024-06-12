@@ -19,12 +19,16 @@ package pl.miloszgilga.tvarchiver.webscrapper.gui.window;
 import lombok.Getter;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.*;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
+import pl.miloszgilga.tvarchiver.webscrapper.util.Constant;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.StringJoiner;
 
 @Getter
 public class RootWindow extends AbstractWindow {
+	public static final String DEFAULT_TITLE = "TV Scrapper";
+
 	private final RootState rootState;
 
 	private final ChannelsListPanel channelsListPanel;
@@ -36,7 +40,7 @@ public class RootWindow extends AbstractWindow {
 	private final BottomBarPanel bottomBarPanel;
 
 	public RootWindow(RootState rootState) {
-		super("TV Scrapper", 1280, 720, rootState);
+		super(DEFAULT_TITLE, 1280, 720, rootState);
 		this.rootState = rootState;
 
 		channelsListPanel = new ChannelsListPanel(rootState, this);
@@ -79,5 +83,22 @@ public class RootWindow extends AbstractWindow {
 			final CardLayout cardLayout = (CardLayout) tvChannelContainerPanel.getLayout();
 			cardLayout.show(tvChannelContainerPanel, channel.id() == 0 ? "unselected" : "selected");
 		});
+	}
+
+	public void updateTitle(String channelName) {
+		setTitle(DEFAULT_TITLE + " - " + channelName);
+	}
+
+	public void updateTitle(Double percentage) {
+		final String[] fragments = getTitle().split(" - ");
+		final StringJoiner joiner = new StringJoiner(" - ");
+		joiner.add(DEFAULT_TITLE);
+		joiner.add(fragments[1]);
+		joiner.add(Constant.PF.format(percentage) + "%");
+		setTitle(joiner.toString());
+	}
+
+	public void setDefaultTitle() {
+		setTitle(DEFAULT_TITLE);
 	}
 }

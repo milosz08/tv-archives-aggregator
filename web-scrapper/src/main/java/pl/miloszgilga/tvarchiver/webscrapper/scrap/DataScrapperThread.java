@@ -20,18 +20,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.miloszgilga.tvarchiver.webscrapper.db.TvDailyProgramBatchUpdate;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.MessageDialog;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.AbstractWindow;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.RootWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.*;
 import pl.miloszgilga.tvarchiver.webscrapper.state.AppState;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 import java.util.*;
 
 @Slf4j
 public class DataScrapperThread extends Thread {
 	private final RootState rootState;
+	private final AbstractWindow rootWindow;
 	private final MessageDialog messageDialog;
 	private final TvChannel selectedChannel;
 	private final long minDelayMs, maxDelayMs;
@@ -43,10 +48,11 @@ public class DataScrapperThread extends Thread {
 
 	private boolean isScrappingActive;
 
-	public DataScrapperThread(RootState rootState, MessageDialog messageDialog, int minDelay) {
+	public DataScrapperThread(RootWindow rootWindow, int minDelay) {
 		super("ScrapperThread");
-		this.rootState = rootState;
-		this.messageDialog = messageDialog;
+		this.rootWindow = rootWindow;
+		this.rootState = rootWindow.getRootState();
+		this.messageDialog = rootWindow.getMessageDialog();
 		this.selectedChannel = rootState.getSelectedChannel();
 		minDelayMs = minDelay * 1000L;
 		maxDelayMs = rootState.getRandomness() * 1000L;
@@ -142,6 +148,7 @@ public class DataScrapperThread extends Thread {
 			messageDialog.showInfo("Scrapping ended. Processed %d days.", processedDays);
 			rootState.updateSelectedYear(-1);
 		}
+		rootWindow.getFrameTaskbar().setProgressState(Taskbar.State.PAUSED);
 	}
 
 	public void stopScrapping() {

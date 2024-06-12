@@ -20,9 +20,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import pl.miloszgilga.tvarchiver.webscrapper.db.YearWithPersistedDto;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.FrameTaskbar;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.MessageDialog;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelDetailsPanel;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.AbstractWindow;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.RootWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.scrap.DataScrapperThread;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelCalendarSource;
@@ -93,7 +94,7 @@ public class ChannelDetailsController {
 			messageDialog.showInfo("All data for year %s was already fetched.", selectedYear);
 			return;
 		}
-		dataScrapperThread = new DataScrapperThread(rootState, messageDialog, 0);
+		dataScrapperThread = new DataScrapperThread(channelDetailsPanel.getRootWindow(), 0);
 		dataScrapperThread.start();
 		rootState.updateAppState(AppState.SCRAPPING);
 		updateProgressState(Taskbar.State.NORMAL);
@@ -111,7 +112,10 @@ public class ChannelDetailsController {
 	}
 
 	public void onSwitchChannel(TvChannel channel) {
+		final RootWindow rootWindow = channelDetailsPanel.getRootWindow();
 		if (channel.name().isBlank()) {
+			rootWindow.setDefaultTitle();
+			updateProgressState(Taskbar.State.NORMAL);
 			return;
 		}
 		final RootState rootState = channelDetailsPanel.getRootState();
@@ -153,9 +157,12 @@ public class ChannelDetailsController {
 		rootState.updateSelectedYear(-1);
 		rootState.updateTotalFetchedCount(persistedTvPrograms);
 		rootState.updateChannelDetails(details);
+		rootWindow.updateTitle(channel.name());
+		updateProgressState(Taskbar.State.PAUSED);
 	}
 
 	private void updateProgressState(Taskbar.State state) {
-		FrameTaskbar.setProgressState(channelDetailsPanel.getRootWindow(), state);
+		final AbstractWindow rootWindow = channelDetailsPanel.getRootWindow();
+		rootWindow.getFrameTaskbar().setProgressState(state);
 	}
 }

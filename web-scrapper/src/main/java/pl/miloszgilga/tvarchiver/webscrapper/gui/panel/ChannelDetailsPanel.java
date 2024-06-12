@@ -20,8 +20,7 @@ import io.reactivex.rxjava3.core.Observable;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import pl.miloszgilga.tvarchiver.webscrapper.controller.ChannelDetailsController;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.FrameTaskbar;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.window.AbstractWindow;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.RootWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.state.ChannelDetailsTotalFetchedAggregator;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 import pl.miloszgilga.tvarchiver.webscrapper.util.Constant;
@@ -37,7 +36,7 @@ public class ChannelDetailsPanel extends JPanel {
 	private static final int STEP = 5;
 
 	private final RootState rootState;
-	private final JFrame rootWindow;
+	private final RootWindow rootWindow;
 	private final ChannelDetailsController controller;
 	private final JPanel controlPanel;
 	private final ScrappingDetailsPanel scrappingDetailsPanel;
@@ -51,7 +50,7 @@ public class ChannelDetailsPanel extends JPanel {
 	private final JPanel progressBarPanel;
 	private final JProgressBar progressBar;
 
-	public ChannelDetailsPanel(RootState rootState, AbstractWindow rootWindow) {
+	public ChannelDetailsPanel(RootState rootState, RootWindow rootWindow) {
 		this.rootState = rootState;
 		this.rootWindow = rootWindow;
 		controller = new ChannelDetailsController(this, rootWindow.getMessageDialog());
@@ -122,6 +121,7 @@ public class ChannelDetailsPanel extends JPanel {
 		SwingUtilities.invokeLater(() -> {
 			progressBar.setValue((int) percentage);
 			progressBar.setString(String.format("%s%% (%d/%d)", Constant.PF.format(percentage), fetched, total));
+			rootWindow.updateTitle(percentage);
 		});
 	}
 
@@ -142,7 +142,7 @@ public class ChannelDetailsPanel extends JPanel {
 				final long total = state.details().daysCount();
 				final double percentage = ((double) state.totalFetched() / total) * 100;
 				updateProgress(percentage, state.totalFetched(), total);
-				FrameTaskbar.setProgress(rootWindow, percentage);
+				rootWindow.getFrameTaskbar().setProgress(percentage);
 			}
 		});
 		rootState.asDisposable(rootState.getAppState$(), state -> {
