@@ -118,16 +118,21 @@ public class ChannelDetailsController {
 		final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
 
 		// check count of saved programs and compare with all dates
+		final String savedSql = """
+			SELECT COUNT(DISTINCT DATE(schedule_date))
+			FROM tv_programs_data WHERE channel_id = ?
+			""";
 		Long persistedTvPrograms = jdbcTemplate
-			.queryForObject("SELECT COUNT(*) FROM tv_programs_data WHERE channel_id = ?", Long.class, channel.id());
+			.queryForObject(savedSql, Long.class, channel.id());
 		if (persistedTvPrograms == null) {
 			persistedTvPrograms = 0L;
 		}
-
 		// fetch already persisted count rows per year
 		final String sql = """
-			SELECT YEAR(schedule_date) as year, COUNT(*) AS count FROM tv_programs_data
-			WHERE channel_id = ? GROUP BY YEAR(schedule_date)
+			SELECT YEAR(schedule_date) as year, COUNT(DISTINCT DATE(schedule_date)) AS count
+			FROM tv_programs_data
+			WHERE channel_id = ?
+			GROUP BY YEAR(schedule_date)
 			""";
 		final List<YearWithPersistedDto> alreadyPersistedPerYear = jdbcTemplate
 			.query(sql, (rs, rowNum) -> new YearWithPersistedDto(rs.getInt("year"), rs.getInt("count")), channel.id());
