@@ -16,7 +16,6 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.gui;
 
-import io.github.cdimascio.dotenv.DotEnvException;
 import lombok.extern.slf4j.Slf4j;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.window.ConnectToDbWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
@@ -27,17 +26,13 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 @Slf4j
 public class GuiThread implements Runnable {
 	private final LookAndFeel defaultLookAndFeel;
+	private final RootState rootState;
 	private final MessageDialog messageDialog;
-	private RootState rootState;
 
 	public GuiThread() {
 		defaultLookAndFeel = new MetalLookAndFeel();
+		rootState = new RootState();
 		messageDialog = new MessageDialog(null);
-		try {
-			rootState = new RootState();
-		} catch (DotEnvException ex) {
-			messageDialog.showError(ex.getMessage());
-		}
 	}
 
 	public void initAndStartThread() {
