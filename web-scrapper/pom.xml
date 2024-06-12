@@ -21,7 +21,7 @@
 
 	<groupId>pl.miloszgilga</groupId>
 	<artifactId>web-scrapper</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
@@ -110,4 +110,37 @@
 			<version>${commonsIo.version}</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-5</version>
+				<configuration>
+					<finalName>tv-scrapper-${project.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<outputDirectory>${project.basedir}/.bin</outputDirectory>
+					<archive>
+						<manifest>
+							<mainClass>pl.miloszgilga.tvarchiver.webscrapper.WebScrapperEntrypoint</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<classifier>jar-with-dependencies</classifier>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
