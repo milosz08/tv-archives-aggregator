@@ -34,6 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChannelsListController {
 	private final ChannelsListPanel channelsListPanel;
+	private final MessageDialog messageDialog;
 
 	public void fetchChannelsList() {
 		final RootState rootState = channelsListPanel.getRootState();
@@ -44,6 +45,7 @@ public class ChannelsListController {
 		}
 		channelsListPanel.getChannelListModel().clear();
 		rootState.updateTvChannels(new ArrayList<>());
+		rootState.updateSelectedChannel(new TvChannel());
 		// firstly, select data from persisted DB
 		final List<TvChannel> fetchedTvChannels = jdbcTemplate.query("SELECT * FROM tv_channels", (rs, rowNum) ->
 			new TvChannel(rs.getLong("id"), rs.getString("name"), rs.getString("slug"))
@@ -70,7 +72,7 @@ public class ChannelsListController {
 
 	public void reFetchChannels() {
 		fetchChannelsList();
-		MessageDialog.showInfo("TV channels list was restored.");
+		messageDialog.showInfo("TV channels list was restored.");
 	}
 
 	public void removeSelection() {
@@ -79,13 +81,12 @@ public class ChannelsListController {
 	}
 
 	public void onListSelection(ListSelectionEvent event) {
-		if (event.getValueIsAdjusting()) {
-			return;
-		}
-		final RootState rootState = channelsListPanel.getRootState();
-		final JList<TvChannel> tvChannels = channelsListPanel.getChannels();
-		if (tvChannels.getSelectedIndex() != -1) {
-			rootState.updateSelectedChannel(tvChannels.getSelectedValue());
+		if (!event.getValueIsAdjusting()) {
+			final RootState rootState = channelsListPanel.getRootState();
+			final JList<TvChannel> tvChannels = channelsListPanel.getChannels();
+			if (tvChannels.getSelectedIndex() != -1) {
+				rootState.updateSelectedChannel(tvChannels.getSelectedValue());
+			}
 		}
 	}
 

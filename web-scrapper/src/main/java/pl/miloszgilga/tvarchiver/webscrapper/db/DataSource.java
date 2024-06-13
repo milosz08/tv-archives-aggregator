@@ -17,6 +17,7 @@
 package pl.miloszgilga.tvarchiver.webscrapper.db;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -28,16 +29,20 @@ import java.sql.Statement;
 @Slf4j
 public class DataSource {
 	private final HikariDataSource dataSource;
+	@Getter
 	private final InetSocketAddress dbHost;
+	@Getter
+	private final String dbName;
 
 	public DataSource(String username, String password, String dbName) {
-		this("localhost", 3306, username, password, dbName);
+		this(new InetSocketAddress("localhost", 3306), username, password, dbName);
 	}
 
-	public DataSource(String host, int port, String username, String password, String dbName) {
+	public DataSource(InetSocketAddress addr, String username, String password, String dbName) {
+		this.dbName = dbName;
 		dataSource = new HikariDataSource();
-		dbHost = new InetSocketAddress(host, port);
-		dataSource.setJdbcUrl(String.format("jdbc:mysql://%s:%d/%s", host, port, dbName));
+		dbHost = new InetSocketAddress(addr.getHostString(), addr.getPort());
+		dataSource.setJdbcUrl(String.format("jdbc:mysql://%s:%d/%s", addr.getHostString(), addr.getPort(), dbName));
 		dataSource.setUsername(username);
 		dataSource.setPassword(password);
 		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -47,7 +52,7 @@ public class DataSource {
 	public boolean isSuccessfullyConnected() {
 		try (final Connection connection = dataSource.getConnection();
 			 final Statement statement = connection.createStatement()) {
-			statement.executeQuery("select 1");
+			statement.executeQuery("SELECT 1");
 			return true;
 		} catch (SQLException e) {
 			return false;

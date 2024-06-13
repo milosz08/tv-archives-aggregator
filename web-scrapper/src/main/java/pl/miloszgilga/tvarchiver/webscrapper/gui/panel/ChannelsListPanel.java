@@ -19,6 +19,7 @@ package pl.miloszgilga.tvarchiver.webscrapper.gui.panel;
 import lombok.Getter;
 import pl.miloszgilga.tvarchiver.webscrapper.controller.ChannelsListController;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.filter.TvChannelFilterListener;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.window.AbstractWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
@@ -42,9 +43,9 @@ public class ChannelsListPanel extends JPanel {
 	private final JButton removeSelectionButton;
 	private final JLabel fetchedChannelsLabel;
 
-	public ChannelsListPanel(RootState rootState) {
+	public ChannelsListPanel(RootState rootState, AbstractWindow rootWindow) {
 		this.rootState = rootState;
-		controller = new ChannelsListController(this);
+		controller = new ChannelsListController(this, rootWindow.getMessageDialog());
 
 		channelsPanel = new JPanel();
 		searchField = new JTextField();
@@ -63,10 +64,10 @@ public class ChannelsListPanel extends JPanel {
 		reFetchChannelsButton.addActionListener(e -> controller.reFetchChannels());
 		removeSelectionButton.addActionListener(e -> controller.removeSelection());
 
-		buttonWithTextPanel.setLayout(new BorderLayout());
-		buttonWithTextPanel.add(reFetchChannelsButton, BorderLayout.NORTH);
-		buttonWithTextPanel.add(removeSelectionButton, BorderLayout.CENTER);
-		buttonWithTextPanel.add(fetchedChannelsLabel, BorderLayout.SOUTH);
+		buttonWithTextPanel.setLayout(new GridLayout(3, 1));
+		buttonWithTextPanel.add(reFetchChannelsButton);
+		buttonWithTextPanel.add(removeSelectionButton);
+		buttonWithTextPanel.add(fetchedChannelsLabel);
 
 		setLayout(new BorderLayout());
 		add(searchField, BorderLayout.NORTH);
@@ -80,6 +81,11 @@ public class ChannelsListPanel extends JPanel {
 	}
 
 	private void initObservables() {
-		rootState.wrapAsDisposable(rootState.getTvChannels$(), channelListModel::addAll);
+		rootState.asDisposable(rootState.getTvChannels$(), channelListModel::addAll);
+		rootState.asDisposable(rootState.getAppState$(), state -> {
+			reFetchChannelsButton.setEnabled(state.isIdle());
+			removeSelectionButton.setEnabled(state.isIdle());
+			channels.setEnabled(state.isIdle());
+		});
 	}
 }

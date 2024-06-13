@@ -10,6 +10,7 @@ data-server/.idea/jarRepositories.xml
 data-server/.idea/workspace.xml
 data-server/.idea/uiDesigner.xml
 
+web-scrapper/.bin/
 web-scrapper/.logs/
 web-scrapper/target/
 Web-scrapper/.env

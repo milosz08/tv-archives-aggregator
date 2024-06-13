@@ -16,27 +16,40 @@
 
 package pl.miloszgilga.tvarchiver.webscrapper.gui;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pl.miloszgilga.tvarchiver.webscrapper.state.AbstractDisposableProvider;
+import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 @Slf4j
-@RequiredArgsConstructor
 public class GuiWindowAdapter extends WindowAdapter {
-	private final JFrame frame;
-	private final AbstractDisposableProvider disposableProvider;
+	private final MessageDialog messageDialog;
+	private final RootState rootState;
+
+	private boolean isScrapping;
+
+	public GuiWindowAdapter(MessageDialog messageDialog, RootState rootState) {
+		this.messageDialog = messageDialog;
+		this.rootState = rootState;
+		initObservables();
+	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		final int result = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit?", "Exit",
-			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (isScrapping) {
+			messageDialog.showError("You cannot close the window while scrapping is active!");
+			return;
+		}
+		final int result = messageDialog.showConfirm("Are you sure you want to exit?");
 		if (result == JOptionPane.YES_OPTION) {
-			disposableProvider.cleanupAndDisposableSubscription();
+			rootState.cleanupAndDisposableSubscription();
 			System.exit(0);
 		}
+	}
+
+	private void initObservables() {
+		rootState.asDisposable(rootState.getAppState$(), state -> isScrapping = !state.isIdle());
 	}
 }

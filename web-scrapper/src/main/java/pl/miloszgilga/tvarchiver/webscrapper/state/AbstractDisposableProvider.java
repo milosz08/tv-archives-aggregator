@@ -34,7 +34,7 @@ public abstract class AbstractDisposableProvider {
 		subscriptionsPool = new ConcurrentHashMap<>();
 	}
 
-	public <T> void wrapAsDisposable(Observable<T> subject, Consumer<T> consumer) {
+	public <T> void asDisposable(Observable<T> subject, Consumer<T> consumer) {
 		final Disposable disposable = subject.subscribe(consumer::accept);
 		subscriptionsPool.put(UUID.randomUUID(), disposable);
 	}

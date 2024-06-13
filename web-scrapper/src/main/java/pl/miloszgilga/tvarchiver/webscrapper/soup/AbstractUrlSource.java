@@ -26,13 +26,21 @@ import java.io.IOException;
 @Slf4j
 abstract class AbstractUrlSource {
 	protected Document rootNode;
+	protected String url;
 
-	public AbstractUrlSource(UrlSource urlSource) {
+	protected AbstractUrlSource(UrlSource urlSource, Object... args) {
+		url = urlSource.getUrl(args);
+		if (urlSource.isInstantlyConnection()) {
+			connectAndGet();
+		}
+	}
+
+	public void connectAndGet() {
 		try {
-			rootNode = Jsoup.connect(urlSource.getUrl())
+			rootNode = Jsoup.connect(url)
 				.userAgent("Mozilla")
 				.get();
-			log.debug("Successfully connected to: {}", urlSource);
+			log.debug("Successfully connected to: {}", url);
 		} catch (IOException ex) {
 			throw new InoperableException(ex);
 		}

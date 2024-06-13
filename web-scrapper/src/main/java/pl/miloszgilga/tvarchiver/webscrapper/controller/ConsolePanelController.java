@@ -32,6 +32,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class ConsolePanelController {
 	private final ConsolePanel consolePanel;
+	private final MessageDialog messageDialog;
 
 	public void moveUp() {
 		final JScrollBar verticalScrollBar = consolePanel.getScrollPane().getVerticalScrollBar();
@@ -44,9 +45,7 @@ public class ConsolePanelController {
 	}
 
 	public void clearText() {
-		final int result = JOptionPane.showConfirmDialog(consolePanel, "Are you sure to clear console content?",
-			"Please confirm", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
+		final int result = messageDialog.showConfirm("Are you sure to clear console content?");
 		if (result == JOptionPane.YES_OPTION) {
 			final JTextArea textArea = ConsolePanel.textArea;
 			textArea.setText(StringUtils.EMPTY);
@@ -67,9 +66,9 @@ public class ConsolePanelController {
 		final File file = fileChooser.getSelectedFile();
 		try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 			writer.write(ConsolePanel.textArea.getText());
-			MessageDialog.showInfo("Logs saved to: " + file.getAbsolutePath());
+			messageDialog.showInfo("Logs saved to: " + file.getAbsolutePath());
 		} catch (IOException ex) {
-			MessageDialog.showError("An error occurred while saving logs to file!");
+			messageDialog.showError("An error occurred while saving logs to file!");
 		}
 	}
 }

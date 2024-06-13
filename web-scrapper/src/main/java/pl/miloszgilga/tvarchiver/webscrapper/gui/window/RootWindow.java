@@ -17,17 +17,18 @@
 package pl.miloszgilga.tvarchiver.webscrapper.gui.window;
 
 import lombok.Getter;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelDetailsPanel;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelsListPanel;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ConsolePanel;
-import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.UnselectedChannelPanel;
+import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.*;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
+import pl.miloszgilga.tvarchiver.webscrapper.util.Constant;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.StringJoiner;
 
 @Getter
 public class RootWindow extends AbstractWindow {
+	public static final String DEFAULT_TITLE = "TV Scrapper";
+
 	private final RootState rootState;
 
 	private final ChannelsListPanel channelsListPanel;
@@ -36,17 +37,19 @@ public class RootWindow extends AbstractWindow {
 	private final UnselectedChannelPanel unselectedChannelPanel;
 	private final ChannelDetailsPanel channelDetailsPanel;
 	private final ConsolePanel consolePanel;
+	private final BottomBarPanel bottomBarPanel;
 
 	public RootWindow(RootState rootState) {
-		super("TV Scrapper", 1280, 720, rootState);
+		super(DEFAULT_TITLE, 1280, 720, rootState);
 		this.rootState = rootState;
 
-		channelsListPanel = new ChannelsListPanel(rootState);
+		channelsListPanel = new ChannelsListPanel(rootState, this);
 		rightCombinePanel = new JPanel();
 		tvChannelContainerPanel = new JPanel();
 		unselectedChannelPanel = new UnselectedChannelPanel();
-		channelDetailsPanel = new ChannelDetailsPanel(rootState);
-		consolePanel = new ConsolePanel();
+		channelDetailsPanel = new ChannelDetailsPanel(rootState, this);
+		consolePanel = new ConsolePanel(this);
+		bottomBarPanel = new BottomBarPanel(rootState);
 	}
 
 	@Override
@@ -68,14 +71,34 @@ public class RootWindow extends AbstractWindow {
 		splitPane.setResizeWeight(0.25);
 		splitPane.setDividerLocation(250);
 
-		rootPanel.add(splitPane);
+		rootPanel.setLayout(new BorderLayout());
+		rootPanel.add(splitPane, BorderLayout.CENTER);
+		rootPanel.add(bottomBarPanel, BorderLayout.SOUTH);
+
 		initObservables();
 	}
 
 	private void initObservables() {
-		rootState.wrapAsDisposable(rootState.getSelectedChannel$(), channel -> {
+		rootState.asDisposable(rootState.getSelectedChannel$(), channel -> {
 			final CardLayout cardLayout = (CardLayout) tvChannelContainerPanel.getLayout();
 			cardLayout.show(tvChannelContainerPanel, channel.id() == 0 ? "unselected" : "selected");
 		});
+	}
+
+	public void updateTitle(String channelName) {
+		setTitle(DEFAULT_TITLE + " - " + channelName);
+	}
+
+	public void updateTitle(Double percentage) {
+		final String[] fragments = getTitle().split(" - ");
+		final StringJoiner joiner = new StringJoiner(" - ");
+		joiner.add(DEFAULT_TITLE);
+		joiner.add(fragments[1]);
+		joiner.add(Constant.PF.format(percentage) + "%");
+		setTitle(joiner.toString());
+	}
+
+	public void setDefaultTitle() {
+		setTitle(DEFAULT_TITLE);
 	}
 }

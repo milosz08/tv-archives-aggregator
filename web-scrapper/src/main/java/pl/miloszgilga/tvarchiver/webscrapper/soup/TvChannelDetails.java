@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.webscrapper.gui;
+package pl.miloszgilga.tvarchiver.webscrapper.soup;
 
-public class InoperableException extends RuntimeException {
-	public InoperableException(Throwable cause) {
-		super(cause);
-	}
+import java.time.LocalDate;
+import java.util.TreeMap;
 
-	public InoperableException(String message) {
-		super(message);
-	}
+public record TvChannelDetails(
+	TreeMap<Integer, TvChannelYearData> years,
+	LocalDate startDate,
+	LocalDate endDate,
+	long daysCount
+) {
 }

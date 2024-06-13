@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.webscrapper.gui;
+package pl.miloszgilga.tvarchiver.webscrapper.db;
 
-public class InoperableException extends RuntimeException {
-	public InoperableException(Throwable cause) {
-		super(cause);
-	}
-
-	public InoperableException(String message) {
-		super(message);
-	}
+public record YearWithPersistedDto(
+	int year,
+	long count
+) {
 }

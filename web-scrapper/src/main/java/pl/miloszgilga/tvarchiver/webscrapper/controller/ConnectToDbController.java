@@ -24,10 +24,12 @@ import pl.miloszgilga.tvarchiver.webscrapper.gui.window.RootWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
 
 @RequiredArgsConstructor
 public class ConnectToDbController {
 	private final ConnectToDbWindow connectToDbWindow;
+	private final MessageDialog messageDialog;
 
 	public void onClickConnectToDb() {
 		final String host = connectToDbWindow.getHostField().getText();
@@ -37,8 +39,9 @@ public class ConnectToDbController {
 		final String dbName = connectToDbWindow.getDbNameField().getText();
 		try {
 			final int parsedPort = Integer.parseInt(port);
+			final InetSocketAddress address = new InetSocketAddress(host, parsedPort);
 			final RootState rootState = connectToDbWindow.getRootState();
-			final DataSource dataSource = new DataSource(host, parsedPort, username, password, dbName);
+			final DataSource dataSource = new DataSource(address, username, password, dbName);
 			if (!dataSource.isSuccessfullyConnected()) {
 				throw new ConnectException();
 			}
@@ -47,9 +50,9 @@ public class ConnectToDbController {
 			rootWindow.createWindow();
 			connectToDbWindow.closeWindow();
 		} catch (NumberFormatException ex) {
-			MessageDialog.showError("Incorrect port");
+			messageDialog.showError("Incorrect port");
 		} catch (ConnectException ex) {
-			MessageDialog.showError("Unable to connect to DB");
+			messageDialog.showError("Unable to connect to DB");
 		}
 	}
 }

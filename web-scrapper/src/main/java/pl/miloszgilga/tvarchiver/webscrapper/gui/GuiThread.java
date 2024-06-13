@@ -27,10 +27,12 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 public class GuiThread implements Runnable {
 	private final LookAndFeel defaultLookAndFeel;
 	private final RootState rootState;
+	private final MessageDialog messageDialog;
 
 	public GuiThread() {
 		defaultLookAndFeel = new MetalLookAndFeel();
 		rootState = new RootState();
+		messageDialog = new MessageDialog(null);
 	}
 
 	public void initAndStartThread() {
@@ -51,7 +53,7 @@ public class GuiThread implements Runnable {
 			log.info("Initialized application GUI.");
 		} catch (InoperableException ex) {
 			log.error(ex.getMessage());
-			JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			messageDialog.showError(ex.getMessage());
 		}
 	}
 }

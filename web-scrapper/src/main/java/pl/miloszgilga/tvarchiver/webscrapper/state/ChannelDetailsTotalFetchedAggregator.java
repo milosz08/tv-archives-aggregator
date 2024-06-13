@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.webscrapper.gui;
+package pl.miloszgilga.tvarchiver.webscrapper.state;
 
-public class InoperableException extends RuntimeException {
-	public InoperableException(Throwable cause) {
-		super(cause);
-	}
+import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelDetails;
 
-	public InoperableException(String message) {
-		super(message);
-	}
+public record ChannelDetailsTotalFetchedAggregator(
+	TvChannelDetails details,
+	long totalFetched
+) {
 }

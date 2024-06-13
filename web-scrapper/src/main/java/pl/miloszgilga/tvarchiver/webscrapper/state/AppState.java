@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.webscrapper.gui;
+package pl.miloszgilga.tvarchiver.webscrapper.state;
 
-public class InoperableException extends RuntimeException {
-	public InoperableException(Throwable cause) {
-		super(cause);
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public enum AppState {
+	IDLE("Idle"),
+	SCRAPPING("Scrapping"),
+	;
+
+	private final String state;
+
+	public String createState() {
+		return String.format("State: %s", state);
 	}
 
-	public InoperableException(String message) {
-		super(message);
+	public boolean isIdle() {
+		return this.equals(AppState.IDLE);
 	}
 }

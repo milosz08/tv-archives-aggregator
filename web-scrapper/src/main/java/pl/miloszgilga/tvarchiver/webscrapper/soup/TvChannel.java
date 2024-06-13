@@ -18,7 +18,12 @@ package pl.miloszgilga.tvarchiver.webscrapper.soup;
 
 import org.apache.commons.lang3.StringUtils;
 
-public record TvChannel(long id, String name, String slug) implements Comparable<TvChannel> {
+public record TvChannel(
+	long id,
+	String name,
+	String slug
+) implements Comparable<TvChannel> {
+
 	public TvChannel() {
 		this(0, StringUtils.EMPTY, StringUtils.EMPTY);
 	}

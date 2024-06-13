@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.webscrapper.gui;
+package pl.miloszgilga.tvarchiver.webscrapper.soup;
 
-public class InoperableException extends RuntimeException {
-	public InoperableException(Throwable cause) {
-		super(cause);
-	}
+import java.io.Serializable;
 
-	public InoperableException(String message) {
-		super(message);
-	}
+public record DayScheduleDetails(
+	String name,
+	String description,
+	String programType,
+	Integer season,
+	Integer episode,
+	String badge,
+	String hourStart
+) implements Serializable {
 }
