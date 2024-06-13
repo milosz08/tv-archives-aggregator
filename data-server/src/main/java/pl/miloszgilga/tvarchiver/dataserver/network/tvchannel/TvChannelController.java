@@ -28,15 +28,15 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/tvchannel")
+@RequestMapping("/api/v1/tv-channel")
 @RequiredArgsConstructor
 public class TvChannelController {
-    private final TvChannelService tvChannelService;
+	private final TvChannelService tvChannelService;
 
-    @GetMapping("/all/search")
-    ResponseEntity<Map<Character, List<TvChannelResponseDto>>> getTvChannelsBySearch(
-        @RequestParam("phrase") String phrase
-    ) {
-        return ResponseEntity.ok(tvChannelService.getTvChannelsBySearch(phrase));
-    }
+	@GetMapping("/all/search")
+	ResponseEntity<Map<Character, List<TvChannelResponseDto>>> getTvChannelsBySearch(
+		@RequestParam("phrase") String phrase
+	) {
+		return ResponseEntity.ok(tvChannelService.getTvChannelsBySearch(phrase));
+	}
 }

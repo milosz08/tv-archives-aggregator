@@ -17,12 +17,12 @@
 package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto;
 
 public record TvChannelResponseDto(
-    String name,
-    String slug
+	String name,
+	String slug
 ) implements Comparable<TvChannelResponseDto> {
 
-    @Override
-    public int compareTo(TvChannelResponseDto o) {
-        return o.name.compareTo(name);
-    }
+	@Override
+	public int compareTo(TvChannelResponseDto o) {
+		return o.name.compareTo(name);
+	}
 }
