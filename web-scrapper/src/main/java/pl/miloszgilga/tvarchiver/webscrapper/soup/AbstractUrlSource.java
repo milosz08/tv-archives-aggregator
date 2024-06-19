@@ -35,7 +35,7 @@ abstract class AbstractUrlSource {
 		}
 	}
 
-	public void connectAndGet() {
+	public void connectAndGet(String url) {
 		try {
 			rootNode = Jsoup.connect(url)
 				.userAgent("Mozilla")
@@ -44,5 +44,9 @@ abstract class AbstractUrlSource {
 		} catch (IOException ex) {
 			throw new InoperableException(ex);
 		}
+	}
+
+	public void connectAndGet() {
+		connectAndGet(url);
 	}
 }

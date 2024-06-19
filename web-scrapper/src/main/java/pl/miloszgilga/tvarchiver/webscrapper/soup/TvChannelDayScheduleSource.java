@@ -32,8 +32,8 @@ public class TvChannelDayScheduleSource extends AbstractUrlSource {
 	}
 
 	public List<DayScheduleDetails> fetchDayScheduleDetails(LocalDate selectedDay) {
-		url = url + "?dzien=" + Constant.DTF.format(selectedDay);
-		connectAndGet();
+		final String urlWithDate = url + "?dzien=" + Constant.DTF.format(selectedDay);
+		connectAndGet(urlWithDate);
 
 		// get all program blocks
 		final Elements programsBlocks = rootNode.select(".atomsTvChannelEmissionTile__tileTag");

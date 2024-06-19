@@ -88,8 +88,12 @@ public class DataScrapperThread extends Thread {
 			endDate = tvChannelDetails.endDate();
 		}
 		// check already saved dates
-		final String listSql = "SELECT schedule_date FROM tv_programs_data WHERE schedule_date BETWEEN ? AND ?";
-		final List<LocalDate> alreadySavedDates = jdbcTemplate.queryForList(listSql, LocalDate.class, startDate, endDate);
+		final String listSql = """
+			SELECT schedule_date FROM tv_programs_data
+			WHERE channel_id = ? AND (schedule_date BETWEEN ? AND ?)
+			""";
+		final List<LocalDate> alreadySavedDates = jdbcTemplate.queryForList(listSql,
+			LocalDate.class, selectedChannel.id(), startDate, endDate);
 
 		// get tv channel id
 		final String objSql = "SELECT id FROM tv_channels WHERE slug = ?";
