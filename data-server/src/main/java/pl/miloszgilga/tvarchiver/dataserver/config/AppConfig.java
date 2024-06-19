@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.dataserver.network.calendar.dto;
+package pl.miloszgilga.tvarchiver.dataserver.config;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-public record CalendarYearDto(
-    int year,
-    List<CalendarMonthDto> months
-) {
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "app-properties")
+public class AppConfig {
+	private List<String> clientUrls;
 }
