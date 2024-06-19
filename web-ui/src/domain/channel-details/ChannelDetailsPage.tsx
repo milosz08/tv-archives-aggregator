@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
-import { appConfig } from './app/app.config';
 
-bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
+const ChannelDetailsPage: React.FC = (): JSX.Element => {
+  return <div>channel details</div>;
+};
+
+export default ChannelDetailsPage;

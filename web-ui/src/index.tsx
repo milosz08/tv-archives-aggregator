@@ -13,11 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApplicationConfig } from '@angular/core';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideRouter } from '@angular/router';
-import { routes } from './app.routes';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router';
+import '@/index.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import router from './router/router';
 
-export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideAnimationsAsync()],
-};
+const queryClient = new QueryClient();
+
+const appMount = document.getElementById('app-mount')!;
+
+ReactDOM.createRoot(appMount).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  </React.StrictMode>
+);

@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { RouterOutlet } from '@angular/router';
+import { Grid } from '@mui/material';
 
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, MatButtonModule],
-  templateUrl: './app.component.html',
-})
-export class AppComponent {
-  title = 'web-ui';
-}
+type Props = {
+  countOfEmptyBlocks: number;
+};
+
+const EmptyBlocks: React.FC<Props> = ({ countOfEmptyBlocks }): JSX.Element[] =>
+  Array.from({ length: countOfEmptyBlocks }, (_, i) => i).map(i => (
+    <Grid key={i} item xs={1} padding={1} textAlign="center"></Grid>
+  ));
+
+export default EmptyBlocks;

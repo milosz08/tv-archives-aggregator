@@ -15,19 +15,12 @@
   "psi-header.changes-tracking": {
     "isActive": true,
     "autoHeader": "autoSave",
-    "include": ["typescript", "scss", "html"],
-    "exclude": ["json", "jsonl", "jsonc"],
+    "include": ["typescript", "css", "typescriptreact", "html"],
+    "exclude": ["json", "jsonl", "jsonc", "html"],
     "excludeGlob": ["./src/index.html", ".vscode/**/*"],
     "enforceHeader": true
   },
   "psi-header.lang-config": [
-    {
-      "language": "html",
-      "begin": "<!--",
-      "prefix": " ~ ",
-      "end": " -->",
-      "lineLength": 64
-    },
     {
       "language": "*",
       "begin": "/*",

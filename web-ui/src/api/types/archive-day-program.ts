@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
 
-describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
-  });
+export type Program = {
+  name: string;
+  description?: string;
+  programType: string;
+  isTvShow: boolean;
+  season?: number;
+  episode?: number;
+  badge?: string;
+  hourStart: string;
+};
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-});
+export type ProgramDayDetails = {
+  channelName: string;
+  listOfPrograms: Program[];
+};

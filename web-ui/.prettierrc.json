@@ -1,5 +1,6 @@
 {
   "tabWidth": 2,
+  "printWidth": 80,
   "useTabs": false,
   "singleQuote": true,
   "semi": true,
@@ -7,30 +8,21 @@
   "arrowParens": "avoid",
   "trailingComma": "es5",
   "bracketSameLine": true,
-  "printWidth": 80,
-  "overrides": [
-    {
-      "files": "*.html",
-      "options": {
-        "parser": "html"
-      }
-    }
-  ],
   "importOrderParserPlugins": [
     "typescript",
-    "decorators-legacy"
+    "jsx"
   ],
   "plugins": [
     "@trivago/prettier-plugin-sort-imports"
   ],
   "importOrder": [
-    "^(zone.*)$",
-    "^(@.*)$",
+    "^(react*)$",
     "^([a-zA-Z].*)$",
-    "^rxjs$",
-    "^~/(.*)$",
+    "^@(.*)$",
     "^[./]",
-    "^[../]"
+    "^[../]",
+    "^@/(-styles)$",
+    "^@/(.styles)$"
   ],
   "importOrderSeparation": false,
   "importOrderSortSpecifiers": true
