@@ -19,7 +19,8 @@ package pl.miloszgilga.tvarchiver.dataserver.network.calendar.dto;
 import java.util.List;
 
 public record CalendarMonthDto(
-    String name,
-    List<CalendarDay> days
+	String name,
+	int countOfEmptyBlocks,
+	List<CalendarDay> days
 ) {
 }

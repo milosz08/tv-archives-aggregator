@@ -16,6 +16,7 @@
 
 package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel;
 
+import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelDetails;
 import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelResponseDto;
 
 import java.util.List;
@@ -23,4 +24,5 @@ import java.util.Map;
 
 public interface TvChannelService {
 	Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase);
+	TvChannelDetails getTvChannelDetails(String channelSlug);
 }

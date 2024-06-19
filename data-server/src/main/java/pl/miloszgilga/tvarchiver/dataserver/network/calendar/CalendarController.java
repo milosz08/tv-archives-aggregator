@@ -18,8 +18,11 @@ package pl.miloszgilga.tvarchiver.dataserver.network.calendar;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import pl.miloszgilga.tvarchiver.dataserver.network.calendar.dto.CalendarYearDto;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import pl.miloszgilga.tvarchiver.dataserver.network.calendar.dto.CalendarMonthDto;
 
 import java.util.List;
 
@@ -27,10 +30,18 @@ import java.util.List;
 @RequestMapping("/api/v1/calendar")
 @RequiredArgsConstructor
 public class CalendarController {
-    private final CalendarService calendarService;
+	private final CalendarService calendarService;
 
-    @GetMapping("/struct/{channelSlug}")
-    ResponseEntity<List<CalendarYearDto>> getCalendarStructurePerChannel(@PathVariable String channelSlug) {
-        return ResponseEntity.ok(calendarService.getCalendarStructurePerChannel(channelSlug));
-    }
+	@GetMapping("/struct/channel/{channelSlug}/year/{year}")
+	ResponseEntity<List<CalendarMonthDto>> getCalendarStructurePerChannel(
+		@PathVariable String channelSlug,
+		@PathVariable int year
+	) {
+		return ResponseEntity.ok(calendarService.getCalendarStructurePerChannel(channelSlug, year));
+	}
+
+	@GetMapping("/years/channel/{channelSlug}")
+	ResponseEntity<List<String>> getChannelPersistedYears(@PathVariable String channelSlug) {
+		return ResponseEntity.ok(calendarService.getChannelPersistedYears(channelSlug));
+	}
 }

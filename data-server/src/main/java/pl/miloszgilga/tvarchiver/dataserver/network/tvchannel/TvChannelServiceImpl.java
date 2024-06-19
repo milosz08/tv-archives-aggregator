@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelDetails;
 import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelResponseDto;
 
 import java.util.*;
@@ -55,14 +56,19 @@ public class TvChannelServiceImpl implements TvChannelService {
 		for (final Character letter : elementsToRemoved) {
 			mappedByFirstLetter.remove(letter);
 		}
-		mappedByFirstLetter.put('#', nonLettersNames); // add saved non-letters tv channels
-
-		// sort all channels in selected latter category
+		if (!nonLettersNames.isEmpty()) {
+			mappedByFirstLetter.put('#', nonLettersNames); // add saved non-letters tv channels
+		}
+		// sort all channels in selected letter category
 		for (final List<TvChannelResponseDto> channels : mappedByFirstLetter.values()) {
 			Collections.sort(channels);
 		}
-		log.info("Found: {} records with phrase: {}. Letters: {}", tvChannels.size(), phrase,
-			mappedByFirstLetter.size());
 		return mappedByFirstLetter;
+	}
+
+	@Override
+	public TvChannelDetails getTvChannelDetails(String channelSlug) {
+		final String sql = "SELECT name FROM tv_channels WHERE slug = ?";
+		return jdbcTemplate.queryForObject(sql, TvChannelDetails.class, channelSlug);
 	}
 }

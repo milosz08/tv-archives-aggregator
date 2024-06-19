@@ -18,23 +18,25 @@ package pl.miloszgilga.tvarchiver.dataserver.network.program;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import pl.miloszgilga.tvarchiver.dataserver.network.program.dto.ProgramDto;
-import pl.miloszgilga.tvarchiver.dataserver.pageable.PageableDto;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import pl.miloszgilga.tvarchiver.dataserver.network.program.dto.ProgramDayDetailsDto;
 
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/api/v1/channel")
+@RequestMapping("/api/v1/program")
 @RequiredArgsConstructor
 public class ProgramController {
-    private final ProgramService programService;
+	private final ProgramService programService;
 
-    @GetMapping("/all/channel/{channelSlug}")
-    ResponseEntity<PageableDto<ProgramDto>> getPageableProgramsByTvChannelAndDate(
-        @PathVariable String channelSlug,
-        @RequestParam("date") LocalDate date
-    ) {
-        return ResponseEntity.ok(programService.getAllProgramsPerChannelAndDay(channelSlug, date));
-    }
+	@GetMapping("/all/channel/{channelSlug}/date/{date}")
+	ResponseEntity<ProgramDayDetailsDto> getAllProgramsPerChannelAndDay(
+		@PathVariable String channelSlug,
+		@PathVariable LocalDate date
+	) {
+		return ResponseEntity.ok(programService.getAllProgramsPerChannelAndDay(channelSlug, date));
+	}
 }

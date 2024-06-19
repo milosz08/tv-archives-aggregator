@@ -18,10 +18,8 @@ package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelDetails;
 import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelResponseDto;
 
 import java.util.List;
@@ -38,5 +36,10 @@ public class TvChannelController {
 		@RequestParam("phrase") String phrase
 	) {
 		return ResponseEntity.ok(tvChannelService.getTvChannelsBySearch(phrase));
+	}
+
+	@GetMapping("/details/{channelSlug}")
+	ResponseEntity<TvChannelDetails> getChannelDetails(@PathVariable String channelSlug) {
+		return ResponseEntity.ok(tvChannelService.getTvChannelDetails(channelSlug));
 	}
 }

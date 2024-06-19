@@ -16,14 +16,10 @@
 
 package pl.miloszgilga.tvarchiver.dataserver.network.program.dto;
 
-public record ProgramDto(
-	String name,
-	String description,
-	String programType,
-	boolean isTvShow,
-	Integer season,
-	Integer episode,
-	String badge,
-	String hourStart
+import java.util.List;
+
+public record ProgramDayDetailsDto(
+	String channelName,
+	List<ProgramDto> listOfPrograms
 ) {
 }

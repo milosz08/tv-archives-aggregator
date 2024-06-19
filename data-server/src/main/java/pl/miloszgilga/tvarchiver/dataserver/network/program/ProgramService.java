@@ -16,11 +16,10 @@
 
 package pl.miloszgilga.tvarchiver.dataserver.network.program;
 
-import pl.miloszgilga.tvarchiver.dataserver.network.program.dto.ProgramDto;
-import pl.miloszgilga.tvarchiver.dataserver.pageable.PageableDto;
+import pl.miloszgilga.tvarchiver.dataserver.network.program.dto.ProgramDayDetailsDto;
 
 import java.time.LocalDate;
 
 public interface ProgramService {
-    PageableDto<ProgramDto> getAllProgramsPerChannelAndDay(String channelSlug, LocalDate day);
+	ProgramDayDetailsDto getAllProgramsPerChannelAndDay(String channelSlug, LocalDate day);
 }

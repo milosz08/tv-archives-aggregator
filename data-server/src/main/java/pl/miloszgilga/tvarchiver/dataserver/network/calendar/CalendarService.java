@@ -16,10 +16,11 @@
 
 package pl.miloszgilga.tvarchiver.dataserver.network.calendar;
 
-import pl.miloszgilga.tvarchiver.dataserver.network.calendar.dto.CalendarYearDto;
+import pl.miloszgilga.tvarchiver.dataserver.network.calendar.dto.CalendarMonthDto;
 
 import java.util.List;
 
 public interface CalendarService {
-    List<CalendarYearDto> getCalendarStructurePerChannel(String channelSlug);
+	List<CalendarMonthDto> getCalendarStructurePerChannel(String channelSlug, int year);
+	List<String> getChannelPersistedYears(String channelSlug);
 }

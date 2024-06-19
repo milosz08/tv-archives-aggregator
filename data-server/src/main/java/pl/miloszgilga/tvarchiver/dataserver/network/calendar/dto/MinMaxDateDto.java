@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.dataserver.network.program.dto;
+package pl.miloszgilga.tvarchiver.dataserver.network.calendar.dto;
 
-public record ProgramDto(
-	String name,
-	String description,
-	String programType,
-	boolean isTvShow,
-	Integer season,
-	Integer episode,
-	String badge,
-	String hourStart
+import java.time.LocalDate;
+
+public record MinMaxDateDto(
+	LocalDate start,
+	LocalDate end
 ) {
 }
