@@ -30,39 +30,39 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TvChannelServiceImpl implements TvChannelService {
-    private final JdbcTemplate jdbcTemplate;
+	private final JdbcTemplate jdbcTemplate;
 
-    @Override
-    public Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase) {
-        final String sql = "SELECT name, slug FROM tv_channels WHERE LOWER(name) LIKE LOWER(?)";
-        final List<TvChannelResponseDto> tvChannels = jdbcTemplate
-            .query(sql, new DataClassRowMapper<>(TvChannelResponseDto.class), "%" + phrase + "%");
+	@Override
+	public Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase) {
+		final String sql = "SELECT name, slug FROM tv_channels WHERE LOWER(name) LIKE LOWER(?)";
+		final List<TvChannelResponseDto> tvChannels = jdbcTemplate
+			.query(sql, new DataClassRowMapper<>(TvChannelResponseDto.class), "%" + phrase + "%");
 
-        final TreeMap<Character, List<TvChannelResponseDto>> mappedByFirstLetter = new TreeMap<>(tvChannels.stream()
-            .collect(Collectors.groupingBy(s -> s.name().toLowerCase().charAt(0))));
+		final TreeMap<Character, List<TvChannelResponseDto>> mappedByFirstLetter = new TreeMap<>(tvChannels.stream()
+			.collect(Collectors.groupingBy(s -> s.name().toLowerCase().charAt(0))));
 
-        final List<TvChannelResponseDto> nonLettersNames = new ArrayList<>();
-        final List<Character> elementsToRemoved = new ArrayList<>();
+		final List<TvChannelResponseDto> nonLettersNames = new ArrayList<>();
+		final List<Character> elementsToRemoved = new ArrayList<>();
 
-        // filter for non-letter characters
-        for (final Map.Entry<Character, List<TvChannelResponseDto>> entry : mappedByFirstLetter.entrySet()) {
-            if (!Character.isLetter(entry.getKey())) {
-                nonLettersNames.addAll(entry.getValue());
-                elementsToRemoved.add(entry.getKey());
-            }
-        }
-        // removing moved letters
-        for (final Character letter : elementsToRemoved) {
-            mappedByFirstLetter.remove(letter);
-        }
-        mappedByFirstLetter.put('#', nonLettersNames); // add saved non-letters tv channels
+		// filter for non-letter characters
+		for (final Map.Entry<Character, List<TvChannelResponseDto>> entry : mappedByFirstLetter.entrySet()) {
+			if (!Character.isLetter(entry.getKey())) {
+				nonLettersNames.addAll(entry.getValue());
+				elementsToRemoved.add(entry.getKey());
+			}
+		}
+		// removing moved letters
+		for (final Character letter : elementsToRemoved) {
+			mappedByFirstLetter.remove(letter);
+		}
+		mappedByFirstLetter.put('#', nonLettersNames); // add saved non-letters tv channels
 
-        // sort all channels in selected latter category
-        for (final List<TvChannelResponseDto> channels : mappedByFirstLetter.values()) {
-            Collections.sort(channels);
-        }
-        log.info("Found: {} records with phrase: {}. Letters: {}", tvChannels.size(), phrase,
-            mappedByFirstLetter.size());
-        return mappedByFirstLetter;
-    }
+		// sort all channels in selected latter category
+		for (final List<TvChannelResponseDto> channels : mappedByFirstLetter.values()) {
+			Collections.sort(channels);
+		}
+		log.info("Found: {} records with phrase: {}. Letters: {}", tvChannels.size(), phrase,
+			mappedByFirstLetter.size());
+		return mappedByFirstLetter;
+	}
 }
