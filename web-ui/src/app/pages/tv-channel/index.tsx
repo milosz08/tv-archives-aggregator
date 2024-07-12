@@ -61,7 +61,7 @@ const TvChannelPage: React.FC = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    if (isError) {
+    if (isError || (data && !data.hasPersistedDays)) {
       navigate('/');
     }
   }, [isError]);

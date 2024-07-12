@@ -13,9 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import MonthsWithRecordsPlot from '@/components/channel-details/MonthsWithRecordsPlot';
+import PersistedChannelInfo from '@/components/channel-details/PersistentChannelInfo';
+import { Divider } from '@mui/material';
 
-const ChannelDetailsPage: React.FC = (): JSX.Element => {
-  return <div>channel details</div>;
-};
+const ChannelDetailsPage: React.FC = (): JSX.Element => (
+  <>
+    <PersistedChannelInfo />
+    <Divider />
+    <MonthsWithRecordsPlot />
+  </>
+);
 
 export default ChannelDetailsPage;

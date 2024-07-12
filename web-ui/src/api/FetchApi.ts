@@ -15,7 +15,12 @@
  */
 import { AxiosInstance } from 'axios';
 import { ProgramDayDetails } from './types/archive-day-program';
-import { TvChannelDetails, TvChannelsAlphabet } from './types/tv-channel';
+import {
+  TvChannelDetails,
+  TvChannelPersistenceDetails,
+  TvChannelsAlphabet,
+} from './types/tv-channel';
+import { MonthlyProgramsChartDto } from './types/tv-channel-chart';
 import { CalendarMonth } from './types/tv-channel-years';
 
 const fetchApi = (axios: AxiosInstance) => ({
@@ -29,6 +34,21 @@ const fetchApi = (axios: AxiosInstance) => ({
   fetchTvChannelDetails: async (channelSlug: string | undefined) => {
     const { data } = await axios.get<TvChannelDetails>(
       `/api/v1/tv-channel/details/${channelSlug}`
+    );
+    return data;
+  },
+  fetchTvChannelPersistenceDetails: async (channelSlug: string | undefined) => {
+    const { data } = await axios.get<TvChannelPersistenceDetails>(
+      `/api/v1/tv-channel/details/${channelSlug}/persistence`
+    );
+    return data;
+  },
+  fetchMonthlyChannelPrograms: async (
+    channelSlug: string | undefined,
+    year: number
+  ) => {
+    const { data } = await axios.get<MonthlyProgramsChartDto>(
+      `/api/v1/tv-channel/${channelSlug}/chart/year/${year}/program/types`
     );
     return data;
   },

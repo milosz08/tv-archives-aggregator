@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TableCell, TableRow, Typography } from '@mui/material';
 
-export type TvChannel = {
-  name: string;
-  slug: string;
-  persistedDays: number;
+type Props = {
+  label: string;
+  value: string | number;
 };
 
-export type TvChannelsAlphabet = {
-  [symbol: string]: TvChannel[];
-};
+const TableContentRow: React.FC<Props> = ({ label, value }): JSX.Element => (
+  <TableRow>
+    <TableCell>{label}</TableCell>
+    <TableCell>
+      <Typography fontSize={15} fontWeight={500}>
+        {value}
+      </Typography>
+    </TableCell>
+  </TableRow>
+);
 
-export type TvChannelDetails = {
-  name: string;
-  hasPersistedDays: number;
-};
-
-export type TvChannelPersistenceDetails = {
-  persistedDays: number;
-  persistedYears: number;
-  persistedTvPrograms: number;
-  averageDbSize: number;
-};
+export default TableContentRow;

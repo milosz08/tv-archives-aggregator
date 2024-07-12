@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-export type TvChannel = {
+export type MonthlyProgramsChartDto = {
+  series: MonthlyProgramChartStackElement[];
+  table: MonthlyProgramChartStackElement[];
+  months: string[];
+  stackKey: string;
+  allPerMonths: number[];
+};
+
+export type MonthlyProgramChartStackElement = {
   name: string;
-  slug: string;
-  persistedDays: number;
-};
-
-export type TvChannelsAlphabet = {
-  [symbol: string]: TvChannel[];
-};
-
-export type TvChannelDetails = {
-  name: string;
-  hasPersistedDays: number;
-};
-
-export type TvChannelPersistenceDetails = {
-  persistedDays: number;
-  persistedYears: number;
-  persistedTvPrograms: number;
-  averageDbSize: number;
+  data: number[];
+  color: string;
+  existInChart: boolean;
 };
