@@ -189,13 +189,14 @@ public class TvChannelServiceImpl implements TvChannelService {
 			tableRow.setColor(color);
 			if (i < colorsCount) {
 				series.add(tableRow);
+				tableRow.setExistInChart(true);
 			} else if (i == colorsCount) {
 				final List<List<Integer>> restOfData = tableData.subList(colorsCount, tableData.size())
 					.stream()
 					.map(MonthlyProgramChartStackElement::getData)
 					.toList();
 				series.add(new MonthlyProgramChartStackElement("Others",
-					AppUtils.reduce2dList(persistedMonths.size(), restOfData), appConfig.getDefaultChartColor()));
+					AppUtils.reduce2dList(persistedMonths.size(), restOfData), appConfig.getDefaultChartColor(), true));
 			}
 		}
 		series.sort(Comparator.comparing(row -> row.getData().stream().mapToInt(Integer::intValue).sum(),

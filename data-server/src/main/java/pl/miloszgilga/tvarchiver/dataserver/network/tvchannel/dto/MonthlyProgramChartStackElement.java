@@ -29,6 +29,7 @@ public class MonthlyProgramChartStackElement {
 	private String name;
 	private List<Integer> data;
 	private String color;
+	private boolean existInChart;
 
 	public MonthlyProgramChartStackElement(String name, List<Integer> data) {
 		this.name = name;
