@@ -17,9 +17,9 @@ import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { useDebounceValue } from 'usehooks-ts';
 import { fetchTvChannels } from '@/api';
+import TvChannelsWithLetter from '@/components/tv-channels/TvChannelsWithLetter';
 import { Alert, Box, CircularProgress, TextField } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import TvChannelsWithLetter from './components/TvChannelsWithLetter';
 
 const TvChannelsPage: React.FC = (): JSX.Element => {
   const [searchPhrase, setSearchPhrase] = useDebounceValue('', 500);

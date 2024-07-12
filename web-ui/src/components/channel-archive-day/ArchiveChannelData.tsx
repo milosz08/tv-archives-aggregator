@@ -36,8 +36,7 @@ const ArchiveChannelData: React.FC = (): JSX.Element => {
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ['channelArchivedDay', slug, date],
-    queryFn: async () =>
-      await fetchArchiveProgramPerDay(slug || '', date || ''),
+    queryFn: async () => await fetchArchiveProgramPerDay(slug, date),
     enabled: !!slug && !!date,
   });
 

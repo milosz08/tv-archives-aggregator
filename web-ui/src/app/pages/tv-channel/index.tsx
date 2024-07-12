@@ -43,7 +43,8 @@ const TvChannelPage: React.FC = (): JSX.Element => {
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ['tvChannelDetails', slug],
-    queryFn: async () => await fetchTvChannelDetails(slug || ''),
+    queryFn: async () => await fetchTvChannelDetails(slug),
+    enabled: !!slug,
   });
 
   const onToggleCard = (newValue: number): void => {

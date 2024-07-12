@@ -21,6 +21,7 @@ import {
   fetchPersistedChannelYears,
   fetchTvChannelYearMonths,
 } from '@/api/fetch';
+import EmptyBlocks from '@/components/channel-years/EmptyBlocks';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
   Alert,
@@ -36,7 +37,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import EmptyBlocks from './components/EmptyBlocks';
 
 const dayOfWeeks = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
@@ -44,19 +44,24 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [year, setYear] = useState('');
 
-  const persistedYears = useQuery({
+  const {
+    data: yearsData,
+    isError: yearsError,
+    isFetching: yearsFetching,
+    refetch: yearsRefetch,
+  } = useQuery({
     queryKey: ['channelPersistedYears', slug],
-    queryFn: async () => await fetchPersistedChannelYears(slug || ''),
+    queryFn: async () => await fetchPersistedChannelYears(slug),
     enabled: !!slug,
   });
 
   const { data, isFetching, isError, refetch } = useQuery({
     queryKey: ['tvChannelYears', slug, year],
-    queryFn: async () => await fetchTvChannelYearMonths(slug || '', year),
-    enabled: !!year,
+    queryFn: async () => await fetchTvChannelYearMonths(slug, year),
+    enabled: !!slug && !!year,
   });
 
   const generatedDayOfWeeks: JSX.Element[] = dayOfWeeks.map(dayOfWeek => (
@@ -67,18 +72,18 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
 
   const onRefetchData = (): void => {
     if (year) {
-      persistedYears.refetch();
+      yearsRefetch();
       refetch();
       navigate(`/channel/${slug}/years?year=${year}`);
     }
   };
 
   useEffect(() => {
-    if (persistedYears.isError || isError) {
+    if (yearsError || isError) {
       navigate('/');
       enqueueSnackbar('Unable to fetch data!', { variant: 'error' });
     }
-  }, [persistedYears.isError, isError]);
+  }, [yearsError, isError]);
 
   useEffect(() => {
     const year = searchParams.get('year');
@@ -87,7 +92,7 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
     }
   }, []);
 
-  if (persistedYears.isFetching || isFetching) {
+  if (yearsFetching || isFetching) {
     return (
       <Box display="flex" justifyContent="center" marginTop={4}>
         <CircularProgress />
@@ -103,12 +108,16 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
           <Select
             labelId="years-label"
             value={year}
-            onChange={e => setYear(e.target.value as string)}
+            onChange={e => {
+              const year = e.target.value as string;
+              setYear(year);
+              setSearchParams({ year });
+            }}
             label="Year">
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {persistedYears?.data?.map(year => (
+            {yearsData?.map(year => (
               <MenuItem key={year} value={year}>
                 {year}
               </MenuItem>

@@ -15,9 +15,9 @@
  */
 import dayjs, { Dayjs } from 'dayjs';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import ArchiveChannelData from '@/components/channel-archive-day/ArchiveChannelData';
 import { Box, Grid, Link, Paper } from '@mui/material';
 import { StaticDatePicker } from '@mui/x-date-pickers';
-import ArchiveChannelData from './components/ArchiveChannelData';
 
 const ChannelArchiveDayPage: React.FC = (): JSX.Element => {
   const { slug, date } = useParams();
