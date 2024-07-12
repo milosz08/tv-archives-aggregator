@@ -19,10 +19,10 @@ import { TvChannelDetails, TvChannelsAlphabet } from './types/tv-channel';
 import { CalendarMonth } from './types/tv-channel-years';
 
 const fetchApi = (axios: AxiosInstance) => ({
-  fetchTvChannels: async (channelName: string) => {
+  fetchTvChannels: async (channelName: string, onlyWithSomeData: boolean) => {
     const { data } = await axios.get<TvChannelsAlphabet>(
       '/api/v1/tv-channel/all/search',
-      { params: { phrase: channelName } }
+      { params: { phrase: channelName, onlyWithSomeData } }
     );
     return data;
   },

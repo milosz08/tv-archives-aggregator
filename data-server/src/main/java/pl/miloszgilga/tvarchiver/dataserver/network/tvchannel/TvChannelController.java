@@ -33,9 +33,10 @@ public class TvChannelController {
 
 	@GetMapping("/all/search")
 	ResponseEntity<Map<Character, List<TvChannelResponseDto>>> getTvChannelsBySearch(
-		@RequestParam("phrase") String phrase
+		@RequestParam("phrase") String phrase,
+		@RequestParam("onlyWithSomeData") boolean onlyWithSomeData
 	) {
-		return ResponseEntity.ok(tvChannelService.getTvChannelsBySearch(phrase));
+		return ResponseEntity.ok(tvChannelService.getTvChannelsBySearch(phrase, onlyWithSomeData));
 	}
 
 	@GetMapping("/details/{channelSlug}")

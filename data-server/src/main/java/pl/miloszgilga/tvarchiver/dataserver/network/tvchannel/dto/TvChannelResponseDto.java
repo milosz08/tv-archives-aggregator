@@ -18,7 +18,8 @@ package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto;
 
 public record TvChannelResponseDto(
 	String name,
-	String slug
+	String slug,
+	long persistedDays
 ) implements Comparable<TvChannelResponseDto> {
 
 	@Override

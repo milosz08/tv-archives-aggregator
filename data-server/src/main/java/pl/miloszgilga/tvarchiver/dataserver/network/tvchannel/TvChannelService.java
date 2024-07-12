@@ -23,6 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface TvChannelService {
-	Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase);
+	Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase, boolean onlyWithSomeData);
 	TvChannelDetails getTvChannelDetails(String channelSlug);
 }

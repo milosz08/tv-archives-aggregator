@@ -34,12 +34,17 @@ public class TvChannelServiceImpl implements TvChannelService {
 	private final JdbcTemplate jdbcTemplate;
 
 	@Override
-	public Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase) {
-		final String sql = "SELECT name, slug FROM tv_channels WHERE LOWER(name) LIKE LOWER(?)";
+	public Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase, boolean onlyWithSomeData) {
+		String sql = """
+			SELECT c.name, slug, COUNT(DISTINCT DATE(schedule_date)) as persisted_days FROM tv_channels c
+			LEFT JOIN tv_programs_data d ON d.channel_id = c.id
+			WHERE LOWER(c.name) LIKE LOWER(?) GROUP BY c.id
+			""";
 		final List<TvChannelResponseDto> tvChannels = jdbcTemplate
 			.query(sql, new DataClassRowMapper<>(TvChannelResponseDto.class), "%" + phrase + "%");
 
 		final TreeMap<Character, List<TvChannelResponseDto>> mappedByFirstLetter = new TreeMap<>(tvChannels.stream()
+			.filter(channel -> channel.persistedDays() > 0 || !onlyWithSomeData)
 			.collect(Collectors.groupingBy(s -> s.name().toLowerCase().charAt(0))));
 
 		final List<TvChannelResponseDto> nonLettersNames = new ArrayList<>();

@@ -17,6 +17,7 @@
 export type TvChannel = {
   name: string;
   slug: string;
+  persistedDays: number;
 };
 
 export type TvChannelsAlphabet = {

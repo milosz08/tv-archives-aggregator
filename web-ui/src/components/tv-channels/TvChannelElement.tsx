@@ -15,7 +15,7 @@
  */
 import { Link as RouterLink } from 'react-router-dom';
 import { TvChannel } from '@/api/types/tv-channel';
-import { Button, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 
 type Props = {
   tvChannel: TvChannel;
@@ -27,10 +27,16 @@ const TvChannelElement: React.FC<Props> = ({ tvChannel }): JSX.Element => (
       <Button
         component={RouterLink}
         to={`/channel/${tvChannel.slug}/details`}
-        fullWidth={true}>
-        <Typography variant="h6" component="div" margin={2}>
-          {tvChannel.name}
-        </Typography>
+        fullWidth={true}
+        sx={{ padding: 2 }}>
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <Typography variant="h6" component="div">
+            {tvChannel.name}
+          </Typography>
+          <Typography variant="body1" color="gray" fontSize={14}>
+            {tvChannel.persistedDays} days
+          </Typography>
+        </Box>
       </Button>
     </Paper>
   </Grid>
