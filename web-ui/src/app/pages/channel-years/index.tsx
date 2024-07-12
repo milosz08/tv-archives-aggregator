@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
 import { useNavigate, useParams } from 'react-router';
 import { Link, useSearchParams } from 'react-router-dom';
-import {
-  fetchPersistedChannelYears,
-  fetchTvChannelYearMonths,
-} from '@/api/fetch';
+import { useAxios } from '@/api';
 import EmptyBlocks from '@/components/channel-years/EmptyBlocks';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
@@ -43,9 +39,9 @@ const dayOfWeeks = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 const ChannelYearsPage: React.FC = (): JSX.Element => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   const [searchParams, setSearchParams] = useSearchParams();
   const [year, setYear] = useState('');
+  const { api } = useAxios();
 
   const {
     data: yearsData,
@@ -54,13 +50,13 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
     refetch: yearsRefetch,
   } = useQuery({
     queryKey: ['channelPersistedYears', slug],
-    queryFn: async () => await fetchPersistedChannelYears(slug),
+    queryFn: async () => await api.fetchPersistedChannelYears(slug),
     enabled: !!slug,
   });
 
   const { data, isFetching, isError, refetch } = useQuery({
     queryKey: ['tvChannelYears', slug, year],
-    queryFn: async () => await fetchTvChannelYearMonths(slug, year),
+    queryFn: async () => await api.fetchTvChannelYearMonths(slug, year),
     enabled: !!slug && !!year,
   });
 
@@ -81,7 +77,6 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
   useEffect(() => {
     if (yearsError || isError) {
       navigate('/');
-      enqueueSnackbar('Unable to fetch data!', { variant: 'error' });
     }
   }, [yearsError, isError]);
 

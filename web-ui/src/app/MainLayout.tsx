@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { Suspense } from 'react';
-import { SnackbarProvider } from 'notistack';
 import { Outlet } from 'react-router';
 import Header from '@/components/Header';
 import SuspenseFallback from '@/components/SuspenseFallback';
@@ -36,16 +35,14 @@ const routerLinks: PageLink[] = [
 
 const MainLayout: React.FC = (): JSX.Element => (
   <Suspense fallback={<SuspenseFallback />}>
-    <SnackbarProvider>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Header links={routerLinks} />
-        <Container maxWidth="xl">
-          <Box margin={3} marginTop={13}>
-            <Outlet />
-          </Box>
-        </Container>
-      </LocalizationProvider>
-    </SnackbarProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Header links={routerLinks} />
+      <Container maxWidth="xl">
+        <Box margin={3} marginTop={13}>
+          <Outlet />
+        </Box>
+      </Container>
+    </LocalizationProvider>
   </Suspense>
 );
 

@@ -13,36 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useEffect } from 'react';
-import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
-import { fetchTvChannels } from '@/api';
+import { useAxios } from '@/api';
 import TvChannelsWithLetter from '@/components/tv-channels/TvChannelsWithLetter';
-import { Alert, Box, CircularProgress, TextField } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Checkbox,
+  CircularProgress,
+  FormControlLabel,
+  FormGroup,
+  TextField,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 const TvChannelsPage: React.FC = (): JSX.Element => {
   const [searchPhrase, setSearchPhrase] = useDebounceValue('', 500);
-  const { enqueueSnackbar } = useSnackbar();
+  const { api } = useAxios();
 
-  const { data, isError, isFetching } = useQuery({
+  const [showOnlyFetched, setShowOnlyFetched] = useState(true);
+
+  const { data, isFetching } = useQuery({
     queryKey: ['tvChannels', searchPhrase],
-    queryFn: async () => await fetchTvChannels(searchPhrase),
+    queryFn: async () => await api.fetchTvChannels(searchPhrase),
   });
-
-  useEffect(() => {
-    if (isError) {
-      enqueueSnackbar('Unable to fetch data!', { variant: 'error' });
-    }
-  }, [isError]);
 
   return (
     <Box display="flex" flexDirection="column" rowGap={2}>
-      <TextField
-        label="Enter channel name"
-        variant="standard"
-        onChange={e => setSearchPhrase(e.target.value)}
-      />
+      <FormGroup>
+        <TextField
+          label="Enter channel name"
+          variant="standard"
+          onChange={e => setSearchPhrase(e.target.value)}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showOnlyFetched}
+              onChange={e => setShowOnlyFetched(e.target.checked)}
+            />
+          }
+          label="Show TV channels with some data"
+        />
+      </FormGroup>
       {isFetching && (
         <Box display="flex" justifyContent="center" marginTop={4}>
           <CircularProgress />

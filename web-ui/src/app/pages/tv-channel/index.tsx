@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
+import { Suspense, useEffect, useState } from 'react';
 import {
   Outlet,
   Link as RouterLink,
@@ -22,7 +21,7 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom';
-import { fetchTvChannelDetails } from '@/api/fetch';
+import { useAxios } from '@/api';
 import ChannelDetailsProvider from '@/context/ChannelDetailsContext';
 import {
   Box,
@@ -39,11 +38,11 @@ const TvChannelPage: React.FC = (): JSX.Element => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { enqueueSnackbar } = useSnackbar();
+  const { api } = useAxios();
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ['tvChannelDetails', slug],
-    queryFn: async () => await fetchTvChannelDetails(slug),
+    queryFn: async () => await api.fetchTvChannelDetails(slug),
     enabled: !!slug,
   });
 
@@ -63,7 +62,6 @@ const TvChannelPage: React.FC = (): JSX.Element => {
   useEffect(() => {
     if (isError) {
       navigate('/');
-      enqueueSnackbar('Unable to fetch data!', { variant: 'error' });
     }
   }, [isError]);
 
@@ -90,7 +88,14 @@ const TvChannelPage: React.FC = (): JSX.Element => {
           <Tab label="Channel details" />
           <Tab label="Archived years" />
         </Tabs>
-        <Outlet />
+        <Suspense
+          fallback={
+            <Box display="flex" justifyContent="center">
+              <CircularProgress />
+            </Box>
+          }>
+          <Outlet />
+        </Suspense>
       </Box>
     </ChannelDetailsProvider>
   );

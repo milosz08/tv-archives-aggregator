@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import AxiosWrapper, { useAxios } from './AxiosWrapper';
 import QueryWrapper from './QueryWrapper';
-import { fetchTvChannels } from './fetch';
 
-export { fetchTvChannels, QueryWrapper };
+export { QueryWrapper, AxiosWrapper, useAxios };
