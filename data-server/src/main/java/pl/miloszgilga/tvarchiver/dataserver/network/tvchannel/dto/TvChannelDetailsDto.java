@@ -17,6 +17,7 @@
 package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto;
 
 public record TvChannelDetailsDto(
-	String name
+	String name,
+	boolean hasPersistedDays
 ) {
 }

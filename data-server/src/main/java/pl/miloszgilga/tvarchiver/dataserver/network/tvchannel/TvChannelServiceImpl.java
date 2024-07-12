@@ -77,7 +77,12 @@ public class TvChannelServiceImpl implements TvChannelService {
 
 	@Override
 	public TvChannelDetailsDto getTvChannelDetails(String channelSlug) {
-		final String sql = "SELECT name FROM tv_channels WHERE slug = ?";
+		final String sql = """
+				SELECT c.name, COUNT(d.id) > 0 AS has_persisted_days
+				FROM tv_channels AS c
+				LEFT JOIN tv_programs_data AS d ON d.channel_id = c.id
+				WHERE slug = ?
+			""";
 		return jdbcTemplate.queryForObject(sql, new DataClassRowMapper<>(TvChannelDetailsDto.class), channelSlug);
 	}
 
