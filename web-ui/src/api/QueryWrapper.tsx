@@ -13,7 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import QueryWrapper from './QueryWrapper';
-import { fetchTvChannels } from './fetch';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-export { fetchTvChannels, QueryWrapper };
+const queryClient = new QueryClient();
+
+type Props = {
+  children: React.ReactNode;
+};
+
+const QueryWrapper: React.FC<Props> = ({ children }): JSX.Element => (
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+);
+
+export default QueryWrapper;

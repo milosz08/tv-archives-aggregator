@@ -26,7 +26,9 @@ export const fetchTvChannels = async (channelName: string) => {
   return data;
 };
 
-export const fetchTvChannelDetails = async (channelSlug: string) => {
+export const fetchTvChannelDetails = async (
+  channelSlug: string | undefined
+) => {
   const { data } = await axios.get<TvChannelDetails>(
     `/api/v1/tv-channel/details/${channelSlug}`
   );
@@ -34,7 +36,7 @@ export const fetchTvChannelDetails = async (channelSlug: string) => {
 };
 
 export const fetchTvChannelYearMonths = async (
-  channelSlug: string,
+  channelSlug: string | undefined,
   year: string
 ) => {
   const { data } = await axios.get<CalendarMonth[]>(
@@ -43,7 +45,9 @@ export const fetchTvChannelYearMonths = async (
   return data;
 };
 
-export const fetchPersistedChannelYears = async (channelSlug: string) => {
+export const fetchPersistedChannelYears = async (
+  channelSlug: string | undefined
+) => {
   const { data } = await axios.get<number[]>(
     `/api/v1/calendar/years/channel/${channelSlug}`
   );
@@ -51,8 +55,8 @@ export const fetchPersistedChannelYears = async (channelSlug: string) => {
 };
 
 export const fetchArchiveProgramPerDay = async (
-  channelSlug: string,
-  date: string
+  channelSlug: string | undefined,
+  date: string | undefined
 ) => {
   const { data } = await axios.get<ProgramDayDetails>(
     `/api/v1/program/all/channel/${channelSlug}/date/${date}`

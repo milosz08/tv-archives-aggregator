@@ -15,19 +15,16 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router';
+import AppRouter from '@/app/AppRouter';
 import '@/index.css';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import router from './router/router';
-
-const queryClient = new QueryClient();
+import { QueryWrapper } from './api';
 
 const appMount = document.getElementById('app-mount')!;
 
 ReactDOM.createRoot(appMount).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <QueryWrapper>
+      <AppRouter />
+    </QueryWrapper>
   </React.StrictMode>
 );
