@@ -20,10 +20,10 @@ import TvChannelsWithLetter from '@/components/tv-channels/TvChannelsWithLetter'
 import {
   Alert,
   Box,
-  Checkbox,
   CircularProgress,
   FormControlLabel,
   FormGroup,
+  Switch,
   TextField,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -35,13 +35,14 @@ const TvChannelsPage: React.FC = (): JSX.Element => {
   const [showOnlyFetched, setShowOnlyFetched] = useState(true);
 
   const { data, isFetching } = useQuery({
-    queryKey: ['tvChannels', searchPhrase],
-    queryFn: async () => await api.fetchTvChannels(searchPhrase),
+    queryKey: ['tvChannels', searchPhrase, showOnlyFetched],
+    queryFn: async () =>
+      await api.fetchTvChannels(searchPhrase, showOnlyFetched),
   });
 
   return (
     <Box display="flex" flexDirection="column" rowGap={2}>
-      <FormGroup>
+      <FormGroup sx={{ gap: 1 }}>
         <TextField
           label="Enter channel name"
           variant="standard"
@@ -49,12 +50,12 @@ const TvChannelsPage: React.FC = (): JSX.Element => {
         />
         <FormControlLabel
           control={
-            <Checkbox
+            <Switch
               checked={showOnlyFetched}
               onChange={e => setShowOnlyFetched(e.target.checked)}
             />
           }
-          label="Show TV channels with some data"
+          label="Show only TV channels with some data"
         />
       </FormGroup>
       {isFetching && (

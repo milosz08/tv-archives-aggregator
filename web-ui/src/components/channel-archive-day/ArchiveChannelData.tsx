@@ -15,9 +15,8 @@
  */
 import { useEffect } from 'react';
 import React from 'react';
-import { useSnackbar } from 'notistack';
 import { useNavigate, useParams } from 'react-router';
-import { fetchArchiveProgramPerDay } from '@/api/fetch';
+import { useAxios } from '@/api';
 import {
   Alert,
   Box,
@@ -32,18 +31,17 @@ import { useQuery } from '@tanstack/react-query';
 const ArchiveChannelData: React.FC = (): JSX.Element => {
   const { slug, date } = useParams();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  const { api } = useAxios();
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ['channelArchivedDay', slug, date],
-    queryFn: async () => await fetchArchiveProgramPerDay(slug, date),
+    queryFn: async () => await api.fetchArchiveProgramPerDay(slug, date),
     enabled: !!slug && !!date,
   });
 
   useEffect(() => {
     if (isError) {
       navigate(`/channel/${slug}/years`);
-      enqueueSnackbar('Unable to fetch data!', { variant: 'error' });
     }
   }, [isError]);
 
