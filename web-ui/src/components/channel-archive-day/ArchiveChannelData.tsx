@@ -17,14 +17,8 @@ import { useEffect } from 'react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useAxios } from '@/api';
-import {
-  Alert,
-  Box,
-  CircularProgress,
-  Divider,
-  Grid,
-  Typography,
-} from '@mui/material';
+import SuspensePartFallback from '@/components/SuspensePartFallback';
+import { Alert, Box, Divider, Grid, Typography } from '@mui/material';
 import { orange } from '@mui/material/colors';
 import { useQuery } from '@tanstack/react-query';
 
@@ -46,11 +40,7 @@ const ArchiveChannelData: React.FC = (): JSX.Element => {
   }, [isError]);
 
   if (isFetching) {
-    return (
-      <Box display="flex" justifyContent="center" marginTop={4}>
-        <CircularProgress />
-      </Box>
-    );
+    return <SuspensePartFallback />;
   }
 
   return (

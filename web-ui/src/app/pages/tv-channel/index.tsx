@@ -22,6 +22,7 @@ import {
   useParams,
 } from 'react-router-dom';
 import { useAxios } from '@/api';
+import SuspensePartFallback from '@/components/SuspensePartFallback';
 import ChannelDetailsProvider from '@/context/ChannelDetailsContext';
 import {
   Box,
@@ -66,11 +67,7 @@ const TvChannelPage: React.FC = (): JSX.Element => {
   }, [isError]);
 
   if (isFetching) {
-    return (
-      <Box display="flex" justifyContent="center" marginTop={4}>
-        <CircularProgress />
-      </Box>
-    );
+    return <SuspensePartFallback />;
   }
 
   return (
@@ -79,7 +76,11 @@ const TvChannelPage: React.FC = (): JSX.Element => {
         <Link component={RouterLink} to="/">
           Return to channels
         </Link>
-        {data && <Typography variant="h4">{data.name}</Typography>}
+        {data && (
+          <Typography variant="h4" fontWeight={500}>
+            {data.name}
+          </Typography>
+        )}
         <Tabs
           value={value}
           onChange={(_, value) => onToggleCard(value)}

@@ -16,11 +16,11 @@
 import { useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
 import { useAxios } from '@/api';
+import SuspensePartFallback from '@/components/SuspensePartFallback';
 import TvChannelsWithLetter from '@/components/tv-channels/TvChannelsWithLetter';
 import {
   Alert,
   Box,
-  CircularProgress,
   FormControlLabel,
   FormGroup,
   Switch,
@@ -58,11 +58,7 @@ const TvChannelsPage: React.FC = (): JSX.Element => {
           label="Show only TV channels with some data"
         />
       </FormGroup>
-      {isFetching && (
-        <Box display="flex" justifyContent="center" marginTop={4}>
-          <CircularProgress />
-        </Box>
-      )}
+      {isFetching && <SuspensePartFallback />}
       {data && Object.keys(data).length === 0 && (
         <Alert severity="warning">Not found any channels.</Alert>
       )}

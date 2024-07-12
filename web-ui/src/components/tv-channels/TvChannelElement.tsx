@@ -28,7 +28,8 @@ const TvChannelElement: React.FC<Props> = ({ tvChannel }): JSX.Element => (
         component={RouterLink}
         to={`/channel/${tvChannel.slug}/details`}
         fullWidth={true}
-        sx={{ padding: 2 }}>
+        sx={{ padding: 2 }}
+        disabled={tvChannel.persistedDays === 0}>
         <Box display="flex" flexDirection="column" alignItems="center">
           <Typography variant="h6" component="div">
             {tvChannel.name}
