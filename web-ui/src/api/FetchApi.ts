@@ -34,7 +34,7 @@ const fetchApi = (axios: AxiosInstance) => ({
   },
   fetchTvChannelYearMonths: async (
     channelSlug: string | undefined,
-    year: string
+    year: number
   ) => {
     const { data } = await axios.get<CalendarMonth[]>(
       `/api/v1/calendar/struct/channel/${channelSlug}/year/${year}`

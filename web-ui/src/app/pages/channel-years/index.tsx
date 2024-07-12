@@ -13,25 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAxios } from '@/api';
+import SuspensePartFallback from '@/components/SuspensePartFallback';
+import YearSelect from '@/components/YearSelect';
 import EmptyBlocks from '@/components/channel-years/EmptyBlocks';
+import useYearSelect from '@/hooks/useYearSelect';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 const dayOfWeeks = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
@@ -40,21 +31,12 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [year, setYear] = useState('');
   const { api } = useAxios();
 
-  const {
-    data: yearsData,
-    isError: yearsError,
-    isFetching: yearsFetching,
-    refetch: yearsRefetch,
-  } = useQuery({
-    queryKey: ['channelPersistedYears', slug],
-    queryFn: async () => await api.fetchPersistedChannelYears(slug),
-    enabled: !!slug,
-  });
+  const { years, year, isYearsFetching, setYear, refetchYears } =
+    useYearSelect();
 
-  const { data, isFetching, isError, refetch } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ['tvChannelYears', slug, year],
     queryFn: async () => await api.fetchTvChannelYearMonths(slug, year),
     enabled: !!slug && !!year,
@@ -68,63 +50,39 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
 
   const onRefetchData = (): void => {
     if (year) {
-      yearsRefetch();
+      refetchYears();
       refetch();
       navigate(`/channel/${slug}/years?year=${year}`);
     }
   };
 
   useEffect(() => {
-    if (yearsError || isError) {
-      navigate('/');
-    }
-  }, [yearsError, isError]);
-
-  useEffect(() => {
     const year = searchParams.get('year');
-    if (year) {
-      setYear(year);
+    if (year && typeof year === 'number') {
+      setYear(year as number);
     }
   }, []);
 
-  if (yearsFetching || isFetching) {
-    return (
-      <Box display="flex" justifyContent="center" marginTop={4}>
-        <CircularProgress />
-      </Box>
-    );
+  if (isFetching || isYearsFetching) {
+    return <SuspensePartFallback />;
   }
 
   return (
     <>
-      <Box display="flex">
-        <FormControl sx={{ m: 1, minWidth: 120 }} component={Box} flexGrow={1}>
-          <InputLabel id="years-label">Year</InputLabel>
-          <Select
-            labelId="years-label"
-            value={year}
-            onChange={e => {
-              const year = e.target.value as string;
-              setYear(year);
-              setSearchParams({ year });
-            }}
-            label="Year">
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {yearsData?.map(year => (
-              <MenuItem key={year} value={year}>
-                {year}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      <Box display="flex" columnGap={2}>
+        <YearSelect
+          years={years}
+          year={year}
+          setYear={setYear}
+          isFetching={isYearsFetching}
+          onSetYearCallback={year => setSearchParams({ year })}
+        />
         <Button variant="contained" onClick={onRefetchData}>
           <RefreshIcon />
         </Button>
       </Box>
       <Box key={year} marginBottom={2}>
-        {data && data?.length !== 0 ? (
+        {data && data?.length !== 0 && (
           <Grid container spacing={2}>
             {data?.map(({ name, countOfEmptyBlocks, days }) => (
               <Grid key={name} item xs={12} sm={6} md={4} lg={3}>
@@ -160,10 +118,6 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
               </Grid>
             ))}
           </Grid>
-        ) : (
-          <Alert severity="warning">
-            No saved any days from selected year or not selected any year.
-          </Alert>
         )}
       </Box>
     </>
