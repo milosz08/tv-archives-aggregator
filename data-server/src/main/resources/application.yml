@@ -14,3 +14,17 @@ app-properties:
   client-urls:
     - http://localhost:4362
     - http://tv-web-ui:4362
+  chart-colors:
+    - '#a6cee3'
+    - '#1f78b4'
+    - '#b2df8a'
+    - '#33a02c'
+    - '#fb9a99'
+    - '#e31a1c'
+    - '#fdbf6f'
+    - '#ff7f00'
+    - '#cab2d6'
+    - '#6a3d9a'
+    - '#ffff99'
+    - '#b15928'
+  default-chart-color: '#d3d3d3'

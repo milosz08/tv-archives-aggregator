@@ -19,7 +19,9 @@ package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelDetails;
+import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.MonthlyProgramsChartDto;
+import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelDetailsDto;
+import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelPersistenceInfoDto;
 import pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto.TvChannelResponseDto;
 
 import java.util.List;
@@ -40,7 +42,20 @@ public class TvChannelController {
 	}
 
 	@GetMapping("/details/{channelSlug}")
-	ResponseEntity<TvChannelDetails> getChannelDetails(@PathVariable String channelSlug) {
+	ResponseEntity<TvChannelDetailsDto> getChannelDetails(@PathVariable String channelSlug) {
 		return ResponseEntity.ok(tvChannelService.getTvChannelDetails(channelSlug));
+	}
+
+	@GetMapping("/details/{channelSlug}/persistence")
+	ResponseEntity<TvChannelPersistenceInfoDto> getChannelPersistenceDetails(@PathVariable String channelSlug) {
+		return ResponseEntity.ok(tvChannelService.getTvChannelPersistenceDetails(channelSlug));
+	}
+
+	@GetMapping("/{channelSlug}/chart/year/{year}/program/types")
+	ResponseEntity<MonthlyProgramsChartDto> getMonthlyChannelPrograms(
+		@PathVariable String channelSlug,
+		@PathVariable int year
+	) {
+		return ResponseEntity.ok(tvChannelService.getMonthlyChannelPrograms(channelSlug, year));
 	}
 }

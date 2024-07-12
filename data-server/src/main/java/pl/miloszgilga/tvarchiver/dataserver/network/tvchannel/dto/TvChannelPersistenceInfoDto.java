@@ -16,7 +16,10 @@
 
 package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto;
 
-public record TvChannelDetails(
-	String name
+public record TvChannelPersistenceInfoDto(
+	long persistedDays,
+	long persistedYears,
+	long persistedTvPrograms,
+	long averageDbSize
 ) {
 }

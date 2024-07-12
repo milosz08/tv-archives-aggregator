@@ -24,6 +24,7 @@
 		<mylsqConn.version>8.4.0</mylsqConn.version>
 		<dotEnv.version>4.0.0</dotEnv.version>
 		<commonsText.version>1.12.0</commonsText.version>
+		<junit.version>5.7.1</junit.version>
 	</properties>
 
 	<dependencies>
@@ -58,6 +59,18 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
 			<version>${commonsText.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

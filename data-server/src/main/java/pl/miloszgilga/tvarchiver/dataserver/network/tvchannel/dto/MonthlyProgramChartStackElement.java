@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.dataserver.config;
+package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
-@Configuration
-@ConfigurationProperties(prefix = "app-properties")
-public class AppConfig {
-	private List<String> clientUrls;
-	private List<String> chartColors;
-	private String defaultChartColor;
+@Getter
+@Setter
+@AllArgsConstructor
+public class MonthlyProgramChartStackElement {
+	private String name;
+	private List<Integer> data;
+	private String color;
+
+	public MonthlyProgramChartStackElement(String name, List<Integer> data) {
+		this.name = name;
+		this.data = data;
+	}
 }

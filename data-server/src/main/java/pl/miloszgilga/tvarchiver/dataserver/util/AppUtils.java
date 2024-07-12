@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.dataserver.config;
+package pl.miloszgilga.tvarchiver.dataserver.util;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
 import java.util.List;
 
-@Data
-@Configuration
-@ConfigurationProperties(prefix = "app-properties")
-public class AppConfig {
-	private List<String> clientUrls;
-	private List<String> chartColors;
-	private String defaultChartColor;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class AppUtils {
+	public static List<Integer> reduce2dList(int size, List<List<Integer>> list2d) {
+		final Integer[] reducedArray = new Integer[size];
+		Arrays.fill(reducedArray, 0);
+		for (int j = 0; j < reducedArray.length; j++) {
+			for (final List<Integer> restOfDatum : list2d) {
+				reducedArray[j] += restOfDatum.get(j);
+			}
+		}
+		return List.of(reducedArray);
+	}
 }

@@ -14,19 +14,30 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.dataserver.config;
+package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.util;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.junit.jupiter.api.Test;
+import pl.miloszgilga.tvarchiver.dataserver.util.AppUtils;
 
 import java.util.List;
 
-@Data
-@Configuration
-@ConfigurationProperties(prefix = "app-properties")
-public class AppConfig {
-	private List<String> clientUrls;
-	private List<String> chartColors;
-	private String defaultChartColor;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
+public class AppUtilsTest {
+
+	@Test
+	public void testReduce2dList() {
+		//given
+		final List<List<Integer>> input = List.of(
+			List.of(10, 20, 30),
+			List.of(20, 10, 15)
+		);
+
+		//when
+		final List<Integer> expected = List.of(30, 30, 45);
+
+		//then
+		final List<Integer> result = AppUtils.reduce2dList(expected.size(), input);
+		assertArrayEquals(expected.toArray(), result.toArray());
+	}
 }

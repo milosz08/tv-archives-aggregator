@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.dataserver.config;
+package pl.miloszgilga.tvarchiver.dataserver.network.tvchannel.dto;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
-
-@Data
-@Configuration
-@ConfigurationProperties(prefix = "app-properties")
-public class AppConfig {
-	private List<String> clientUrls;
-	private List<String> chartColors;
-	private String defaultChartColor;
+public record TvChannelDetailsDto(
+	String name
+) {
 }
