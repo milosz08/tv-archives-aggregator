@@ -75,7 +75,7 @@ public class CalendarServiceImpl implements CalendarService {
 		final String sql = """
 			SELECT DISTINCT YEAR(schedule_date) FROM tv_programs_data AS pd
 			INNER JOIN tv_channels AS c ON pd.channel_id = c.id
-			WHERE c.slug = ?
+			WHERE c.slug = ? ORDER BY YEAR(schedule_date) DESC
 			""";
 		return jdbcTemplate.queryForList(sql, String.class, channelSlug);
 	}
