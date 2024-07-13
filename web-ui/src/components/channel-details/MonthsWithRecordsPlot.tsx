@@ -109,10 +109,11 @@ const MonthsWithRecordsPlot: React.FC = (): JSX.Element => {
             <FormControlLabel
               control={
                 <Switch
-                  checked={chartData.some(
-                    ({ name }) => name.toLowerCase() === 'others'
-                  )}
+                  checked={chartData.some(({ name }) => checkIsOthers(name))}
                   onChange={e => setToggleShowingOthers(e.target.checked)}
+                  disabled={
+                    !data.series.some(({ name }) => checkIsOthers(name))
+                  }
                 />
               }
               label="Hide/show others section on chart"
