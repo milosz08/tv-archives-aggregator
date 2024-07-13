@@ -32,6 +32,8 @@ const slotProps = {
   },
 };
 
+const othersKey = 'others';
+
 const MonthsWithRecordsPlot: React.FC = (): JSX.Element => {
   const { slug } = useParams();
   const { api } = useAxios();
@@ -57,7 +59,11 @@ const MonthsWithRecordsPlot: React.FC = (): JSX.Element => {
   }));
 
   const checkIsOthers = (name: string): boolean => {
-    return name.toLowerCase() !== 'others';
+    return name.toLowerCase() === othersKey;
+  };
+
+  const checkNoIsOthers = (name: string): boolean => {
+    return name.toLowerCase() !== othersKey;
   };
 
   const onRefresh = (): void => {
@@ -71,7 +77,7 @@ const MonthsWithRecordsPlot: React.FC = (): JSX.Element => {
       setChartData(prevState =>
         checked
           ? [othersRow, ...prevState]
-          : prevState.filter(({ name }) => checkIsOthers(name))
+          : prevState.filter(({ name }) => checkNoIsOthers(name))
       );
     }
   };
