@@ -16,6 +16,7 @@
 import { useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
 import { useAxios } from '@/api';
+import RefreshSectionHeader from '@/components/RefreshSectionHeader';
 import SuspensePartFallback from '@/components/SuspensePartFallback';
 import TvChannelsWithLetter from '@/components/tv-channels/TvChannelsWithLetter';
 import {
@@ -34,14 +35,17 @@ const TvChannelsPage: React.FC = (): JSX.Element => {
 
   const [showOnlyFetched, setShowOnlyFetched] = useState(true);
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ['tvChannels', searchPhrase, showOnlyFetched],
     queryFn: async () =>
       await api.fetchTvChannels(searchPhrase, showOnlyFetched),
   });
 
   return (
-    <Box display="flex" flexDirection="column" rowGap={2}>
+    <Box>
+      <RefreshSectionHeader onRefresh={() => refetch()}>
+        TV Channels
+      </RefreshSectionHeader>
       <FormGroup sx={{ gap: 1 }}>
         <TextField
           label="Enter channel name"
