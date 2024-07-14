@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.miloszgilga.tvarchiver.dataserver.features.tvchannel.dto.MonthlyProgramsChartDto;
 import pl.miloszgilga.tvarchiver.dataserver.features.tvchannel.dto.TvChannelDetailsDto;
-import pl.miloszgilga.tvarchiver.dataserver.features.tvchannel.dto.TvChannelPersistenceInfoDto;
 import pl.miloszgilga.tvarchiver.dataserver.features.tvchannel.dto.TvChannelResponseDto;
 
 import java.util.List;
@@ -44,11 +43,6 @@ class TvChannelController {
 	@GetMapping("/details/{channelSlug}")
 	ResponseEntity<TvChannelDetailsDto> getChannelDetails(@PathVariable String channelSlug) {
 		return ResponseEntity.ok(tvChannelService.getTvChannelDetails(channelSlug));
-	}
-
-	@GetMapping("/details/{channelSlug}/persistence")
-	ResponseEntity<TvChannelPersistenceInfoDto> getChannelPersistenceDetails(@PathVariable String channelSlug) {
-		return ResponseEntity.ok(tvChannelService.getTvChannelPersistenceDetails(channelSlug));
 	}
 
 	@GetMapping("/{channelSlug}/chart/year/{year}/program/types")

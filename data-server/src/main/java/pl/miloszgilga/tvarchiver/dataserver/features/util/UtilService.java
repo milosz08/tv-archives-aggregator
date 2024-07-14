@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package pl.miloszgilga.tvarchiver.dataserver.features.tvchannel.dto;
+package pl.miloszgilga.tvarchiver.dataserver.features.util;
 
-public record TvChannelPersistenceInfoDto(
-	long persistedDays,
-	long persistedYears,
-	long persistedTvPrograms,
-	long averageDbSize
-) {
+import pl.miloszgilga.tvarchiver.dataserver.features.util.dto.DatabaseCapacityDetailsDto;
+
+interface UtilService {
+	DatabaseCapacityDetailsDto getDatabaseCapacityDetails(String channelSlug);
 }

@@ -88,30 +88,6 @@ class TvChannelServiceImpl implements TvChannelService {
 	}
 
 	@Override
-	public TvChannelPersistenceInfoDto getTvChannelPersistenceDetails(String channelSlug) {
-		final String sql = """
-			SELECT
-				COUNT(DISTINCT DATE(schedule_date)) as persisted_days,
-				COUNT(DISTINCT YEAR(schedule_date)) as persisted_years,
-				COUNT(d.id) as persisted_tv_programs,
-				SUM(
-			    IF(ISNULL(d.id), 0, 28) +
-			    IFNULL(LENGTH(d.name), 0) +
-			    IFNULL(LENGTH(d.description), 0) +
-			    IFNULL(LENGTH(d.program_type), 0) +
-			    IFNULL(LENGTH(d.badge), 0) +
-			    IFNULL(LENGTH(d.hour_start), 0) +
-			    IFNULL(LENGTH(d.schedule_date), 0) +
-			    IFNULL(LENGTH(d.weekday), 0) +
-			    IFNULL(LENGTH(d.channel_id), 0)
-				) AS average_db_size
-			FROM tv_channels AS c LEFT JOIN tv_programs_data AS d ON d.channel_id = c.id
-			WHERE slug = ? GROUP BY c.id
-			""";
-		return jdbcTemplate.queryForObject(sql, new DataClassRowMapper<>(TvChannelPersistenceInfoDto.class), channelSlug);
-	}
-
-	@Override
 	public MonthlyProgramsChartDto getMonthlyChannelPrograms(String channelSlug, int year) {
 		// fetch all persisted months for selected year in channel
 		final String persistedMonthsSql = """
