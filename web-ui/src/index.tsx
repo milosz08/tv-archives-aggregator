@@ -18,18 +18,21 @@ import { SnackbarProvider } from 'notistack';
 import ReactDOM from 'react-dom/client';
 import AppRouter from '@/app/AppRouter';
 import '@/index.css';
+import MuiThemeSupplier from '@/mui/MuiThemeSupplier';
 import { AxiosWrapper, QueryWrapper } from './api';
 
 const appMount = document.getElementById('app-mount')!;
 
 ReactDOM.createRoot(appMount).render(
   <React.StrictMode>
-    <SnackbarProvider>
-      <AxiosWrapper>
-        <QueryWrapper>
-          <AppRouter />
-        </QueryWrapper>
-      </AxiosWrapper>
-    </SnackbarProvider>
+    <MuiThemeSupplier>
+      <SnackbarProvider>
+        <AxiosWrapper>
+          <QueryWrapper>
+            <AppRouter />
+          </QueryWrapper>
+        </AxiosWrapper>
+      </SnackbarProvider>
+    </MuiThemeSupplier>
   </React.StrictMode>
 );
