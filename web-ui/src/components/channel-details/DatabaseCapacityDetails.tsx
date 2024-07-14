@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useParams } from 'react-router';
 import { useAxios } from '@/api';
+import RefreshSectionHeader from '@/components/RefreshSectionHeader';
+import SuspensePartFallback from '@/components/SuspensePartFallback';
 import { formatLargeNumber, parseBytes } from '@/utils';
 import {
   Box,
@@ -25,18 +26,27 @@ import {
   TableContainer,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import RefreshSectionHeader from '../RefreshSectionHeader';
-import SuspensePartFallback from '../SuspensePartFallback';
 import TableContentRow from './TableContentRow';
 
-const PersistedChannelInfo: React.FC = (): JSX.Element => {
-  const { slug } = useParams();
+type Props = {
+  header: string;
+  queryKey: unknown[];
+  slug?: string;
+  enabled?: boolean;
+};
+
+const DatabaseCapacityDetails: React.FC<Props> = ({
+  header,
+  queryKey,
+  slug = null,
+  enabled = true,
+}): JSX.Element => {
   const { api } = useAxios();
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['tvChannelPersistenceDetails', slug],
-    queryFn: async () => await api.fetchTvChannelPersistenceDetails(slug),
-    enabled: !!slug,
+    queryKey,
+    queryFn: async () => await api.fetchDatabaseCapacityDetails(slug),
+    enabled,
   });
 
   if (!data || isFetching) {
@@ -46,7 +56,7 @@ const PersistedChannelInfo: React.FC = (): JSX.Element => {
   return (
     <Box>
       <RefreshSectionHeader onRefresh={() => refetch()}>
-        Channel persisted info
+        {header}
       </RefreshSectionHeader>
       <Grid container spacing={2}>
         <Grid item sm={12} md={6} width="100%">
@@ -59,7 +69,7 @@ const PersistedChannelInfo: React.FC = (): JSX.Element => {
                 />
                 <TableContentRow
                   label="Total persisted years"
-                  value={data.persistedYears}
+                  value={formatLargeNumber(data.persistedYears)}
                 />
               </TableBody>
             </Table>
@@ -86,4 +96,4 @@ const PersistedChannelInfo: React.FC = (): JSX.Element => {
   );
 };
 
-export default PersistedChannelInfo;
+export default DatabaseCapacityDetails;

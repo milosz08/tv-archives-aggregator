@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-export type TvChannel = {
-  name: string;
-  slug: string;
+export type DatabaseCapacityDetails = {
   persistedDays: number;
-};
-
-export type TvChannelsAlphabet = {
-  [symbol: string]: TvChannel[];
-};
-
-export type TvChannelDetails = {
-  name: string;
-  hasPersistedDays: number;
+  persistedYears: number;
+  persistedTvPrograms: number;
+  averageDbSize: number;
 };

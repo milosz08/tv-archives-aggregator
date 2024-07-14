@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
 import { useAxios } from '@/api';
 import RefreshSectionHeader from '@/components/RefreshSectionHeader';
+import DatabaseCapacityDetails from '@/components/channel-details/DatabaseCapacityDetails';
 import TvChannelsList from '@/components/tv-channels/TvChannelsList';
 import { Box, FormControlLabel, Switch, TextField } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -52,6 +53,10 @@ const TvChannelsPage: React.FC = (): JSX.Element => {
           />
         }
         label="Show only TV channels with some data"
+      />
+      <DatabaseCapacityDetails
+        header="Database capacity"
+        queryKey={['databaseCapacityGlobalDetails']}
       />
       <TvChannelsList data={data} isFetching={isFetching} />
     </Box>

@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useParams } from 'react-router';
+import DatabaseCapacityDetails from '@/components/channel-details/DatabaseCapacityDetails';
 import MonthsWithRecordsPlot from '@/components/channel-details/MonthsWithRecordsPlot';
-import PersistedChannelInfo from '@/components/channel-details/PersistentChannelInfo';
 import { Divider } from '@mui/material';
 
-const ChannelDetailsPage: React.FC = (): JSX.Element => (
-  <>
-    <PersistedChannelInfo />
-    <Divider />
-    <MonthsWithRecordsPlot />
-  </>
-);
+const ChannelDetailsPage: React.FC = (): JSX.Element => {
+  const { slug } = useParams();
+
+  return (
+    <>
+      <DatabaseCapacityDetails
+        header="Channel capacity info"
+        queryKey={['databaseCapacityDetails', slug]}
+        slug={slug}
+        enabled={!!slug}
+      />
+      <Divider />
+      <MonthsWithRecordsPlot />
+    </>
+  );
+};
 
 export default ChannelDetailsPage;

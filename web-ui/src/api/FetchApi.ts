@@ -20,13 +20,10 @@ import {
   SearchResultResDto,
   SelectRecord,
 } from './types/search-content';
-import {
-  TvChannelDetails,
-  TvChannelPersistenceDetails,
-  TvChannelsAlphabet,
-} from './types/tv-channel';
+import { TvChannelDetails, TvChannelsAlphabet } from './types/tv-channel';
 import { MonthlyProgramsChartDto } from './types/tv-channel-chart';
 import { CalendarMonth } from './types/tv-channel-years';
+import { DatabaseCapacityDetails } from './types/util';
 
 const fetchApi = (axios: AxiosInstance) => ({
   fetchTvChannels: async (channelName: string, onlyWithSomeData: boolean) => {
@@ -42,9 +39,10 @@ const fetchApi = (axios: AxiosInstance) => ({
     );
     return data;
   },
-  fetchTvChannelPersistenceDetails: async (channelSlug: string | undefined) => {
-    const { data } = await axios.get<TvChannelPersistenceDetails>(
-      `/api/v1/tv-channel/details/${channelSlug}/persistence`
+  fetchDatabaseCapacityDetails: async (channelSlug: string | null) => {
+    const { data } = await axios.get<DatabaseCapacityDetails>(
+      '/api/v1/util/db/capacity',
+      { params: { slug: channelSlug ?? '' } }
     );
     return data;
   },
