@@ -31,9 +31,13 @@ import {
 
 type Props = {
   row: SearchRecord;
+  viewTvShowColumn: boolean;
 };
 
-const ResultElementRow: React.FC<Props> = ({ row }): JSX.Element => {
+const ResultElementRow: React.FC<Props> = ({
+  row,
+  viewTvShowColumn,
+}): JSX.Element => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -47,7 +51,9 @@ const ResultElementRow: React.FC<Props> = ({ row }): JSX.Element => {
         <TableCell>{row.name}</TableCell>
         <TableCell>{row.tvChannelName}</TableCell>
         <TableCell>{row.programType}</TableCell>
-        <TableCell>{formatSeasonAndEpisode(row)}</TableCell>
+        {viewTvShowColumn && (
+          <TableCell>{formatSeasonAndEpisode(row)}</TableCell>
+        )}
         <TableCell>{row.hourStart}</TableCell>
         <TableCell>{row.scheduleDate}</TableCell>
         <TableCell>{row.weekday}</TableCell>

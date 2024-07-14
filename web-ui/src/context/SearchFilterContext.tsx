@@ -52,6 +52,7 @@ const SearchFilterProvider: React.FC<Props> = ({ children }): JSX.Element => {
     fullTextSearch: false,
     selectedTvChannels: [],
     selectedProgramTypes: [],
+    selectedWeekdays: [],
     tvShowsActive: true,
     startDate: null,
     endDate: null,

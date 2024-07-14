@@ -30,7 +30,8 @@ import { useQuery } from '@tanstack/react-query';
 import MultiselectCheckbox from '../MultiselectCheckbox';
 
 const SearchContentForm: React.FC = (): JSX.Element => {
-  const { searchFilter, updateFilterProp, refetch } = useSearchFilterContext();
+  const { searchFilter, updateFilterProp, refetch, setPage } =
+    useSearchFilterContext();
   const { api } = useAxios();
 
   const { data: tvChannels = [], refetch: refetchTvChannels } = useQuery({
@@ -42,6 +43,12 @@ const SearchContentForm: React.FC = (): JSX.Element => {
   const { data: programTypes = [], refetch: refetchProgramTypes } = useQuery({
     queryKey: ['searchProgramTypes'],
     queryFn: async () => await api.fetchSearchProgramTypes(),
+    enabled: false,
+  });
+
+  const { data: weekdays = [], refetch: refetchWeekdays } = useQuery({
+    queryKey: ['weekdays'],
+    queryFn: async () => await api.fetchSearchWeekdays(),
     enabled: false,
   });
 
@@ -162,11 +169,21 @@ const SearchContentForm: React.FC = (): JSX.Element => {
             />
           </Grid>
           <Grid item sm={12} lg={4} width="100%">
-            <Button type="submit" variant="contained" sx={{ width: '100%' }}>
-              Search content
-            </Button>
+            <MultiselectCheckbox
+              id="search-weekdays"
+              label="Weekdays"
+              limitTags={3}
+              elements={weekdays}
+              onChange={selectedWeekdays =>
+                updateFilterProp('selectedWeekdays', selectedWeekdays)
+              }
+              refetch={refetchWeekdays}
+            />
           </Grid>
         </Grid>
+        <Button type="submit" variant="contained" sx={{ width: '100%' }}>
+          Search content
+        </Button>
       </Box>
     </form>
   );

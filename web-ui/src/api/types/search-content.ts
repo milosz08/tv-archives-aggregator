@@ -29,6 +29,7 @@ export type SearchRecord = {
 
 export type SearchResultResDto = {
   elements: SearchRecord[];
+  viewTvShowColumn: boolean;
   page: number;
   totalPages: number;
   totalElements: number;
@@ -50,6 +51,7 @@ export type SearchFilter = {
   fullTextSearch: boolean;
   selectedTvChannels: SelectRecord[];
   selectedProgramTypes: SelectRecord[];
+  selectedWeekdays: SelectRecord[];
   tvShowsActive: boolean;
   startDate: string | null;
   endDate: string | null;

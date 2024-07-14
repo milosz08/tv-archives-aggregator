@@ -70,7 +70,9 @@ const ResultElementsList: React.FC = (): JSX.Element => {
               <TableCell>Name</TableCell>
               <TableCell>Tv channel</TableCell>
               <TableCell>Program type</TableCell>
-              <TableCell>Season/episode</TableCell>
+              {searchResult.viewTvShowColumn && (
+                <TableCell>Season/episode</TableCell>
+              )}
               <TableCell>Hour start</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Weekday</TableCell>
@@ -78,7 +80,11 @@ const ResultElementsList: React.FC = (): JSX.Element => {
           </TableHead>
           <TableBody>
             {searchResult.elements.map(row => (
-              <ResultElementRow key={uuidv4()} row={row} />
+              <ResultElementRow
+                key={uuidv4()}
+                row={row}
+                viewTvShowColumn={searchResult.viewTvShowColumn}
+              />
             ))}
           </TableBody>
         </Table>

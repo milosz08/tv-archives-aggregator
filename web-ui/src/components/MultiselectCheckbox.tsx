@@ -29,6 +29,7 @@ type Props = {
   id: string;
   label: string;
   elements: SelectRecord[];
+  limitTags?: number;
   onChange: (selectedElements: SelectRecord[]) => void;
   refetch: () => Promise<QueryObserverResult<SelectRecord[], Error>>;
 };
@@ -37,6 +38,7 @@ const MultiselectCheckbox: React.FC<Props> = ({
   id,
   label,
   elements,
+  limitTags = 10,
   onChange,
   refetch,
 }): JSX.Element => {
@@ -58,7 +60,7 @@ const MultiselectCheckbox: React.FC<Props> = ({
       onClose={() => setOpen(false)}
       loading={loading}
       id={id}
-      limitTags={10}
+      limitTags={limitTags}
       options={[...elements]}
       disableCloseOnSelect
       getOptionLabel={option => option.value}

@@ -91,6 +91,10 @@ const fetchApi = (axios: AxiosInstance) => ({
     );
     return data;
   },
+  fetchSearchWeekdays: async () => {
+    const { data } = await axios.get<SelectRecord[]>('/api/v1/search/weekdays');
+    return data;
+  },
   fetchSearchResults: async (
     reqDto: SearchFilter,
     page: number,
@@ -106,6 +110,7 @@ const fetchApi = (axios: AxiosInstance) => ({
         selectedProgramTypes: reqDto.selectedProgramTypes.map(({ id }) =>
           id.replace('-', ' ')
         ),
+        selectedWeekdays: reqDto.selectedWeekdays.map(({ id }) => Number(id)),
       },
       { params: { page, pageSize } }
     );
