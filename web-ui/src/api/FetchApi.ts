@@ -16,6 +16,11 @@
 import { AxiosInstance } from 'axios';
 import { ProgramDayDetails } from './types/archive-day-program';
 import {
+  SearchFilter,
+  SearchResultResDto,
+  SelectRecord,
+} from './types/search-content';
+import {
   TvChannelDetails,
   TvChannelPersistenceDetails,
   TvChannelsAlphabet,
@@ -73,6 +78,36 @@ const fetchApi = (axios: AxiosInstance) => ({
   ) => {
     const { data } = await axios.get<ProgramDayDetails>(
       `/api/v1/program/all/channel/${channelSlug}/date/${date}`
+    );
+    return data;
+  },
+  fetchSearchTvChannels: async () => {
+    const { data } = await axios.get<SelectRecord[]>('/api/v1/search/channels');
+    return data;
+  },
+  fetchSearchProgramTypes: async () => {
+    const { data } = await axios.get<SelectRecord[]>(
+      '/api/v1/search/program/types'
+    );
+    return data;
+  },
+  fetchSearchResults: async (
+    reqDto: SearchFilter,
+    page: number,
+    pageSize: number
+  ) => {
+    const { data } = await axios.post<SearchResultResDto>(
+      '/api/v1/search',
+      {
+        ...reqDto,
+        season: reqDto.season ? Number(reqDto.season) : null,
+        episode: reqDto.episode ? Number(reqDto.episode) : null,
+        selectedTvChannels: reqDto.selectedTvChannels.map(({ id }) => id),
+        selectedProgramTypes: reqDto.selectedProgramTypes.map(({ id }) =>
+          id.replace('-', ' ')
+        ),
+      },
+      { params: { page, pageSize } }
     );
     return data;
   },

@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import ResultElementsList from '@/components/search-content/ResultElementsList';
+import SearchContentForm from '@/components/search-content/SearchContentForm';
+import SearchFilterProvider from '@/context/SearchFilterContext';
+import { Box } from '@mui/material';
 
-const SearchContent: React.FC = (): JSX.Element => {
-  return <div>123</div>;
-};
+const SearchContent: React.FC = (): JSX.Element => (
+  <SearchFilterProvider>
+    <Box display="flex" flexDirection="column" rowGap={4}>
+      <SearchContentForm />
+      <ResultElementsList />
+    </Box>
+  </SearchFilterProvider>
+);
 
 export default SearchContent;
