@@ -15,7 +15,7 @@
  */
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { useAxios } from '@/api';
 import SuspensePartFallback from '@/components/SuspensePartFallback';
 import YearSelect from '@/components/YearSelect';
@@ -99,18 +99,12 @@ const ChannelYearsPage: React.FC = (): JSX.Element => {
                     <EmptyBlocks countOfEmptyBlocks={countOfEmptyBlocks} />
                     {days.map(({ number, isoDate }) => (
                       <Grid key={isoDate} item xs={1}>
-                        <Box
-                          component={Link}
+                        <Button
+                          component={RouterLink}
                           to={`/channel/${slug}/archive/${isoDate}`}
-                          width="100%"
-                          height="100%"
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          paddingY={1.5}
-                          sx={{ textDecoration: 'none' }}>
+                          sx={{ minWidth: '10px', width: '100%' }}>
                           {number}
-                        </Box>
+                        </Button>
                       </Grid>
                     ))}
                   </Grid>

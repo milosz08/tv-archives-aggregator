@@ -86,7 +86,7 @@ const ChartTable: React.FC<Props> = ({
               <TableCell width={5}>
                 {row.existInChart && (
                   <Checkbox
-                    color="default"
+                    color="info"
                     checked={chartData.some(({ name }) => name === row.name)}
                     onChange={e =>
                       onToggleElementVisibility(e.target.checked, row)
@@ -95,11 +95,15 @@ const ChartTable: React.FC<Props> = ({
                 )}
               </TableCell>
               <TableCell component="th" scope="row">
-                <Typography fontWeight={500}>{row.name}</Typography>
+                <Typography fontWeight={500} color="black">
+                  {row.name}
+                </Typography>
               </TableCell>
               {row.data.map(freq => (
                 <TableCell key={uuidv4()} align="center">
-                  <Typography fontWeight={500}>{freq}</Typography>
+                  <Typography fontWeight={500} color="black">
+                    {freq}
+                  </Typography>
                 </TableCell>
               ))}
             </TableRow>

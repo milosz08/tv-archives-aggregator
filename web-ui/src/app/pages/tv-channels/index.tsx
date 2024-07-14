@@ -48,9 +48,9 @@ const TvChannelsPage: React.FC = (): JSX.Element => {
       </RefreshSectionHeader>
       <FormGroup sx={{ gap: 1 }}>
         <TextField
+          size="small"
           value={searchPhrase}
           label="Enter channel name"
-          variant="standard"
           onChange={e => setSearchPhrase(e.target.value)}
         />
         <FormControlLabel

@@ -46,7 +46,6 @@ const YearSelect: React.FC<Props> = ({
       }}
       label="Year"
       size="small"
-      sx={{ backgroundColor: 'white' }}
       disabled={isFetching}>
       {years?.map(year => (
         <MenuItem key={year} value={year}>

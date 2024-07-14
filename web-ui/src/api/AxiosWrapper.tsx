@@ -42,7 +42,6 @@ const AxiosWrapper: React.FC<Props> = ({ children }): JSX.Element => {
     response => response,
     error => {
       const message = error?.response?.data?.message;
-      console.log(message);
       enqueueSnackbar(message || 'Unexpected server error', {
         variant: 'error',
       });
