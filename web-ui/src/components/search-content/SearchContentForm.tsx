@@ -54,6 +54,7 @@ const SearchContentForm: React.FC = (): JSX.Element => {
 
   const handleSubmitSearchForm = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    setPage(1);
     refetch();
   };
 
