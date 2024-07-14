@@ -17,11 +17,10 @@ import { useEffect } from 'react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useAxios } from '@/api';
-import ExternalLinks from '@/components/ExternalLinks';
-import ProgramBadge from '@/components/ProgramBadge';
 import SuspensePartFallback from '@/components/SuspensePartFallback';
-import { Alert, Box, Divider, Grid, Typography } from '@mui/material';
+import { Alert, Box, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import ArchiveElement from './ArchiveElement';
 
 const ArchiveChannelData: React.FC = (): JSX.Element => {
   const { slug, date } = useParams();
@@ -40,8 +39,25 @@ const ArchiveChannelData: React.FC = (): JSX.Element => {
     }
   }, [isError]);
 
-  if (isFetching) {
+  if (!data || isFetching) {
     return <SuspensePartFallback />;
+  }
+
+  let content;
+  if (data.listOfPrograms.length === 0) {
+    content = (
+      <Alert severity="warning" variant="outlined">
+        Not found any data for selected day.
+      </Alert>
+    );
+  } else {
+    content = (
+      <Box marginTop={2} display="flex" flexDirection="column" rowGap={2}>
+        {data?.listOfPrograms?.map(details => (
+          <ArchiveElement key={details.hourStart} details={details} />
+        ))}
+      </Box>
+    );
   }
 
   return (
@@ -49,43 +65,7 @@ const ArchiveChannelData: React.FC = (): JSX.Element => {
       <Typography variant="h4" marginBottom={1}>
         {data?.channelName}
       </Typography>
-      {data?.listOfPrograms && data?.listOfPrograms?.length > 0 ? (
-        <Box marginTop={2} display="flex" flexDirection="column" rowGap={2}>
-          {data?.listOfPrograms?.map(details => (
-            <React.Fragment key={details.hourStart}>
-              <Divider />
-              <Grid container spacing={4}>
-                <Grid item xs={2} fontSize={20} textAlign="right">
-                  {details.hourStart}
-                </Grid>
-                <Grid item xs={10}>
-                  <Typography
-                    component="div"
-                    marginBottom={1}
-                    fontWeight={600}
-                    color="primary">
-                    {details.name}
-                  </Typography>
-                  <Typography component="div" marginBottom={3}>
-                    {details.programType}
-                    {details.season && <span>, season: {details.season}</span>}
-                    {details.episode && (
-                      <span>, episode: {details.episode}</span>
-                    )}
-                  </Typography>
-                  <Typography component="div" color="gray">
-                    {details.description ?? <i>No description</i>}
-                  </Typography>
-                  <ProgramBadge badge={details.badge} />
-                  <ExternalLinks name={details.name} />
-                </Grid>
-              </Grid>
-            </React.Fragment>
-          ))}
-        </Box>
-      ) : (
-        <Alert severity="warning">Not found any data for selected day.</Alert>
-      )}
+      {content}
     </>
   );
 };

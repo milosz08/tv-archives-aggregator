@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSearchFilterContext } from '@/context/SearchFilterContext';
 import { ROWS_PER_PAGE } from '@/utils';
 import {
+  Alert,
   Table,
   TableBody,
   TableCell,
@@ -34,6 +35,14 @@ const ResultElementsList: React.FC = (): JSX.Element => {
 
   if (!searchResult || isFetching) {
     return <SuspensePartFallback />;
+  }
+
+  if (searchResult.elements.length === 0) {
+    return (
+      <Alert variant="outlined" severity="warning">
+        Not found any content.
+      </Alert>
+    );
   }
 
   return (

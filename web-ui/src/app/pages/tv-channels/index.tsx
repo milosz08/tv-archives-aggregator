@@ -17,16 +17,8 @@ import { useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
 import { useAxios } from '@/api';
 import RefreshSectionHeader from '@/components/RefreshSectionHeader';
-import SuspensePartFallback from '@/components/SuspensePartFallback';
-import TvChannelsWithLetter from '@/components/tv-channels/TvChannelsWithLetter';
-import {
-  Alert,
-  Box,
-  FormControlLabel,
-  FormGroup,
-  Switch,
-  TextField,
-} from '@mui/material';
+import TvChannelsList from '@/components/tv-channels/TvChannelsList';
+import { Box, FormControlLabel, Switch, TextField } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 const TvChannelsPage: React.FC = (): JSX.Element => {
@@ -42,42 +34,26 @@ const TvChannelsPage: React.FC = (): JSX.Element => {
   });
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" rowGap={2}>
       <RefreshSectionHeader onRefresh={() => refetch()}>
         TV Channels
       </RefreshSectionHeader>
-      <FormGroup sx={{ gap: 1 }}>
-        <TextField
-          size="small"
-          value={searchPhrase}
-          label="Enter channel name"
-          onChange={e => setSearchPhrase(e.target.value)}
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              checked={showOnlyFetched}
-              onChange={e => setShowOnlyFetched(e.target.checked)}
-            />
-          }
-          label="Show only TV channels with some data"
-        />
-      </FormGroup>
-      {isFetching && <SuspensePartFallback />}
-      {data && Object.keys(data).length === 0 && (
-        <Alert severity="warning">Not found any channels.</Alert>
-      )}
-      {data && !isFetching && (
-        <Box display="flex" flexDirection="column" rowGap={2} marginTop={5}>
-          {Object.keys(data).map(key => (
-            <TvChannelsWithLetter
-              key={key}
-              letter={key}
-              tvChannels={data[key]}
-            />
-          ))}
-        </Box>
-      )}
+      <TextField
+        size="small"
+        value={searchPhrase}
+        label="Enter channel name"
+        onChange={e => setSearchPhrase(e.target.value)}
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            checked={showOnlyFetched}
+            onChange={e => setShowOnlyFetched(e.target.checked)}
+          />
+        }
+        label="Show only TV channels with some data"
+      />
+      <TvChannelsList data={data} isFetching={isFetching} />
     </Box>
   );
 };
