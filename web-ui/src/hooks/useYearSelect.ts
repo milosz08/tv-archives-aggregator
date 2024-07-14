@@ -28,7 +28,9 @@ const useYearSelect = () => {
     queryKey: ['channelPlotYears', slug],
     queryFn: async () => {
       const data = await api.fetchPersistedChannelYears(slug);
-      setYear(data[0]);
+      if (year === 0) {
+        setYear(data[0]);
+      }
       return data;
     },
     enabled: !!slug,
