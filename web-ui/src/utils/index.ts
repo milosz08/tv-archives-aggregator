@@ -13,7 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import byteSize from 'byte-size';
+import { SearchRecord } from '@/api/types/search-content';
+
+export const ROWS_PER_PAGE = [10, 20, 25, 100];
 
 export const formatLargeNumber = (num: number): string => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+};
+
+export const formatSeasonAndEpisode = (row: SearchRecord): string => {
+  const { season, episode } = row;
+  return `${season ?? '-'}/${episode ?? '-'}`;
+};
+
+export const parseBytes = (bytes: number): string => {
+  const { value, unit } = byteSize(bytes);
+  return `${value} ${unit}`;
 };

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import byteSize from 'byte-size';
 import { useParams } from 'react-router';
 import { useAxios } from '@/api';
-import { formatLargeNumber } from '@/utils';
+import { formatLargeNumber, parseBytes } from '@/utils';
 import {
   Box,
   Grid,
@@ -29,11 +28,6 @@ import { useQuery } from '@tanstack/react-query';
 import RefreshSectionHeader from '../RefreshSectionHeader';
 import SuspensePartFallback from '../SuspensePartFallback';
 import TableContentRow from './TableContentRow';
-
-const parseBytes = (bytes: number): string => {
-  const { value, unit } = byteSize(bytes);
-  return `${value} ${unit}`;
-};
 
 const PersistedChannelInfo: React.FC = (): JSX.Element => {
   const { slug } = useParams();
