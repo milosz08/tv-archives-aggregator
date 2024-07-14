@@ -16,6 +16,7 @@
 import byteSize from 'byte-size';
 import { useParams } from 'react-router';
 import { useAxios } from '@/api';
+import { formatLargeNumber } from '@/utils';
 import {
   Box,
   Grid,
@@ -32,10 +33,6 @@ import TableContentRow from './TableContentRow';
 const parseBytes = (bytes: number): string => {
   const { value, unit } = byteSize(bytes);
   return `${value} ${unit}`;
-};
-
-const formatLargeNumber = (num: number): string => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
 
 const PersistedChannelInfo: React.FC = (): JSX.Element => {

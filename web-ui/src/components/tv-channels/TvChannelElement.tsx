@@ -15,6 +15,7 @@
  */
 import { Link as RouterLink } from 'react-router-dom';
 import { TvChannel } from '@/api/types/tv-channel';
+import { formatLargeNumber } from '@/utils';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 
 type Props = {
@@ -35,7 +36,7 @@ const TvChannelElement: React.FC<Props> = ({ tvChannel }): JSX.Element => (
             {tvChannel.name}
           </Typography>
           <Typography variant="body1" color="gray" fontSize={14}>
-            {tvChannel.persistedDays} days
+            {formatLargeNumber(tvChannel.persistedDays)} days
           </Typography>
         </Box>
       </Button>
