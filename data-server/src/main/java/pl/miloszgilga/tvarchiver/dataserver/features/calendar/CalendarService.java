@@ -20,7 +20,7 @@ import pl.miloszgilga.tvarchiver.dataserver.features.calendar.dto.CalendarMonthD
 
 import java.util.List;
 
-public interface CalendarService {
+interface CalendarService {
 	List<CalendarMonthDto> getCalendarStructurePerChannel(String channelSlug, int year);
 	List<String> getChannelPersistedYears(String channelSlug);
 }

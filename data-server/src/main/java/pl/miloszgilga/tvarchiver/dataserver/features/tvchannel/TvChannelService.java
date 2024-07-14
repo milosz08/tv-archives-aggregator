@@ -24,7 +24,7 @@ import pl.miloszgilga.tvarchiver.dataserver.features.tvchannel.dto.TvChannelResp
 import java.util.List;
 import java.util.Map;
 
-public interface TvChannelService {
+interface TvChannelService {
 	Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase, boolean onlyWithSomeData);
 	TvChannelDetailsDto getTvChannelDetails(String channelSlug);
 	TvChannelPersistenceInfoDto getTvChannelPersistenceDetails(String channelSlug);

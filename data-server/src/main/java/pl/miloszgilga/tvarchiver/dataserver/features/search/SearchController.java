@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/search")
 @RequiredArgsConstructor
-public class SearchController {
+class SearchController {
 	private final SearchService searchService;
 
 	@GetMapping("/channels")

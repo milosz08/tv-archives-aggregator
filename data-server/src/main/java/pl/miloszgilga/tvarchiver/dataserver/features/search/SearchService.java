@@ -22,7 +22,7 @@ import pl.miloszgilga.tvarchiver.dataserver.features.search.dto.SelectRecordDto;
 
 import java.util.List;
 
-public interface SearchService {
+interface SearchService {
 	List<SelectRecordDto> getTvChannels();
 	List<SelectRecordDto> getProgramTypes();
 	SearchResultDto performSearch(SearchFilterReqDto reqDto, int page, int pageSize);

@@ -30,7 +30,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/tv-channel")
 @RequiredArgsConstructor
-public class TvChannelController {
+class TvChannelController {
 	private final TvChannelService tvChannelService;
 
 	@GetMapping("/all/search")

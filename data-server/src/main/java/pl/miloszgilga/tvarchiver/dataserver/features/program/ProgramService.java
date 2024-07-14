@@ -20,6 +20,6 @@ import pl.miloszgilga.tvarchiver.dataserver.features.program.dto.ProgramDayDetai
 
 import java.time.LocalDate;
 
-public interface ProgramService {
+interface ProgramService {
 	ProgramDayDetailsDto getAllProgramsPerChannelAndDay(String channelSlug, LocalDate day);
 }

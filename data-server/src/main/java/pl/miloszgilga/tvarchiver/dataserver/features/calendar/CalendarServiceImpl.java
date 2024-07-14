@@ -32,7 +32,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CalendarServiceImpl implements CalendarService {
+class CalendarServiceImpl implements CalendarService {
 	private final JdbcTemplate jdbcTemplate;
 
 	@Override

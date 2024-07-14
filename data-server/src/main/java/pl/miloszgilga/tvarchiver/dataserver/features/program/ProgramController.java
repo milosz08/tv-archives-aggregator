@@ -29,7 +29,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/v1/program")
 @RequiredArgsConstructor
-public class ProgramController {
+class ProgramController {
 	private final ProgramService programService;
 
 	@GetMapping("/all/channel/{channelSlug}/date/{date}")

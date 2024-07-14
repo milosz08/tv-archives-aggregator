@@ -30,7 +30,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class SearchServiceImpl implements SearchService {
+class SearchServiceImpl implements SearchService {
 	private final JdbcTemplate jdbcTemplate;
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

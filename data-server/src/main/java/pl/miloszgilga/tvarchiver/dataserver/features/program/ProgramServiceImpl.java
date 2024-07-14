@@ -32,7 +32,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ProgramServiceImpl implements ProgramService {
+class ProgramServiceImpl implements ProgramService {
 	private final JdbcTemplate jdbcTemplate;
 
 	@Override

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TvChannelServiceImpl implements TvChannelService {
+class TvChannelServiceImpl implements TvChannelService {
 	private final JdbcTemplate jdbcTemplate;
 	private final AppConfig appConfig;
 

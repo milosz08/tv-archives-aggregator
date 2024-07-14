@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/calendar")
 @RequiredArgsConstructor
-public class CalendarController {
+class CalendarController {
 	private final CalendarService calendarService;
 
 	@GetMapping("/struct/channel/{channelSlug}/year/{year}")
