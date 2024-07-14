@@ -42,6 +42,11 @@ class SearchController {
 		return ResponseEntity.ok(searchService.getProgramTypes());
 	}
 
+	@GetMapping("/weekdays")
+	ResponseEntity<List<SelectRecordDto>> getWeekdays() {
+		return ResponseEntity.ok(searchService.getWeekdays());
+	}
+
 	@PostMapping
 	ResponseEntity<SearchResultDto> performSearch(
 		@RequestBody @Valid SearchFilterReqDto reqDto,

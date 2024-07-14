@@ -36,6 +36,9 @@ public class SearchFilterReqDto {
 	@NotNull
 	private List<String> selectedProgramTypes;
 
+	@NotNull
+	private List<Integer> selectedWeekdays;
+
 	private boolean tvShowsActive;
 
 	private String startDate;

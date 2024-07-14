@@ -25,5 +25,6 @@ import java.util.List;
 interface SearchService {
 	List<SelectRecordDto> getTvChannels();
 	List<SelectRecordDto> getProgramTypes();
+	List<SelectRecordDto> getWeekdays();
 	SearchResultDto performSearch(SearchFilterReqDto reqDto, int page, int pageSize);
 }

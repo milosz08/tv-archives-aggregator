@@ -23,10 +23,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import pl.miloszgilga.tvarchiver.dataserver.features.search.dto.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -48,11 +47,20 @@ class SearchServiceImpl implements SearchService {
 		final String sql = """
 			SELECT DISTINCT
 			REPLACE(LOWER(program_type), ' ', '-') AS id,
-			CONCAT(program_type, ' (', COUNT(program_type), ')') AS value
+			CONCAT(program_type, ' (', COUNT(program_type), ')') AS value,
+			COUNT(program_type)
 			FROM tv_programs_data
 			GROUP BY program_type ORDER BY COUNT(program_type) DESC
 			""";
 		return jdbcTemplate.query(sql, new DataClassRowMapper<>(SelectRecordDto.class));
+	}
+
+	@Override
+	public List<SelectRecordDto> getWeekdays() {
+		return Arrays.stream(DayOfWeek.values())
+			.map(dayOfWeek -> new SelectRecordDto(Integer.toString(dayOfWeek.getValue()),
+				dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US)))
+			.toList();
 	}
 
 	@Override
@@ -102,6 +110,10 @@ class SearchServiceImpl implements SearchService {
 			filter.add("CAST(CONCAT(schedule_date, ' ', hour_start, ':00') AS DATETIME) < :endDate");
 			params.put("endDate", reqDto.getEndDate());
 		}
+		if (!reqDto.getSelectedWeekdays().isEmpty()) {
+			filter.add("weekday IN (:weekdays)");
+			params.put("weekdays", reqDto.getSelectedWeekdays());
+		}
 		final String filterSql = String.join(" AND ", filter);
 
 		final String countSql = String.format("""
@@ -126,6 +138,7 @@ class SearchServiceImpl implements SearchService {
 		final List<SearchResultElement> elements = namedParameterJdbcTemplate
 			.query(searchSql, params, new DataClassRowMapper<>(SearchResultElement.class));
 
-		return new SearchResultDto(elements, page, metadata.totalPages(), metadata.count(), pageSize);
+		return new SearchResultDto(elements, reqDto.isTvShowsActive(),
+			page, metadata.totalPages(), metadata.count(), pageSize);
 	}
 }

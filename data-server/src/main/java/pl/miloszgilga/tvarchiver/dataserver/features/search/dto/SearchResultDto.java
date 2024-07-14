@@ -20,6 +20,7 @@ import java.util.List;
 
 public record SearchResultDto(
 	List<SearchResultElement> elements,
+	boolean viewTvShowColumn,
 	int page,
 	int totalPages,
 	int totalElements,
