@@ -17,9 +17,10 @@ import { useEffect } from 'react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useAxios } from '@/api';
+import ExternalLinks from '@/components/ExternalLinks';
+import ProgramBadge from '@/components/ProgramBadge';
 import SuspensePartFallback from '@/components/SuspensePartFallback';
 import { Alert, Box, Divider, Grid, Typography } from '@mui/material';
-import { orange } from '@mui/material/colors';
 import { useQuery } from '@tanstack/react-query';
 
 const ArchiveChannelData: React.FC = (): JSX.Element => {
@@ -73,24 +74,10 @@ const ArchiveChannelData: React.FC = (): JSX.Element => {
                     )}
                   </Typography>
                   <Typography component="div" color="gray">
-                    {details.description}
+                    {details.description ?? <i>No description</i>}
                   </Typography>
-                  {details.badge && (
-                    <Box
-                      component={Typography}
-                      color="white"
-                      marginTop={3}
-                      paddingX={1}
-                      paddingY={0.7}
-                      gap={3}
-                      sx={{
-                        bgcolor: orange[500],
-                        borderRadius: 1,
-                      }}
-                      maxWidth="fit-content">
-                      {details.badge}
-                    </Box>
-                  )}
+                  <ProgramBadge badge={details.badge} />
+                  <ExternalLinks name={details.name} />
                 </Grid>
               </Grid>
             </React.Fragment>
