@@ -82,6 +82,7 @@ public class TvChannelServiceImpl implements TvChannelService {
 				FROM tv_channels AS c
 				LEFT JOIN tv_programs_data AS d ON d.channel_id = c.id
 				WHERE slug = ?
+				GROUP BY c.id
 			""";
 		return jdbcTemplate.queryForObject(sql, new DataClassRowMapper<>(TvChannelDetailsDto.class), channelSlug);
 	}
