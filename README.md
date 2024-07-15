@@ -5,7 +5,7 @@ TV archive aggregator scrapping content from [telemagazyn.pl](https://telemagazy
 ### Subapplications
 - **web-scrapper** - scrapping data from website and saving in DB (desktop Java Swing app),
 - **data-server** - Rest API written in Spring Boot,
-- **web-ui** - Web client written in Angular.
+- **web-ui** - Web client written in React and MUI component library.
 
 ## Author
 Created by Miłosz Gilga. If you have any questions about this application, send message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
