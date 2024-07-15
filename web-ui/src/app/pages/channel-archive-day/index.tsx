@@ -15,7 +15,7 @@
  */
 import dayjs, { Dayjs } from 'dayjs';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
-import ArchiveChannelData from '@/components/channel-archive-day/ArchiveChannelData';
+import { ArchiveChannelData } from '@/components/channel-archive-day';
 import { Box, Grid, Link, Paper } from '@mui/material';
 import { StaticDatePicker } from '@mui/x-date-pickers';
 

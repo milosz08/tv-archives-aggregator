@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { useParams } from 'react-router';
-import DatabaseCapacityDetails from '@/components/channel-details/DatabaseCapacityDetails';
-import MonthsWithRecordsPlot from '@/components/channel-details/MonthsWithRecordsPlot';
+import { DatabaseCapacityDetails } from '@/components';
+import { MonthsWithRecordsPlot } from '@/components/channel-details';
 import { Divider } from '@mui/material';
 
 const ChannelDetailsPage: React.FC = (): JSX.Element => {

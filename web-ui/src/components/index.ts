@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  ResultElementsList,
-  SearchContentForm,
-} from '@/components/search-content';
-import SearchFilterProvider from '@/context/SearchFilterContext';
-import { Box } from '@mui/material';
+import DatabaseCapacityDetails from './DatabaseCapacityDetails';
+import RefreshSectionHeader from './RefreshSectionHeader';
+import SuspensePartFallback from './SuspensePartFallback';
+import YearSelect from './YearSelect';
 
-const SearchContent: React.FC = (): JSX.Element => (
-  <SearchFilterProvider>
-    <Box display="flex" flexDirection="column" rowGap={4}>
-      <SearchContentForm />
-      <ResultElementsList />
-    </Box>
-  </SearchFilterProvider>
-);
-
-export default SearchContent;
+export {
+  DatabaseCapacityDetails,
+  SuspensePartFallback,
+  YearSelect,
+  RefreshSectionHeader,
+};

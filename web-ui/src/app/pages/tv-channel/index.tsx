@@ -22,7 +22,7 @@ import {
   useParams,
 } from 'react-router-dom';
 import { useAxios } from '@/api';
-import SuspensePartFallback from '@/components/SuspensePartFallback';
+import { SuspensePartFallback } from '@/components';
 import ChannelDetailsProvider from '@/context/ChannelDetailsContext';
 import {
   Box,

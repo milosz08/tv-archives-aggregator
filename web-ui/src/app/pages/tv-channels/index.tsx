@@ -16,9 +16,8 @@
 import { useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
 import { useAxios } from '@/api';
-import RefreshSectionHeader from '@/components/RefreshSectionHeader';
-import DatabaseCapacityDetails from '@/components/channel-details/DatabaseCapacityDetails';
-import TvChannelsList from '@/components/tv-channels/TvChannelsList';
+import { DatabaseCapacityDetails, RefreshSectionHeader } from '@/components';
+import { TvChannelsList } from '@/components/tv-channels';
 import { Box, FormControlLabel, Switch, TextField } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
