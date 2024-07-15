@@ -39,11 +39,12 @@ Main features:
 <a name="prerequisites"></a>
 ## Prerequisites
 * for develop environment:
-	* Node v18 and higher (and corresponding NPM installation)
-	* JDK 17 or higher
+	* Node v18 or higher (and corresponding NPM installation),
+	* JDK 17 or higher,
+  * Docker and Docker compose.
 * for running environment:
-	* JRE 17 or higher (only for desktop **web-scrapper** app)
-	* Docker and Docker compose
+	* JRE 17 or higher (only for desktop **web-scrapper** app),
+	* Docker and Docker compose.
 
 <a name="clone-and-install"></a>
 ## Clone and install
