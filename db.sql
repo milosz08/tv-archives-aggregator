@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS tv_channels (
     name VARCHAR(255),
  
     PRIMARY KEY (id),
-    INDEX (slug)
+    INDEX idx_slug_tv_channels(slug)
 )
 ENGINE=InnoDB COLLATE=utf16_polish_ci;
 
@@ -23,10 +23,9 @@ CREATE TABLE IF NOT EXISTS tv_programs_data (
 	weekday INT UNSIGNED NOT NULL,
 	channel_id BIGINT UNSIGNED NOT NULL,
 
-	PRIMARY KEY (id),
-	
 	FOREIGN KEY (channel_id) REFERENCES tv_channels(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	
-	INDEX (name, schedule_date)
+	PRIMARY KEY (id),
+	INDEX idx_name_schedule_date_tv_programs_data(name)
 )
 ENGINE=InnoDB COLLATE=utf16_polish_ci;
