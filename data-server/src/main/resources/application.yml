@@ -13,7 +13,7 @@ spring:
 app-properties:
   client-urls:
     - http://localhost:4362
-    - http://tv-web-ui:4362
+    - http://localhost:4852
   chart-colors:
     - '#a6cee3'
     - '#1f78b4'
