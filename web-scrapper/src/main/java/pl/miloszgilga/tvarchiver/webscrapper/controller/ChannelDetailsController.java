@@ -18,7 +18,7 @@ package pl.miloszgilga.tvarchiver.webscrapper.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
+import pl.miloszgilga.tvarchiver.webscrapper.db.DataHandler;
 import pl.miloszgilga.tvarchiver.webscrapper.db.YearWithPersistedDto;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.MessageDialog;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelDetailsPanel;
@@ -64,15 +64,9 @@ public class ChannelDetailsController {
 			yearData.getFetchedCount(), selectedYear
 		);
 		if (response == JOptionPane.YES_OPTION) {
-			final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
-			final Long channelId = jdbcTemplate.queryForObject(
-				"SELECT id FROM tv_channels WHERE slug = ?",
-				Long.class,
-				selectedChannel.slug());
-			final int rowsAffected = jdbcTemplate.update(
-				"DELETE FROM tv_programs_data WHERE YEAR(schedule_date) = ? AND channel_id = ?",
-				selectedYear,
-				channelId);
+			final DataHandler dataHandler = rootState.getDataHandler();
+			final int rowsAffected = dataHandler.deleteChannelDataByYear(selectedChannel.slug(), selectedYear);
+
 			messageDialog.showInfo("Successfully deleted %s rows.", rowsAffected);
 			rootState.updateSelectedYear(-1);
 			yearData.setFetchedCount(0);
@@ -119,27 +113,15 @@ public class ChannelDetailsController {
 			return;
 		}
 		final RootState rootState = channelDetailsPanel.getRootState();
-		final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
+		final DataHandler dataHandler = rootState.getDataHandler();
+
+		dataHandler.createChannelTableIfNotExists(channel.slug());
 
 		// check count of saved programs and compare with all dates
-		final String savedSql = """
-			SELECT COUNT(DISTINCT DATE(schedule_date))
-			FROM tv_programs_data WHERE channel_id = ?
-			""";
-		Long persistedTvPrograms = jdbcTemplate
-			.queryForObject(savedSql, Long.class, channel.id());
-		if (persistedTvPrograms == null) {
-			persistedTvPrograms = 0L;
-		}
+		final Long persistedTvPrograms = dataHandler.getPersistedProgramsPerYear(channel.slug());
+
 		// fetch already persisted count rows per year
-		final String sql = """
-			SELECT YEAR(schedule_date) as year, COUNT(DISTINCT DATE(schedule_date)) AS count
-			FROM tv_programs_data
-			WHERE channel_id = ?
-			GROUP BY YEAR(schedule_date)
-			""";
-		final List<YearWithPersistedDto> alreadyPersistedPerYear = jdbcTemplate
-			.query(sql, (rs, rowNum) -> new YearWithPersistedDto(rs.getInt("year"), rs.getInt("count")), channel.id());
+		final List<YearWithPersistedDto> alreadyPersistedPerYear = dataHandler.getAlreadyPersistedPerYear(channel.slug());
 
 		// scrap tv channel details (count of records, start and end date)
 		final TvChannelCalendarSource tvChannelCalendarSource = new TvChannelCalendarSource(channel.slug());

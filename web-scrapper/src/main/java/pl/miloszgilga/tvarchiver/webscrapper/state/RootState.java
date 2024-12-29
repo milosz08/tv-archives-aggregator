@@ -21,8 +21,8 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import pl.miloszgilga.tvarchiver.webscrapper.db.DataSource;
+import lombok.SneakyThrows;
+import pl.miloszgilga.tvarchiver.webscrapper.db.DataHandler;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannelDetails;
 
@@ -41,7 +41,7 @@ public class RootState extends AbstractDisposableProvider {
 
 	private Dotenv dotenv;
 	@Getter
-	private DataSource dataSource;
+	private DataHandler dataHandler;
 
 	public RootState() {
 		try {
@@ -121,10 +121,6 @@ public class RootState extends AbstractDisposableProvider {
 		return this.randomness$.getValue();
 	}
 
-	public JdbcTemplate getJdbcTemplate() {
-		return dataSource.getJdbcTemplate();
-	}
-
 	public String getEnvValue(EnvKey key) {
 		return dotenv == null ? key.getDefaultValue() : dotenv.get(key.name(), key.getDefaultValue());
 	}
@@ -141,10 +137,11 @@ public class RootState extends AbstractDisposableProvider {
 		return this.totalFetchedCount$.getValue();
 	}
 
+	@SneakyThrows
 	@Override
 	public void onCleanup() {
-		if (dataSource != null) {
-			dataSource.closeConnection();
+		if (dataHandler != null) {
+			dataHandler.close();
 		}
 	}
 }

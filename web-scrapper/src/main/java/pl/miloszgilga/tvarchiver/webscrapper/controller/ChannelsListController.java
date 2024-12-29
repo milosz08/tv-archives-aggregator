@@ -18,7 +18,7 @@ package pl.miloszgilga.tvarchiver.webscrapper.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
+import pl.miloszgilga.tvarchiver.webscrapper.db.DataHandler;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.MessageDialog;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.ChannelsListPanel;
 import pl.miloszgilga.tvarchiver.webscrapper.soup.TvChannel;
@@ -38,28 +38,22 @@ public class ChannelsListController {
 
 	public void fetchChannelsList() {
 		final RootState rootState = channelsListPanel.getRootState();
-		final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
+		final DataHandler dataHandler = rootState.getDataHandler();
 		List<TvChannel> channels;
-		if (jdbcTemplate == null) {
-			return; // skipping, not initialized JDBC Template class
+		if (dataHandler == null) {
+			return; // skipping, not initialized DataHandler class
 		}
 		channelsListPanel.getChannelListModel().clear();
 		rootState.updateTvChannels(new ArrayList<>());
 		rootState.updateSelectedChannel(new TvChannel());
 		// firstly, select data from persisted DB
-		final List<TvChannel> fetchedTvChannels = jdbcTemplate.query("SELECT * FROM tv_channels", (rs, rowNum) ->
-			new TvChannel(rs.getLong("id"), rs.getString("name"), rs.getString("slug"))
-		);
+		final List<TvChannel> fetchedTvChannels = dataHandler.getTvChannels();
 		if (fetchedTvChannels.isEmpty()) {
 			// if is empty, scrap data and insert into db
 			final TvChannelsSource tvChannelsSource = new TvChannelsSource();
 			final List<TvChannel> scrappedTvChannels = tvChannelsSource.getAllTvChannels();
 
-			jdbcTemplate.batchUpdate("INSERT INTO tv_channels (name,slug) VALUES (?,?)",
-				scrappedTvChannels, scrappedTvChannels.size(), (ps, arg) -> {
-					ps.setString(1, arg.name());
-					ps.setString(2, arg.slug());
-				});
+			dataHandler.batchInsertTvChannels(scrappedTvChannels);
 			log.info("Persisted DB data empty. Filling with {} fetched channels.", scrappedTvChannels.size());
 			channels = scrappedTvChannels;
 		} else {

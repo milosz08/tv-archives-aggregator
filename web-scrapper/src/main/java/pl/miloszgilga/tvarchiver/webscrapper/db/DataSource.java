@@ -19,7 +19,7 @@ package pl.miloszgilga.tvarchiver.webscrapper.db;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.jdbi.v3.core.Jdbi;
 
 import java.net.InetSocketAddress;
 import java.sql.Connection;
@@ -51,7 +51,7 @@ public class DataSource {
 
 	public boolean isSuccessfullyConnected() {
 		try (final Connection connection = dataSource.getConnection();
-			 final Statement statement = connection.createStatement()) {
+		     final Statement statement = connection.createStatement()) {
 			statement.executeQuery("SELECT 1");
 			return true;
 		} catch (SQLException e) {
@@ -59,8 +59,8 @@ public class DataSource {
 		}
 	}
 
-	public JdbcTemplate getJdbcTemplate() {
-		return new JdbcTemplate(dataSource);
+	public Jdbi getJdbi() {
+		return Jdbi.create(dataSource);
 	}
 
 	public void closeConnection() {

@@ -18,6 +18,7 @@ package pl.miloszgilga.tvarchiver.webscrapper.controller;
 
 import lombok.RequiredArgsConstructor;
 import pl.miloszgilga.tvarchiver.webscrapper.db.DataSource;
+import pl.miloszgilga.tvarchiver.webscrapper.db.JdbiDataHandler;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.MessageDialog;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.window.ConnectToDbWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.window.RootWindow;
@@ -45,7 +46,7 @@ public class ConnectToDbController {
 			if (!dataSource.isSuccessfullyConnected()) {
 				throw new ConnectException();
 			}
-			rootState.setDataSource(dataSource);
+			rootState.setDataHandler(new JdbiDataHandler(dataSource));
 			final RootWindow rootWindow = new RootWindow(rootState);
 			rootWindow.createWindow();
 			connectToDbWindow.closeWindow();

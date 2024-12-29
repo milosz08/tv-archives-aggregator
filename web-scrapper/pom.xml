@@ -105,6 +105,11 @@
 			<artifactId>commons-io</artifactId>
 			<version>${commonsIo.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jdbi</groupId>
+			<artifactId>jdbi3-core</artifactId>
+			<version>${jdbi.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

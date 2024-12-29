@@ -19,7 +19,7 @@ package pl.miloszgilga.tvarchiver.webscrapper.controller;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
-import org.springframework.jdbc.core.JdbcTemplate;
+import pl.miloszgilga.tvarchiver.webscrapper.db.DataHandler;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.panel.BottomBarPanel;
 import pl.miloszgilga.tvarchiver.webscrapper.state.RootState;
 
@@ -47,7 +47,7 @@ public class BottomBarController {
 	}
 
 	public String parseToDbHost() {
-		final InetSocketAddress address = bottomBarPanel.getRootState().getDataSource().getDbHost();
+		final InetSocketAddress address = bottomBarPanel.getRootState().getDataHandler().getDbHost();
 		return String.format("DB: %s:%s", address.getHostString(), address.getPort());
 	}
 
@@ -58,11 +58,8 @@ public class BottomBarController {
 	public void fetchDatabaseSize() {
 		final RootState rootState = bottomBarPanel.getRootState();
 		// fetch only when is running and after took first size
-		final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
-		final String sql = """
-			SELECT SUM(data_length + index_length) FROM information_schema.TABLES WHERE table_schema = ?
-			""";
-		final Long dbSize = jdbcTemplate.queryForObject(sql, Long.class, rootState.getDataSource().getDbName());
+		final DataHandler dataHandler = rootState.getDataHandler();
+		final Long dbSize = dataHandler.getDatabaseSize();
 		if (dbSize != null) {
 			bottomBarPanel.getDbSizeLabel().setText(parseToDbSize(dbSize));
 		}

@@ -17,8 +17,7 @@
 package pl.miloszgilga.tvarchiver.webscrapper.scrap;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
-import pl.miloszgilga.tvarchiver.webscrapper.db.TvDailyProgramBatchUpdate;
+import pl.miloszgilga.tvarchiver.webscrapper.db.DataHandler;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.MessageDialog;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.window.AbstractWindow;
 import pl.miloszgilga.tvarchiver.webscrapper.gui.window.RootWindow;
@@ -65,7 +64,7 @@ public class DataScrapperThread extends Thread {
 
 	@Override
 	public void run() {
-		final JdbcTemplate jdbcTemplate = rootState.getJdbcTemplate();
+		final DataHandler dataHandler = rootState.getDataHandler();
 
 		final Map<Integer, TvChannelYearData> years = tvChannelDetails.years();
 		final int firstYear = Collections.min(years.keySet());
@@ -88,16 +87,8 @@ public class DataScrapperThread extends Thread {
 			endDate = tvChannelDetails.endDate();
 		}
 		// check already saved dates
-		final String listSql = """
-			SELECT schedule_date FROM tv_programs_data
-			WHERE channel_id = ? AND (schedule_date BETWEEN ? AND ?)
-			""";
-		final List<LocalDate> alreadySavedDates = jdbcTemplate.queryForList(listSql,
-			LocalDate.class, selectedChannel.id(), startDate, endDate);
-
-		// get tv channel id
-		final String objSql = "SELECT id FROM tv_channels WHERE slug = ?";
-		final Long channelId = jdbcTemplate.queryForObject(objSql, Long.class, selectedChannel.slug());
+		final List<LocalDate> alreadySavedDates = dataHandler
+			.getAlreadySavedDates(selectedChannel.slug(), startDate, endDate);
 
 		// dates range
 		final List<LocalDate> datesRange = generateDateRange(startDate, endDate, alreadySavedDates);
@@ -116,13 +107,7 @@ public class DataScrapperThread extends Thread {
 			}
 			final long randomnessWaitingTime = minDelayMs + random.nextLong(maxDelayMs - minDelayMs + 1);
 			final List<DayScheduleDetails> details = dayScheduleSource.fetchDayScheduleDetails(date);
-			final String insertSql = """
-				INSERT INTO tv_programs_data(
-					name, description, program_type, season, episode, badge, hour_start, schedule_date,
-				    weekday, channel_id
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-				""";
-			jdbcTemplate.batchUpdate(insertSql, new TvDailyProgramBatchUpdate(details, date, channelId));
+			dataHandler.batchInsertChannelData(selectedChannel.slug(), details, date);
 			try {
 				sleep(randomnessWaitingTime);
 			} catch (InterruptedException ex) {
