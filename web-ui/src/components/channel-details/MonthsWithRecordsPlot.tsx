@@ -13,24 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useAxios } from '@/api';
-import { MonthlyProgramChartStackElement } from '@/api/types/tv-channel-chart';
+import {
+  MonthlyProgramChartStackElement,
+  MonthlyProgramsChartDto,
+} from '@/api/types/tv-channel-chart';
 import RefreshSectionHeader from '@/components/RefreshSectionHeader';
 import SuspensePartFallback from '@/components/SuspensePartFallback';
 import YearSelect from '@/components/YearSelect';
 import useYearSelect from '@/hooks/useYearSelect';
 import { Box, FormControlLabel, FormGroup, Paper, Switch } from '@mui/material';
-import { BarChart } from '@mui/x-charts';
+import { BarChart, LineChart, LineChartProps } from '@mui/x-charts';
 import { useQuery } from '@tanstack/react-query';
 import ChartTable from './ChartTable';
 
-const slotProps = {
-  legend: {
-    hidden: true,
+const chartProps = (
+  data: MonthlyProgramsChartDto,
+  height: number
+): Partial<Omit<LineChartProps, 'series'>> => ({
+  height,
+  slotProps: {
+    legend: {
+      hidden: true,
+    },
   },
-};
+  grid: {
+    vertical: true,
+    horizontal: true,
+  },
+  xAxis: [
+    {
+      scaleType: 'band',
+      data: data.months,
+    },
+  ],
+  skipAnimation: true,
+});
 
 const othersKey = 'others';
 
@@ -51,12 +71,24 @@ const MonthsWithRecordsPlot: React.FC = (): JSX.Element => {
     enabled: !!slug && !!year,
   });
 
-  const series = chartData.map(({ data: seriesData, color, name }) => ({
-    data: seriesData,
-    color,
-    stack: data?.stackKey,
-    label: name,
-  }));
+  const computeSeries = useCallback(
+    (withoutStackKey: boolean) =>
+      chartData.map(({ data: seriesData, color, name }) => {
+        const baseObj = {
+          data: seriesData,
+          color,
+          stack: data?.stackKey,
+          label: name,
+        };
+        if (withoutStackKey) {
+          return Object.fromEntries(
+            Object.entries(baseObj).filter(([key]) => key !== 'stack')
+          );
+        }
+        return baseObj;
+      }),
+    [chartData]
+  );
 
   const checkIsOthers = (name: string): boolean => {
     return name.toLowerCase() === othersKey;
@@ -99,17 +131,8 @@ const MonthsWithRecordsPlot: React.FC = (): JSX.Element => {
       </RefreshSectionHeader>
       <YearSelect years={years} year={year} setYear={setYear} />
       <Box component={Paper} marginTop={2} padding={2}>
-        <BarChart
-          series={series}
-          height={550}
-          slotProps={slotProps}
-          xAxis={[
-            {
-              scaleType: 'band',
-              data: data.months,
-            },
-          ]}
-        />
+        <LineChart series={computeSeries(true)} {...chartProps(data, 350)} />
+        <BarChart series={computeSeries(false)} {...chartProps(data, 550)} />
         <Box margin={2}>
           <FormGroup sx={{ gap: 1 }}>
             <FormControlLabel

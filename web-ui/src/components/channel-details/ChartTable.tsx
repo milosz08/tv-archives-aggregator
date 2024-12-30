@@ -71,7 +71,7 @@ const ChartTable: React.FC<Props> = ({
                 onChange={e => onToggleAllVisibility(e.target.checked)}
               />
             </TableCell>
-            <TableCell>Type of TV channel program</TableCell>
+            <TableCell>Type of TV channel program (per year)</TableCell>
             {data.months.map((month, index) => (
               <TableCell key={month} align="center">
                 {month}
@@ -96,7 +96,7 @@ const ChartTable: React.FC<Props> = ({
               </TableCell>
               <TableCell component="th" scope="row">
                 <Typography fontWeight={500} color="black">
-                  {row.name}
+                  {row.name} ({row.total})
                 </Typography>
               </TableCell>
               {row.data.map(freq => (

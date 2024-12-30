@@ -24,6 +24,7 @@ export type MonthlyProgramsChartDto = {
 
 export type MonthlyProgramChartStackElement = {
   name: string;
+  total: number;
   data: number[];
   color: string;
   existInChart: boolean;
