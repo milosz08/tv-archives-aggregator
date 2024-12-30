@@ -29,4 +29,5 @@ public class AppConfig {
 	private List<String> clientUrls;
 	private List<String> chartColors;
 	private String defaultChartColor;
+	private String databaseName;
 }
