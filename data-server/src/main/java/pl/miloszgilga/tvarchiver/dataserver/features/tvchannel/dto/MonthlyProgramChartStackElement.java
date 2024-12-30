@@ -27,6 +27,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MonthlyProgramChartStackElement {
 	private String name;
+	private long total;
 	private List<Integer> data;
 	private String color;
 	private boolean existInChart;
@@ -34,5 +35,18 @@ public class MonthlyProgramChartStackElement {
 	public MonthlyProgramChartStackElement(String name, List<Integer> data) {
 		this.name = name;
 		this.data = data;
+		total = calculateTotal();
+	}
+
+	public MonthlyProgramChartStackElement(String name, List<Integer> data, String color, boolean existInChart) {
+		this.name = name;
+		this.data = data;
+		this.color = color;
+		this.existInChart = existInChart;
+		total = calculateTotal();
+	}
+
+	private long calculateTotal() {
+		return data.stream().reduce(0, Integer::sum);
 	}
 }
