@@ -79,10 +79,13 @@ public class JdbiDataHandler implements DataHandler {
 			 	hour_start VARCHAR(5) NOT NULL,
 			 	schedule_date DATE NOT NULL,
 			 	weekday INT UNSIGNED NOT NULL,
-			 	PRIMARY KEY (id)
+			 	channel_id BIGINT UNSIGNED NOT NULL,
+				FOREIGN KEY (channel_id) REFERENCES tv_channels(id) ON UPDATE CASCADE ON DELETE CASCADE,
+			 	PRIMARY KEY (id),
+			 	INDEX idx_name_%s(name)
 			)
 			ENGINE=InnoDB COLLATE=utf16_polish_ci;
-			""", transformChannelSlug(channelSlug));
+			""", transformChannelSlug(channelSlug), transformChannelSlug(channelSlug));
 		jdbi.useHandle(handle -> handle.execute(sql));
 	}
 
@@ -104,7 +107,7 @@ public class JdbiDataHandler implements DataHandler {
 
 	@Override
 	public void batchInsertChannelData(
-		String channelSlug,
+		TvChannel tvChannel,
 		List<DayScheduleDetails> dayScheduleDetails,
 		LocalDate scheduleDate
 	) {
@@ -117,9 +120,10 @@ public class JdbiDataHandler implements DataHandler {
 				badge,
 				hour_start,
 				schedule_date,
-			  weekday
-			) VALUES (?,?,?,?,?,?,?,?,?)
-			""", transformChannelSlug(channelSlug));
+			  weekday,
+			  channel_id
+			) VALUES (?,?,?,?,?,?,?,?,?,?)
+			""", transformChannelSlug(tvChannel.slug()));
 		jdbi.useHandle(handle -> {
 			final PreparedBatch batch = handle.prepareBatch(sql);
 			for (final DayScheduleDetails detail : dayScheduleDetails) {
@@ -133,6 +137,7 @@ public class JdbiDataHandler implements DataHandler {
 					.bind(6, detail.hourStart())
 					.bind(7, Date.valueOf(scheduleDate))
 					.bind(8, scheduleDate.getDayOfWeek().getValue())
+					.bind(9, tvChannel.id())
 					.add();
 			}
 			batch.execute();

@@ -35,7 +35,7 @@ public interface DataHandler extends Closeable {
 
 	List<LocalDate> getAlreadySavedDates(String channelSlug, LocalDate start, LocalDate end);
 
-	void batchInsertChannelData(String channelSlug, List<DayScheduleDetails> dayScheduleDetails, LocalDate scheduleDate);
+	void batchInsertChannelData(TvChannel tvChannel, List<DayScheduleDetails> dayScheduleDetails, LocalDate scheduleDate);
 
 	List<YearWithPersistedDto> getAlreadyPersistedPerYear(String channelSlug);
 

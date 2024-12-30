@@ -107,7 +107,7 @@ public class DataScrapperThread extends Thread {
 			}
 			final long randomnessWaitingTime = minDelayMs + random.nextLong(maxDelayMs - minDelayMs + 1);
 			final List<DayScheduleDetails> details = dayScheduleSource.fetchDayScheduleDetails(date);
-			dataHandler.batchInsertChannelData(selectedChannel.slug(), details, date);
+			dataHandler.batchInsertChannelData(selectedChannel, details, date);
 			try {
 				sleep(randomnessWaitingTime);
 			} catch (InterruptedException ex) {
