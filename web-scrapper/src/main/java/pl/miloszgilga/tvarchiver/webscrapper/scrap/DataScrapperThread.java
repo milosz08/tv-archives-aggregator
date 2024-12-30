@@ -116,9 +116,9 @@ public class DataScrapperThread extends Thread {
 			}
 			rootState.updateTotalFetchedCount(++totalProcessesDays);
 			rootState.updateChannelDetails(updateYearFetchedProgramsCount(date));
-			log.info("Add {} programs data: {} with randomness: {}s", details.size(), date, randomnessWaitingTime);
+			log.info("Add {} programs data: {} with randomness: {}ms", details.size(), date, randomnessWaitingTime);
 		}
-		log.info("Stopped scrap data from: {} with processed records count: {}", selectedChannel, totalProcessesDays);
+		log.info("Stopped scrap data from: {} with processed days count: {}", selectedChannel, totalProcessesDays);
 		rootState.updateAppState(AppState.IDLE);
 
 		boolean isEnded;
