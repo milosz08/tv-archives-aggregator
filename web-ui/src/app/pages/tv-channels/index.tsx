@@ -13,37 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useState } from 'react';
-import { useDebounceValue } from 'usehooks-ts';
+import { FormEvent, useState } from 'react';
 import { useAxios } from '@/api';
 import { DatabaseCapacityDetails, RefreshSectionHeader } from '@/components';
 import { TvChannelsList } from '@/components/tv-channels';
-import { Box, FormControlLabel, Switch, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Switch,
+  TextField,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 const TvChannelsPage: React.FC = (): JSX.Element => {
-  const [searchPhrase, setSearchPhrase] = useDebounceValue('', 500);
+  const [searchPhrase, setSearchPhrase] = useState('');
   const { api } = useAxios();
 
   const [showOnlyFetched, setShowOnlyFetched] = useState(true);
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['tvChannels', searchPhrase, showOnlyFetched],
+    queryKey: ['tvChannels', showOnlyFetched],
     queryFn: async () =>
       await api.fetchTvChannels(searchPhrase, showOnlyFetched),
   });
+
+  const handleSubmitSearch = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    refetch();
+  };
 
   return (
     <Box display="flex" flexDirection="column" rowGap={2}>
       <RefreshSectionHeader onRefresh={() => refetch()}>
         TV Channels
       </RefreshSectionHeader>
-      <TextField
-        size="small"
-        value={searchPhrase}
-        label="Enter channel name"
-        onChange={e => setSearchPhrase(e.target.value)}
-      />
+      <form onSubmit={handleSubmitSearch}>
+        <Box display="flex" columnGap={2}>
+          <TextField
+            size="small"
+            fullWidth
+            value={searchPhrase}
+            label="Enter channel name"
+            onChange={e => setSearchPhrase(e.target.value)}
+          />
+          <Button type="submit" variant="contained">
+            <SearchIcon />
+          </Button>
+        </Box>
+      </form>
       <FormControlLabel
         control={
           <Switch
