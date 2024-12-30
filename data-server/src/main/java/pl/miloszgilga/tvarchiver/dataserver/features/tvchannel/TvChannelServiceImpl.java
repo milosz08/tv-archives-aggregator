@@ -135,7 +135,8 @@ class TvChannelServiceImpl implements TvChannelService {
 				.collect(Collectors.toMap(MonthlyData::monthId, MonthlyData::freq));
 
 			List<MonthlyData> allMonthsData = new ArrayList<>();
-			for (int month = 1; month <= persistedMonths.size(); month++) {
+			final int firstMonth = Collections.min(persistedMonthsRaw);
+			for (int month = firstMonth; month <= firstMonth + persistedMonths.size() - 1; month++) {
 				allMonthsData.add(new MonthlyData(month, monthFreqMap.getOrDefault(month, 0)));
 			}
 			// sort programs freq months from 1 -> 12
