@@ -18,9 +18,8 @@ package pl.miloszgilga.tvarchiver.dataserver.features.program;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.DataClassRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import pl.miloszgilga.tvarchiver.dataserver.db.DataHandler;
 import pl.miloszgilga.tvarchiver.dataserver.features.program.dto.ProgramDayDetailsDto;
 import pl.miloszgilga.tvarchiver.dataserver.features.program.dto.ProgramDto;
 
@@ -33,25 +32,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 class ProgramServiceImpl implements ProgramService {
-	private final JdbcTemplate jdbcTemplate;
+	private final DataHandler dataHandler;
 
 	@Override
 	public ProgramDayDetailsDto getAllProgramsPerChannelAndDay(String channelSlug, LocalDate day) {
 		// fetch channel name
-		final String channelNameSql = "SELECT name FROM tv_channels WHERE slug = ?";
-		final String channelName = jdbcTemplate.queryForObject(channelNameSql, String.class, channelSlug);
+		final String channelName = dataHandler.getChannelName(channelSlug);
 		// fetch channel programs on selected day
-		final String channelProgramsSql = """
-			SELECT pd.name, description, program_type,
-			IF(season IS NULL OR episode IS NULL, false, true) AS isTvShow,
-			season, episode, badge, hour_start
-			FROM tv_programs_data AS pd
-			INNER JOIN tv_channels AS c ON pd.channel_id = c.id
-			WHERE c.slug = ? AND schedule_date = ?
-			""";
-		final List<ProgramDto> programsData = jdbcTemplate.query(channelProgramsSql,
-			new DataClassRowMapper<>(ProgramDto.class), channelSlug, day);
-
+		final List<ProgramDto> programsData = dataHandler.getChannelProgramForDay(channelSlug, day);
 		programsData.sort(Comparator.comparing(data -> LocalTime.parse(data.hourStart())));
 		return new ProgramDayDetailsDto(channelName, programsData);
 	}

@@ -18,10 +18,9 @@ package pl.miloszgilga.tvarchiver.dataserver.features.tvchannel;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.DataClassRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import pl.miloszgilga.tvarchiver.dataserver.config.AppConfig;
+import pl.miloszgilga.tvarchiver.dataserver.db.DataHandler;
 import pl.miloszgilga.tvarchiver.dataserver.features.tvchannel.dto.*;
 import pl.miloszgilga.tvarchiver.dataserver.util.AppUtils;
 
@@ -34,18 +33,22 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 class TvChannelServiceImpl implements TvChannelService {
-	private final JdbcTemplate jdbcTemplate;
+	private final DataHandler dataHandler;
 	private final AppConfig appConfig;
 
 	@Override
 	public Map<Character, List<TvChannelResponseDto>> getTvChannelsBySearch(String phrase, boolean onlyWithSomeData) {
-		String sql = """
-			SELECT c.name, slug, COUNT(DISTINCT DATE(schedule_date)) AS persisted_days FROM tv_channels AS c
-			LEFT JOIN tv_programs_data AS d ON d.channel_id = c.id
-			WHERE LOWER(c.name) LIKE LOWER(?) GROUP BY c.id
-			""";
-		final List<TvChannelResponseDto> tvChannels = jdbcTemplate
-			.query(sql, new DataClassRowMapper<>(TvChannelResponseDto.class), "%" + phrase + "%");
+		final Map<String, String> allTvChannels = dataHandler.getAllTvChannels(phrase);
+		final List<String> persistedTvChannels = dataHandler.getPersistedChannels();
+
+		final List<String> onlyWithSomeContent = allTvChannels.keySet().stream()
+			.filter(persistedTvChannels::contains)
+			.toList();
+
+		final Map<String, Long> persistedDays = dataHandler.getChannelsPersistedDays(onlyWithSomeContent);
+		final List<TvChannelResponseDto> tvChannels = allTvChannels.entrySet().stream()
+			.map(e -> new TvChannelResponseDto(e.getValue(), e.getKey(), persistedDays.getOrDefault(e.getKey(), 0L)))
+			.toList();
 
 		final TreeMap<Character, List<TvChannelResponseDto>> mappedByFirstLetter = new TreeMap<>(tvChannels.stream()
 			.filter(channel -> channel.persistedDays() > 0 || !onlyWithSomeData)
@@ -77,40 +80,21 @@ class TvChannelServiceImpl implements TvChannelService {
 
 	@Override
 	public TvChannelDetailsDto getTvChannelDetails(String channelSlug) {
-		final String sql = """
-				SELECT c.name, COUNT(d.id) > 0 AS has_persisted_days
-				FROM tv_channels AS c
-				LEFT JOIN tv_programs_data AS d ON d.channel_id = c.id
-				WHERE slug = ?
-				GROUP BY c.id
-			""";
-		return jdbcTemplate.queryForObject(sql, new DataClassRowMapper<>(TvChannelDetailsDto.class), channelSlug);
+		return dataHandler.getChannelDetails(channelSlug);
 	}
 
 	@Override
 	public MonthlyProgramsChartDto getMonthlyChannelPrograms(String channelSlug, int year) {
 		// fetch all persisted months for selected year in channel
-		final String persistedMonthsSql = """
-			SELECT DISTINCT MONTH(schedule_date) FROM tv_programs_data d
-			INNER JOIN tv_channels c ON d.channel_id = c.id
-			WHERE slug = ? AND YEAR(schedule_date) = ?
-			""";
-		final List<String> persistedMonths = jdbcTemplate
-			.queryForList(persistedMonthsSql, Integer.class, channelSlug, year)
+		final List<Integer> persistedMonthsRaw = dataHandler.getPersistedMonths(channelSlug, year);
+
+		final List<String> persistedMonths = persistedMonthsRaw
 			.stream()
 			.map(monthId -> Month.of(monthId).getDisplayName(TextStyle.SHORT, Locale.ENGLISH))
 			.toList();
 
 		// get all program types combined with freq for all months separately
-		final String programTypesPerYearSql = """
-			SELECT program_type AS program_type, COUNT(d.id) AS count_per_month, MONTH(schedule_date) as month_id
-			FROM tv_programs_data d
-			INNER JOIN tv_channels c ON d.channel_id = c.id
-			WHERE slug = ? AND YEAR(schedule_date) = ?
-			GROUP BY program_type, MONTH(schedule_date) ORDER BY MONTH(schedule_date) ASC
-			""";
-		final List<ProgramTypeDto> programTypesPerYear = jdbcTemplate
-			.query(programTypesPerYearSql, new DataClassRowMapper<>(ProgramTypeDto.class), channelSlug, year);
+		final List<ProgramTypeDto> programTypesPerYear = dataHandler.getProgramTypesPerYear(channelSlug, year);
 
 		// flatted to program types
 		final List<String> programTypes = programTypesPerYear.stream()

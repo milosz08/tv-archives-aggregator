@@ -17,9 +17,8 @@
 package pl.miloszgilga.tvarchiver.dataserver.features.calendar;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.DataClassRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import pl.miloszgilga.tvarchiver.dataserver.db.DataHandler;
 import pl.miloszgilga.tvarchiver.dataserver.features.calendar.dto.CalendarDay;
 import pl.miloszgilga.tvarchiver.dataserver.features.calendar.dto.CalendarMonthDto;
 import pl.miloszgilga.tvarchiver.dataserver.features.calendar.dto.MinMaxDateDto;
@@ -33,17 +32,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 class CalendarServiceImpl implements CalendarService {
-	private final JdbcTemplate jdbcTemplate;
+	private final DataHandler dataHandler;
 
 	@Override
 	public List<CalendarMonthDto> getCalendarStructurePerChannel(String channelSlug, int year) {
-		final String yearsSql = """
-			SELECT MIN(schedule_date) AS start, MAX(schedule_date) AS end FROM tv_programs_data AS pd
-			INNER JOIN tv_channels AS c ON pd.channel_id = c.id
-			WHERE c.slug = ? AND YEAR(schedule_date) = ?
-			""";
-		final MinMaxDateDto miMaxDate = jdbcTemplate
-			.queryForObject(yearsSql, new DataClassRowMapper<>(MinMaxDateDto.class), channelSlug, year);
+		final MinMaxDateDto miMaxDate = dataHandler.getMinAndMaxDate(channelSlug, year);
 		if (miMaxDate == null || miMaxDate.start() == null || miMaxDate.end() == null) {
 			return List.of();
 		}
@@ -72,11 +65,6 @@ class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	public List<String> getChannelPersistedYears(String channelSlug) {
-		final String sql = """
-			SELECT DISTINCT YEAR(schedule_date) FROM tv_programs_data AS pd
-			INNER JOIN tv_channels AS c ON pd.channel_id = c.id
-			WHERE c.slug = ? ORDER BY YEAR(schedule_date) DESC
-			""";
-		return jdbcTemplate.queryForList(sql, String.class, channelSlug);
+		return dataHandler.getChannelPersistedYears(channelSlug);
 	}
 }

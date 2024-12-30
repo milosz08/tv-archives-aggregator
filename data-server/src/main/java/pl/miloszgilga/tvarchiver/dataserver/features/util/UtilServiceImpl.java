@@ -18,52 +18,24 @@ package pl.miloszgilga.tvarchiver.dataserver.features.util;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.jdbc.core.DataClassRowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import pl.miloszgilga.tvarchiver.dataserver.db.DataHandler;
 import pl.miloszgilga.tvarchiver.dataserver.features.util.dto.DatabaseCapacityDetailsDto;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 class UtilServiceImpl implements UtilService {
-	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private final DataHandler dataHandler;
 
 	@Override
 	public DatabaseCapacityDetailsDto getDatabaseCapacityDetails(String channelSlug) {
 		final boolean globalCapacity = StringUtils.equals(channelSlug, StringUtils.EMPTY);
-		final String distinctSelector = globalCapacity ? ", channel_id" : StringUtils.EMPTY;
-
-		final String sql = String.format("""
-				SELECT
-					COUNT(DISTINCT DATE(schedule_date)%s) as persisted_days,
-					COUNT(DISTINCT YEAR(schedule_date)%s) as persisted_years,
-					COUNT(d.id) as persisted_tv_programs,
-					SUM(
-				    IF(ISNULL(d.id), 0, 28) +
-				    IFNULL(LENGTH(d.name), 0) +
-				    IFNULL(LENGTH(d.description), 0) +
-				    IFNULL(LENGTH(d.program_type), 0) +
-				    IFNULL(LENGTH(d.badge), 0) +
-				    IFNULL(LENGTH(d.hour_start), 0) +
-				    IFNULL(LENGTH(d.schedule_date), 0) +
-				    IFNULL(LENGTH(d.weekday), 0) +
-				    IFNULL(LENGTH(d.channel_id), 0)
-					) AS average_db_size
-				FROM tv_channels AS c LEFT JOIN tv_programs_data AS d ON d.channel_id = c.id %s
-				""",
-			distinctSelector,
-			distinctSelector,
-			globalCapacity ? "" : "WHERE slug = :channelSlug GROUP BY c.id"
-		);
-
-		final Map<String, Object> params = new HashMap<>();
-		if (!globalCapacity) {
-			params.put("channelSlug", channelSlug);
+		if (globalCapacity) {
+			final List<String> persistedChannels = dataHandler.getPersistedChannels();
+			return dataHandler.getGlobalDatabaseCapacity(persistedChannels);
 		}
-		return namedParameterJdbcTemplate
-			.queryForObject(sql, params, new DataClassRowMapper<>(DatabaseCapacityDetailsDto.class));
+		return dataHandler.getChannelDatabaseCapacity(channelSlug);
 	}
 }
