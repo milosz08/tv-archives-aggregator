@@ -22,5 +22,6 @@ import java.util.List;
 
 interface CalendarService {
 	List<CalendarMonthDto> getCalendarStructurePerChannel(String channelSlug, int year);
+
 	List<String> getChannelPersistedYears(String channelSlug);
 }
