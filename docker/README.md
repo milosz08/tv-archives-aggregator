@@ -35,6 +35,11 @@ services:
     ports:
       - '8080:8080'
     environment:
+      DB_HOST: <database hostname>
+      DB_PORT: <database port>
+      DB_NAME: <database name>
+      DB_USERNAME: <database username>
+      DB_PASSWORD: <database password>
       TV_ARCHIVES_AGGREGATOR_XMS: 1024m
       TV_ARCHIVES_AGGREGATOR_XMX: 1024m
     networks:
