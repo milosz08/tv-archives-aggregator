@@ -82,7 +82,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>${maven-assembly-plugin.version}</version>
         <configuration>
-          <finalName>tv-archives-aggregator-client</finalName>
+          <finalName>tv-archives-aggregator-scrapper</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <outputDirectory>${project.parent.basedir}/.bin</outputDirectory>
           <archive>
