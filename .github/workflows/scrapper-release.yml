@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: output-jar
-          path: .bin/tv-archives-aggregator-client.jar
+          path: .bin/tv-archives-aggregator-scrapper.jar
           retention-days: 1
 
   release:
