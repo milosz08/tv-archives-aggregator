@@ -54,4 +54,3 @@ jobs:
           tag_name: v${{ github.event.inputs.version }}
           name: Release ${{ github.event.inputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: ""
