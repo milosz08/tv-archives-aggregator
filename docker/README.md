@@ -20,8 +20,13 @@ docker build -t milosz08/tv-archives-aggregator-server
 docker run -d \
   --name tv-archives-aggregator-server \
   -p 8080:8080 \
-  -e PM_WEB_PANEL_XMS=1024m \
-  -e PM_WEB_PANEL_XMX=1024m \
+  -e DB_HOST=<database hostname> \
+  -e DB_PORT=<database port> \
+  -e DB_NAME=<database name> \
+  -e DB_USERNAME=<database username> \
+  -e DB_PASSWORD=<database password> \
+  -e TV_ARCHIVES_AGGREGATOR_XMS=1024m \
+  -e TV_ARCHIVES_AGGREGATOR_XMX=1024m \
   milosz08/tv-archives-aggregator-server
 ```
 
