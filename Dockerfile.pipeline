@@ -2,7 +2,7 @@ FROM eclipse-temurin:17-jre-alpine
 
 ENV BUILD_DIR=/docker
 ENV ENTRY_DIR=/app/tv-archives-aggregator
-ENV JAR_NAME=tv-archives-aggreagator-client.jar
+ENV JAR_NAME=tv-archives-aggregator-client.jar
 
 WORKDIR $ENTRY_DIR
 
