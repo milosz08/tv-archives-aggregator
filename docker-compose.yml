@@ -1,46 +1,53 @@
 services:
-  tv-scrapper-mysql-db:
-    container_name: tv-scrapper-mysql-db
+  tv-archives-aggregator-mysql-db:
+    container_name: tv-archives-aggregator-mysql-db
     image: mysql:8.0.32
     ports:
-      - '${TV_SCRAPPER_MYSQL_PORT}:3306'
+      - '${TV_ARCHIVES_AGGREGATOR_MYSQL_PORT}:3306'
     environment:
-      - 'MYSQL_ROOT_PASSWORD=${TV_SCRAPPER_MYSQL_PASSWORD}'
+      - 'MYSQL_ROOT_PASSWORD=${TV_ARCHIVES_AGGREGATOR_MYSQL_PASSWORD}'
       - 'MYSQL_DATABASE=aggregator-db'
     volumes:
       - ./.volumes/mysql/mysql-volume:/var/lib/mysql
       - ./.volumes/mysql/init:/docker-entrypoint-initdb.d
     healthcheck:
-      test: "mysqladmin ping -u root -p${TV_SCRAPPER_MYSQL_PASSWORD}"
+      test: "mysqladmin ping -u root -p${TV_ARCHIVES_AGGREGATOR_MYSQL_PASSWORD}"
     networks:
-      - tv-scrapper-network
+      - tv-archives-aggregator-network
 
-  tv-scrapper-data-server:
-    container_name: tv-scrapper-data-server
+  tv-archives-aggregator-phpmyadmin:
+    container_name: tv-archives-aggregator-phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
     ports:
-      - '${TV_SCRAPPER_DATA_SERVER_PORT}:4361'
+      - ${TV_ARCHIVES_AGGREGATOR_PHPMYADMIN_PORT}:80
+    environment:
+      PMA_HOST: tv-archives-aggregator-mysql-db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${TV_ARCHIVES_AGGREGATOR_MYSQL_PASSWORD}
+    depends_on:
+      - tv-archives-aggregator-mysql-db
+    networks:
+      - tv-archives-aggregator-network
+
+  tv-archives-aggregator-client:
+    container_name: tv-archives-aggregator-client
+    ports:
+      - '${TV_ARCHIVES_AGGREGATOR_CLIENT_PORT}:8080'
     build:
-      context: ./data-server
+      context: .
       dockerfile: Dockerfile
     environment:
-      - 'DB_HOST=tv-scrapper-mysql-db'
-      - 'DB_PORT=3306'
-      - 'DB_NAME=aggregator-db'
-      - 'DB_USERNAME=root'
-      - 'DB_PASSWORD=${TV_SCRAPPER_MYSQL_PASSWORD}'
+      DB_HOST: tv-archives-aggregator-mysql-db
+      DB_PORT: 3306
+      DB_NAME: aggregator-db
+      DB_USERNAME: root
+      DB_PASSWORD: ${TV_ARCHIVES_AGGREGATOR_MYSQL_PASSWORD}
+      TV_ARCHIVES_AGGREGATOR_XMS: 1024m
+      TV_ARCHIVES_AGGREGATOR_XMX: 1024m
     networks:
-      - tv-scrapper-network
-
-  tv-scrapper-web-ui:
-    container_name: tv-scrapper-web-ui
-    ports:
-      - '${TV_SCRAPPER_WEB_UI_PORT}:80'
-    build:
-      context: ./web-ui
-      dockerfile: Dockerfile
-    networks:
-      - tv-scrapper-network
+      - tv-archives-aggregator-network
 
 networks:
-  tv-scrapper-network:
+  tv-archives-aggregator-network:
     driver: bridge

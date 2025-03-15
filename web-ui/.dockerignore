@@ -1,6 +1,0 @@
-node_modules
-dist
-.vscode
-.eslintrc.json
-.gitignore
-.prettierrc.json

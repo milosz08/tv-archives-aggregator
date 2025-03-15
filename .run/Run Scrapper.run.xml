@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Scrapper" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="pl.miloszgilga.archiver.scrapper.AppScrapperMain" />
+    <module name="app-scrapper" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="pl.miloszgilga.archiver.scrapper.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

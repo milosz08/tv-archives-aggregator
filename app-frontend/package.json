@@ -1,0 +1,62 @@
+{
+  "name": "app-frontned",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite --port 4853",
+    "build": "tsc && vite build",
+    "lint": "eslint ../web-ui --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview --port 4853"
+  },
+  "author": {
+    "name": "Miłosz Gilga",
+    "email": "personal@miloszgilga.pl",
+    "url": "https://miloszgilga.pl"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.7",
+    "@mui/material": "^6.4.7",
+    "@mui/x-charts": "^7.27.1",
+    "@mui/x-date-pickers": "^7.27.3",
+    "@reduxjs/toolkit": "^2.6.0",
+    "@tanstack/react-query": "^5.68.0",
+    "axios": "^1.8.3",
+    "byte-size": "^9.0.1",
+    "dayjs": "^1.11.13",
+    "notistack": "^3.0.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.2.0",
+    "react-router": "^7.3.0",
+    "react-router-dom": "^7.3.0",
+    "usehooks-ts": "^3.1.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/byte-size": "^8.1.2",
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@types/react-redux": "^7.1.34",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-json": "^4.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "prettier": "^3.5.3",
+    "prettier-eslint": "^16.3.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1",
+    "vite": "^6.2.2"
+  }
+}

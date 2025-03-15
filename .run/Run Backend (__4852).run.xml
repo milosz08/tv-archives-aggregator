@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Backend (::4852)"
+                 type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="dev"/>
+    <module name="app-backend"/>
+    <option name="SPRING_BOOT_MAIN_CLASS" value="pl.miloszgilga.archiver.backend.AppBackendMain"/>
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="pl.miloszgilga.archiver.*"/>
+        <option name="ENABLED" value="true"/>
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true"/>
+    </method>
+  </configuration>
+</component>

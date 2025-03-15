@@ -1,0 +1,8 @@
+app-backend/target/
+app-scrapper/target/
+app-frontend/target/
+app-frontend/node_modules/
+app-frontend/dist/
+
+app-frontend/.prettierrc.json
+app-frontend/.eslintrc.json

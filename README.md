@@ -1,99 +1,105 @@
-# TV archive aggregator
+# TV archives aggregator
 
-TV archive aggregator scrapping content from [telemagazyn.pl](https://telemagazyn.pl) and indexing it with more comfortable search system.
+TV archive aggregator scrapping content from [telemagazyn.pl](https://telemagazyn.pl) and indexing
+it with more comfortable search system.
 
 ## Table of content
-<!-- no toc -->
-- [Features](#features)
-- [Gallery](#gallery)
-- [Prerequisites](#prerequisites)
-- [Clone and install](#clone-and-install)
-- [Prepare develop environment](#prepare-develop-environment)
-- [Tech stack](#tech-stack)
-- [Author](#author)
-- [License](#license)
 
-<a name="features"></a>
+* [Features](#features)
+* [Gallery](#gallery)
+* [Prerequisites](#prerequisites)
+* [Clone and install](#clone-and-install)
+* [Prepare develop environment](#prepare-develop-environment)
+* [Create executable JAR file (bare-metal)](#create-executable-jar-file-bare-metal)
+* [Tech stack](#tech-stack)
+* [Author](#author)
+* [License](#license)
+
 ## Features
-The main goal of this project is to improve the archiving system for TV programs and make them more easily searchable for interesting content from a given time period.
 
-This project consists of 3 sub-projects:
-- **web-scrapper** - scrapping data from website and saving in DB (desktop Java Swing app),
-- **data-server** - Rest API written in Spring Boot,
-- **web-ui** - Web client written in React and MUI component library.
+The main goal of this project is to improve the archiving system for TV programs and make them more
+easily searchable for interesting content from a given time period.
+
+This project consists of 3 subprojects:
+
+- **app-scrapper** - scrapping data from website and saving in DB (desktop Java Swing app),
+- **app-backend** - Rest API written in Spring Boot,
+- **app-frontend** - Web client written in React and MUI component library.
 
 Main features:
-* make availability to scrap content from [telemagazyn.pl](https://telemagazyn.pl) and saving in defined structure in MySQL database,
+
+* make availability to scrap content from [telemagazyn.pl](https://telemagazyn.pl) and saving in
+  defined structure in MySQL database,
 * provide web API for preexisting web client or other clients (for example mobile),
-* provide web UI for searching content by program type, TV channel or genre with advanced search system and additional data visualization tools.
+* provide web UI for searching content by program type, TV channel or genre with advanced search
+  system and additional data visualization tools.
 
-<a name="gallery"></a>
 ## Gallery
-![](.github/web-scrapper.png)
-![](.github/web-ui-1.png)
-![](.github/web-ui-2.png)
-![](.github/web-ui-3.png)
-![](.github/web-ui-4.png)
-![](.github/web-ui-5.png)
 
-<a name="prerequisites"></a>
+<details>
+  <summary>Click to expand gallery</summary><br>
+  <img src=".github/image/web-scrapper.png" alt=""><br><br>
+  <img src=".github/image/web-ui-1.png" alt=""><br><br>
+  <img src=".github/image/web-ui-2.png" alt=""><br><br>
+  <img src=".github/image/web-ui-3.png" alt=""><br><br>
+  <img src=".github/image/web-ui-4.png" alt=""><br><br>
+  <img src=".github/image/web-ui-5.png" alt="">
+</details>
+
 ## Prerequisites
-* for develop environment:
-	* Node v18 or higher (and corresponding NPM installation),
-	* JDK 17 or higher,
-  * Docker and Docker compose.
-* for running environment:
-	* JRE 17 or higher (only for desktop **web-scrapper** app),
-	* Docker and Docker compose.
 
-<a name="clone-and-install"></a>
+* for develop environment:
+  * Node v20 or higher (and corresponding NPM installation),
+  * JDK 17 or higher,
+  * Docker.
+* for running environment:
+  * JRE 17 or higher (only for desktop **app-scrapper** app),
+  * Docker.
+
 ## Clone and install
+
 1. To install the program on your computer, use the command below:
 
 ```bash
-$ git clone https://github.com/milosz08/tv-archive-aggregator
+$ git clone https://github.com/milosz08/tv-archives-aggregator
 ```
 
-2. Create docker containers for **data-server**, **web-ui** and MySQL database via:
+2. Create docker containers for **tv-archives-aggregator-mysql-db**,
+   **tv-archives-aggregator-phpmyadmin**  and MySQL database via:
 
 ```bash
-docker-compose up -d
+$ docker-compose up -d
 ```
+
 This command should create 3 docker containers:
-<table>
-  <tr>
-    <td>Application</td>
-    <td>Port</td>
-    <td>Description</td>
-  </tr>
-  <tr>
-    <td>tv-scrapper-mysql-db</td>
-    <td>4850</td>
-    <td>MySQL database port</td>
-  </tr>
-  <tr>
-    <td>tv-scrapper-data-server</td>
-    <td>4851</td>
-    <td>Rest API port</td>
-  </tr>
-  <tr>
-    <td>tv-scrapper-web-ui</td>
-    <td>4852</td>
-    <td>Web client port</td>
-  </tr>
-</table>
 
-3. Build and create executable JAR file of **web-scrapper** desktop app:
+| Application                       | Port                          | Description                      |
+|-----------------------------------|-------------------------------|----------------------------------|
+| tv-archives-aggregator-mysql-db   | [4850](http://localhost:4850) | MySQL database                   |
+| tv-archives-aggregator-phpmyadmin | [4851](http://localhost:4851) | MySQL database client            |
+| tv-archives-aggregator-client     | [4852](http://localhost:4852) | Application (frontend + backend) |
+
+> NOTE: If you have already MySQL database client, you can omit creating
+> `tv-archives-aggregator-phpmyadmin` container. To omit, create only MySQL db container
+> via: `$ docker compose up -d tv-archives-aggregator-mysql-db tv-archives-aggregator-client`.
+
+3. Build and create executable JAR file of **app-scrapper** desktop app:
+
 * for UNIX environment type:
+
 ```bash
-./mvnw clean assembly:assembly
+$ ./mvnw clean package -pl app-scrapper
 ```
 
 * for Windows environment type:
+
 ```powershell
-.\mvnw.cmd clean assembly:assembly
+.\mvnw.cmd clean package -pl app-scrapper
 ```
-This command create `tv-scrapper-1.0.0.jar` file in `.bin` directory. All application logs will be in `logs` directory. Optionally you can create `.env` file with database connection details (not required):
+
+This command create `tv-archives-aggregator-scrapper.jar` file in `.bin` directory. All application
+logs will be in `log` directory. Optionally you can create `.env` file with database connection
+details (not required):
 
 ```properties
 DB_HOST=localhost
@@ -103,51 +109,137 @@ DB_PASSWORD=admin
 DB_NAME=aggregator-db
 ```
 
-<a name="prepare-develop-environment"></a>
+To run **app-scrapper**, type:
+
+```bash
+$ java \
+  -Xms1024m \
+  -Xmx1024m \
+  -jar tv-archives-aggreagator-scrapper.jar
+```
+
 ## Prepare develop environment
+
 1. Clone and install via `git clone` command (see *Clone and install* section).
-2. Optionally, change MySQL root password in `.env` file:
+2. Create `.env` file based `example.env` in root directory with following content:
 
 ```properties
-TV_SCRAPPER_MYSQL_PASSWORD=admin
+# ports (should not be changed)
+TV_ARCHIVES_AGGREGATOR_MYSQL_PORT=4850
+TV_ARCHIVES_AGGREGATOR_PHPMYADMIN_PORT=4851
+TV_ARCHIVES_AGGREGATOR_CLIENT_PORT=4852
+# credentials (can be changed)
+TV_ARCHIVES_AGGREGATOR_MYSQL_PASSWORD=admin
 ```
 
 3. Go to root directory and run MySQL database via:
-```bash
-$ docker-compose up -d tv-scrapper-mysql-db
-```
-This command should initialize MySQL database with two tables: `tv_channels` and `tv_programs_data`.
-
-4. Create `.env` files:
-* for UNIX environment via `create-env.sh`:  
 
 ```bash
-$ chmod +x create-env.sh
-$ ./create-env.sh \
-DB_HOST=localhost \
-DB_PORT=4850 \
-DB_USERNAME=root \
-DB_PASSWORD=admin \
-DB_NAME=aggregator-db
+$ docker-compose up -d tv-archives-aggregator-mysql-db tv-archives-aggregator-phpmyadmin
 ```
-> NOTE: Optionally, add `-d` flag, if you can remove already existing `.env` file:
 
-* for Windows environment via `create-env.ps1`:  
+> NOTE: If you have already MySQL database client, you can omit creating
+> `tv-archives-aggregator-phpmyadmin` container. To omit, create only MySQL db container
+> via: `$ docker compose up -d tv-archives-aggregator-mysql-db`.
 
-```powershell
-.\create-env.ps1 -Arguments `
-DB_HOST=localhost, `
-DB_PORT=4850, `
-DB_USERNAME=root, `
-DB_PASSWORD=admin, `
-DB_NAME=aggregator-db
+This command should initialize MySQL database with content located inside
+`.volumes/mysql/init/init.sql` file.
+
+4. Setup **app-frontend**:
+
+* Go to frontend directory (`$ cd app-frontend`) and install all dependencies via:
+
+```bash
+$ yarn install --frozen-lockfile
 ```
-> NOTE: Optionally, add `-Overwrite` flag, if you can remove already existing `.env` file:
 
-5. That's it. Now you can run **data-server**, **web-scrapper** and **web-ui** in your favorite IDE (prefers Intellij IDEA for first two and Visual Studio Code for **web-ui**).
+> NOTE: If you do not have yarn, install via: `npm i -g yarn`.
 
-<a name="tech-stack"></a>
+* Run client via:
+
+```bash
+$ yarn run dev
+```
+
+* Alternatively to run development server, type:
+
+```bash
+$ yarn run preview
+```
+
+Development server should be available at `4853` TCP port.
+
+5. Setup **app-backend**:
+
+* Go to backend directory (`$ cd app-backend`) and type (for UNIX):
+
+```bash
+$ ./mvnw clean install
+$ ./mvnw spring-boot:run
+```
+
+or for Windows:
+
+```bash
+$ mvnw.cmd clean install
+$ mvnw.cmd spring-boot:run
+```
+
+* Check application state via endpoint: [/actuator/health](http://localhost:4852/actuator/health).
+  If response show this:
+
+```json
+{
+  "status": "UP"
+}
+```
+
+application is running and waiting for http requests.
+
+6. Setup **app-scrapper**:
+
+* This application is a Java Swing app and can be run from Intellij configuration or simpler
+  directly from `AppScrapperMain.java` class via
+
+## Create executable JAR files (bare-metal)
+
+1. To create executable JAR file for client app (**app-frontend** + **app-backend**,
+   **app-scrapper**), you must type (for UNIX):
+
+```bash
+$ ./mvnw clean package
+```
+
+or for Windows:
+
+```bash
+.\mvnw.cmd clean package
+```
+
+Output JAR files will be located inside `.bin` directory. With this file you can run app in
+bare-metal environment without virtualization via:
+
+* for client (**app-frontend** + **app-backend**)
+
+```bash
+$ java \
+  -Xms1024m \
+  -Xmx1024m \
+  -Dserver.port=8080 \
+  -jar tv-archives-aggreagator-client.jar
+```
+
+* for scrapper (**app-scrapper**)
+
+```bash
+$ java \
+  -Xms1024m \
+  -Xmx1024m \
+  -jar tv-archives-aggreagator-scrapper.jar
+```
+
 ## Tech stack
+
 * Java SE 17
 * Swing UI
 * Spring Boot 3
@@ -156,8 +248,10 @@ DB_NAME=aggregator-db
 * MUI components library
 
 ## Author
-Created by Miłosz Gilga. If you have any questions about this application, send message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
+
+Created by Miłosz Gilga. If you have any questions about this application, send
+message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
 
 ## License
 
-This software is on Apache 2.0 License.
+This project is licensed under the Apache 2.0 License.

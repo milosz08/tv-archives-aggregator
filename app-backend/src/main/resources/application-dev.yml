@@ -1,0 +1,11 @@
+server:
+  port: 4852
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:4850/${app-properties.database-name}
+    username: root
+    password: admin
+
+app-properties:
+  database-name: aggregator-db

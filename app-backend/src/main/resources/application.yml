@@ -1,0 +1,21 @@
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+app-properties:
+  default-chart-color: '#d3d3d3'
+  chart-colors:
+    - '#a6cee3'
+    - '#1f78b4'
+    - '#b2df8a'
+    - '#33a02c'
+    - '#fb9a99'
+    - '#e31a1c'
+    - '#fdbf6f'
+    - '#ff7f00'
+    - '#cab2d6'
+    - '#6a3d9a'
+    - '#ffff99'
+    - '#b15928'
