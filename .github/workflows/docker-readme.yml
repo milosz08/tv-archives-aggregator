@@ -23,4 +23,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: milosz08/tv-archives-aggregator-client
           readme-filepath: ./docker/README.md
-          short-description: "TV archives aggregator client (Java + React) application."
+          short-description: "TV archives aggregator client (Java with Spring Boot and React)."
