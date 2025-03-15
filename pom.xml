@@ -32,7 +32,6 @@
     <springDotenv.version>4.0.0</springDotenv.version>
     <dotenv.version>3.2.0</dotenv.version>
     <commonsText.version>1.12.0</commonsText.version>
-    <junit.version>5.7.1</junit.version>
     <commonsIo.version>2.18.0</commonsIo.version>
     <jdbi.version>3.47.0</jdbi.version>
     <hikariCp.version>6.2.1</hikariCp.version>
@@ -135,18 +134,6 @@
         <groupId>com.miglayout</groupId>
         <artifactId>miglayout-swing</artifactId>
         <version>${migLayout.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
