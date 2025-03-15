@@ -1,9 +1,13 @@
 name: Create scrapper app release
 
 on:
-  push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Enter the version in format X.X.X'
+        required: true
+        default: '1.0.0'
+        type: string
 
 jobs:
   build:
@@ -49,15 +53,10 @@ jobs:
           name: output-jar
           path: ${{ github.workspace }}/release
 
-      - name: Write release version
-        run: |
-          VERSION=${{ github.event.release.tag_name }}
-          echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: ./release/*.jar
-          tag_name: ${$VERSION}
+          tag_name: ${{ github.event.release.tag_name }}
           name: Release ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
