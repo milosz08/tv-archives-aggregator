@@ -10,8 +10,11 @@ on:
         type: string
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -33,30 +36,17 @@ jobs:
       - name: Package to JAR
         run: ./mvnw package -pl app-scrapper
 
-      - name: Upload generated JAR artifact
-        uses: actions/upload-artifact@v4
+      - name: Create tag ${{ github.event.inputs.version }}
+        uses: rickstaa/action-create-tag@v1
         with:
-          name: output-jar
-          path: .bin/tv-archives-aggregator-scrapper.jar
-          retention-days: 1
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - name: Download generated JAR artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: output-jar
-          path: ${{ github.workspace }}/release
+          tag: ${{ github.event.inputs.version }}
+          tag_exists_error: true
+          message: "Release ${{ github.event.inputs.version }}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ./release/*.jar
-          tag_name: ${{ github.event.release.tag_name }}
+          files: ${{ github.workspace }}./.bin/tv-archives-aggregator-scrapper.jar
+          tag_name: ${{ github.event.inputs.version }}
           name: Release ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
