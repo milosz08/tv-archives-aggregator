@@ -82,7 +82,8 @@ This command should create 3 docker containers:
 | tv-archives-aggregator-phpmyadmin | [4851](http://localhost:4851) | MySQL database client            |
 | tv-archives-aggregator-client     | [4852](http://localhost:4852) | Application (frontend + backend) |
 
-> NOTE: If you have already MySQL database client, you can omit creating
+> [!TIP]
+> If you have already MySQL database client, you can omit creating
 > `tv-archives-aggregator-phpmyadmin` container. To omit, create only MySQL db container
 > via: `$ docker compose up -d tv-archives-aggregator-mysql-db tv-archives-aggregator-client`.
 
@@ -141,7 +142,8 @@ TV_ARCHIVES_AGGREGATOR_MYSQL_PASSWORD=admin
 $ docker-compose up -d tv-archives-aggregator-mysql-db tv-archives-aggregator-phpmyadmin
 ```
 
-> NOTE: If you have already MySQL database client, you can omit creating
+> [!TIP]
+> If you have already MySQL database client, you can omit creating
 > `tv-archives-aggregator-phpmyadmin` container. To omit, create only MySQL db container
 > via: `$ docker compose up -d tv-archives-aggregator-mysql-db`.
 
