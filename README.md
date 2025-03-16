@@ -187,8 +187,8 @@ $ ./mvnw spring-boot:run
 or for Windows:
 
 ```bash
-$ mvnw.cmd clean install
-$ mvnw.cmd spring-boot:run
+.\mvnw.cmd clean install
+.\mvnw.cmd spring-boot:run
 ```
 
 * Check application state via endpoint: [/actuator/health](http://localhost:4852/actuator/health).
