@@ -27,7 +27,7 @@ docker run -d \
   -e DB_PASSWORD=<database password> \
   -e TV_ARCHIVES_AGGREGATOR_XMS=1024m \
   -e TV_ARCHIVES_AGGREGATOR_XMX=1024m \
-  milosz08/tv-archives-aggregator-client
+  milosz08/tv-archives-aggregator-client:latest
 ```
 
 * Using `docker-compose.yml` file:
@@ -36,7 +36,7 @@ docker run -d \
 services:
   tv-archives-aggregator-client:
     container_name: tv-archives-aggregator-client
-    image: milosz08/tv-archives-aggregator-client
+    image: milosz08/tv-archives-aggregator-client:latest
     ports:
       - '8080:8080'
     environment:
