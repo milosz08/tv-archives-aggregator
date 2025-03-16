@@ -15,7 +15,7 @@
   </appender>
 
   <appender name="FILE" class="RollingFileAppender">
-    <file>${PATH}/webScrapper.log</file>
+    <file>${PATH}/web-scrapper.log</file>
     <append>true</append>
     <immediateFlush>true</immediateFlush>
     <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
