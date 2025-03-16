@@ -156,7 +156,8 @@ This command should initialize MySQL database with content located inside
 $ yarn install --frozen-lockfile
 ```
 
-> NOTE: If you do not have yarn, install via: `npm i -g yarn`.
+> [!TIP]
+> If you do not have yarn, install via: `npm i -g yarn`.
 
 * Run client via:
 
