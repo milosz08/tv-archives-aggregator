@@ -1,5 +1,8 @@
 # TV archives aggregator
 
+[[Docker image](https://hub.docker.com/r/milosz08/tv-archives-aggregator-client)] |
+[[About project](https://miloszgilga.pl/project/tv-archives-aggregator)]
+
 TV archive aggregator scrapping content from [telemagazyn.pl](https://telemagazyn.pl) and indexing
 it with more comfortable search system.
 

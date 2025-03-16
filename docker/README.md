@@ -1,4 +1,4 @@
-# TV archives aggregator
+# TV archives aggregator client
 
 TV archive aggregator scrapping content from [telemagazyn.pl](https://telemagazyn.pl) and indexing
 it with more comfortable search system.
@@ -9,7 +9,7 @@ it with more comfortable search system.
 ## Build image
 
 ```bash
-docker build -t milosz08/tv-archives-aggregator-server
+docker build -t milosz08/tv-archives-aggregator-client
 ```
 
 ## Create container
@@ -18,7 +18,7 @@ docker build -t milosz08/tv-archives-aggregator-server
 
 ```bash
 docker run -d \
-  --name tv-archives-aggregator-server \
+  --name tv-archives-aggregator-client \
   -p 8080:8080 \
   -e DB_HOST=<database hostname> \
   -e DB_PORT=<database port> \
@@ -27,16 +27,16 @@ docker run -d \
   -e DB_PASSWORD=<database password> \
   -e TV_ARCHIVES_AGGREGATOR_XMS=1024m \
   -e TV_ARCHIVES_AGGREGATOR_XMX=1024m \
-  milosz08/tv-archives-aggregator-server
+  milosz08/tv-archives-aggregator-client
 ```
 
 * Using `docker-compose.yml` file:
 
 ```yaml
 services:
-  tv-archives-aggregator-server:
-    container_name: tv-archives-aggregator-server
-    image: milosz08/tv-archives-aggregator-server
+  tv-archives-aggregator-client:
+    container_name: tv-archives-aggregator-client
+    image: milosz08/tv-archives-aggregator-client
     ports:
       - '8080:8080'
     environment:
