@@ -9,7 +9,7 @@ it with more comfortable search system.
 ## Build image
 
 ```bash
-docker build -t milosz08/tv-archives-aggregator-client
+docker build -t milosz08/tv-archives-aggregator-client .
 ```
 
 ## Create container
