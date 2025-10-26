@@ -1,8 +1,6 @@
 package pl.miloszgilga.archiver.scrapper.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
 import pl.miloszgilga.archiver.scrapper.gui.MessageDialog;
 import pl.miloszgilga.archiver.scrapper.gui.panel.ConsolePanel;
 
@@ -11,7 +9,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RequiredArgsConstructor
 public class ConsolePanelController {
@@ -32,13 +31,13 @@ public class ConsolePanelController {
     final int result = messageDialog.showConfirm("Are you sure to clear console content?");
     if (result == JOptionPane.YES_OPTION) {
       final JTextArea textArea = ConsolePanel.textArea;
-      textArea.setText(StringUtils.EMPTY);
+      textArea.setText("");
     }
   }
 
   public void printToFile() {
-    final FastDateFormat targetFormat = FastDateFormat.getInstance("MM-dd-yyyy-HH-mm-ss-SSS");
-    final String fileName = String.format("%s-%s", targetFormat.format(new Date()), "log.txt");
+    final DateTimeFormatter targetFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy-HH-mm-ss-SSS");
+    final String fileName = "%s-%s".formatted(LocalDateTime.now().format(targetFormat), "log.txt");
 
     final JFileChooser fileChooser = new JFileChooser();
     fileChooser.setSelectedFile(new File(fileName));

@@ -1,6 +1,6 @@
 package pl.miloszgilga.archiver.scrapper.soup;
 
-import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public record TvChannel(
   long id,
@@ -9,7 +9,7 @@ public record TvChannel(
 ) implements Comparable<TvChannel> {
 
   public TvChannel() {
-    this(0, StringUtils.EMPTY, StringUtils.EMPTY);
+    this(0, "", "");
   }
 
   @Override
@@ -18,6 +18,7 @@ public record TvChannel(
   }
 
   @Override
+  @NotNull
   public String toString() {
     return name;
   }

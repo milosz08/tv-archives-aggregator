@@ -2,7 +2,6 @@ package pl.miloszgilga.archiver.scrapper.gui.panel;
 
 import io.reactivex.rxjava3.core.Observable;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import pl.miloszgilga.archiver.scrapper.controller.ChannelDetailsController;
 import pl.miloszgilga.archiver.scrapper.gui.window.RootWindow;
 import pl.miloszgilga.archiver.scrapper.state.ChannelDetailsTotalFetchedAggregator;
@@ -119,7 +118,7 @@ public class ChannelDetailsPanel extends JPanel {
     rootState.asDisposable(rootState.getSelectedChannel$(), controller::onSwitchChannel);
     rootState.asDisposable(rootState.getSelectedYear$(), year -> {
       startScrappingButton
-        .setText("Start scrapping" + (year != -1 ? " (" + year + ")" : StringUtils.EMPTY));
+        .setText("Start scrapping" + (year != -1 ? " (" + year + ")" : ""));
       removeSelectedYearButton.setEnabled(year != -1);
       removeRowDataButton.setEnabled(year != -1);
     });
