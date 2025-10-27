@@ -26,6 +26,9 @@ class TvChannelServiceImpl implements TvChannelService {
     boolean onlyWithSomeData
   ) {
     final Map<String, String> allTvChannels = dataHandler.getAllTvChannels(phrase);
+    if (allTvChannels.isEmpty()) {
+      return new HashMap<>();
+    }
     final List<String> persistedTvChannels = dataHandler.getPersistedChannels();
 
     final List<String> onlyWithSomeContent = allTvChannels.keySet().stream()
