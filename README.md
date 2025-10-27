@@ -87,23 +87,20 @@ This command should create 3 docker containers:
 > `tv-archives-aggregator-phpmyadmin` container. To omit, create only MySQL db container
 > via: `$ docker compose up -d tv-archives-aggregator-mysql-db tv-archives-aggregator-client`.
 
-3. Build and create executable JAR file of **app-scrapper** desktop app:
+3. Download latest release of **app-scrapper** desktop app from this repository (available binaries
+   with embedded JVM) for macOS (dmg), Linux (rpm, deb) and Windows (msi) and install it via
+   standard installer procedure.
 
-* for UNIX environment type:
+4. Alternative you can build binaries by you own directly from sources (for Windows, you must have
+   [wix3](https://github.com/wixtoolset/wix3/releases) in your environment PATH):
 
-```bash
-$ ./mvnw clean package -pl app-scrapper
-```
+> [!NOTE]
+> The build command (`$ ./mvnw clean package -pl app-scrapper`) must be run on the target operating
+> system. It will automatically detect the OS (Windows, macOS, Linux) and build the corresponding
+> native executable in `target/installer`.
 
-* for Windows environment type:
-
-```powershell
-.\mvnw.cmd clean package -pl app-scrapper
-```
-
-This command create `tv-archives-aggregator-scrapper.jar` file in `.bin` directory. All application
-logs will be in `log` directory. Optionally you can create `.env` file with database connection
-details (not required):
+5. Optionally, create `.env` file inside your installed application directory and insert listed data
+   below:
 
 ```properties
 DB_HOST=localhost
@@ -113,14 +110,11 @@ DB_PASSWORD=admin
 DB_NAME=aggregator-db
 ```
 
-To run **app-scrapper**, type:
-
-```bash
-$ java \
-  -Xms1024m \
-  -Xmx1024m \
-  -jar tv-archives-aggreagator-scrapper.jar
-```
+> [!TIP]
+> Please note that on its first launch, the application downloads the entire Chromium engine. This
+> is necessary to bypass Cloudflare's verification mechanisms, so the initial startup may take quite
+> a long time. For debugging purposes (on Windows systems), you can add the `--win-console` flag in
+> the jpackage settings. On Unix no special flag is necessary.
 
 ## Prepare develop environment
 
@@ -200,14 +194,14 @@ or for Windows:
 }
 ```
 
-application is running and waiting for http requests.
+application is running and waiting for HTTP requests.
 
 6. Setup **app-scrapper**:
 
-* This application is a Java Swing app and can be run from Intellij configuration or simpler
-  directly from `AppScrapperMain.java` class via
+* This application is a Java Swing app and can be run from Intellij configuration (located in `.run`
+  directory).
 
-## Create executable JAR files (bare-metal)
+## Create executable JAR file (bare-metal)
 
 1. To create executable JAR file for client app (**app-frontend** + **app-backend**,
    **app-scrapper**), you must type (for UNIX):
@@ -235,18 +229,10 @@ $ java \
   -jar tv-archives-aggreagator-client.jar
 ```
 
-* for scrapper (**app-scrapper**)
-
-```bash
-$ java \
-  -Xms1024m \
-  -Xmx1024m \
-  -jar tv-archives-aggreagator-scrapper.jar
-```
-
 ## Tech stack
 
 * Java SE 17
+* JSoup, Playwright Java, Chromium
 * Swing UI
 * Spring Boot 3
 * MySQL with JDBC Spring data
