@@ -10,8 +10,8 @@ import java.util.List;
 
 @Slf4j
 public class TvChannelsSource extends AbstractUrlSource {
-  public TvChannelsSource() {
-    super(UrlSource.TV_CHANNELS);
+  public TvChannelsSource(BrowserManager browserManager) {
+    super(browserManager, UrlSource.TV_CHANNELS);
   }
 
   public List<TvChannel> getAllTvChannels() {

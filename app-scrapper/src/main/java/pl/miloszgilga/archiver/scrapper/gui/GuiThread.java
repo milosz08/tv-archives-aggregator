@@ -2,6 +2,7 @@ package pl.miloszgilga.archiver.scrapper.gui;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.miloszgilga.archiver.scrapper.gui.window.ConnectToDbWindow;
+import pl.miloszgilga.archiver.scrapper.soup.BrowserManager;
 import pl.miloszgilga.archiver.scrapper.state.RootState;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class GuiThread implements Runnable {
 
   public GuiThread() {
     defaultLookAndFeel = new MetalLookAndFeel();
-    rootState = new RootState();
+    rootState = new RootState(new BrowserManager());
     messageDialog = new MessageDialog(null);
   }
 

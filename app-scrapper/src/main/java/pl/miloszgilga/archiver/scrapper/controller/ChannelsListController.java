@@ -34,7 +34,7 @@ public class ChannelsListController {
     final List<TvChannel> fetchedTvChannels = dataHandler.getTvChannels();
     if (fetchedTvChannels.isEmpty()) {
       // if is empty, scrap data and insert into db
-      final TvChannelsSource tvChannelsSource = new TvChannelsSource();
+      final TvChannelsSource tvChannelsSource = new TvChannelsSource(rootState.getBrowserManager());
       final List<TvChannel> scrappedTvChannels = tvChannelsSource.getAllTvChannels();
 
       dataHandler.batchInsertTvChannels(scrappedTvChannels);

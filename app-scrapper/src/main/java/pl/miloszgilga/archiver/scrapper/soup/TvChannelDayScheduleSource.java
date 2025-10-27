@@ -11,8 +11,8 @@ import java.util.List;
 
 @Slf4j
 public class TvChannelDayScheduleSource extends AbstractUrlSource {
-  public TvChannelDayScheduleSource(String channelSlug) {
-    super(UrlSource.TV_CHANNEL_DAY_SCHEDULE, channelSlug);
+  public TvChannelDayScheduleSource(BrowserManager browserManager, String channelSlug) {
+    super(browserManager, UrlSource.TV_CHANNEL_DAY_SCHEDULE, channelSlug);
   }
 
   public List<DayScheduleDetails> fetchDayScheduleDetails(LocalDate selectedDay) {

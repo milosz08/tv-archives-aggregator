@@ -1,7 +1,8 @@
-.idea/
-.bin/
-.log/
-target/
-out/
-node_modules/
-.volumes/**/*volume/
+.idea
+.bin
+.log
+.pw
+target
+out
+node_modules
+.volumes/**/*volume

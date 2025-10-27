@@ -19,8 +19,8 @@ public class TvChannelCalendarSource extends AbstractUrlSource {
   private final String channelSlug;
   private Elements dateNodes;
 
-  public TvChannelCalendarSource(String channelSlug) {
-    super(UrlSource.TV_CHANNEL_CALENDAR, channelSlug);
+  public TvChannelCalendarSource(BrowserManager browserManager, String channelSlug) {
+    super(browserManager, UrlSource.TV_CHANNEL_CALENDAR, channelSlug);
     this.channelSlug = channelSlug;
   }
 

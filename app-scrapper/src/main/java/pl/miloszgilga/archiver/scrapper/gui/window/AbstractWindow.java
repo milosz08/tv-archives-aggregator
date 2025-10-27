@@ -6,8 +6,12 @@ import pl.miloszgilga.archiver.scrapper.gui.GuiWindowAdapter;
 import pl.miloszgilga.archiver.scrapper.gui.MessageDialog;
 import pl.miloszgilga.archiver.scrapper.state.RootState;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
 
 public abstract class AbstractWindow extends JFrame {
   private final String title;
@@ -38,6 +42,7 @@ public abstract class AbstractWindow extends JFrame {
     setResizable(false);
     addWindowListener(guiWindowAdapter);
     setTitle(title);
+    getLogo().ifPresent(this::setIconImage);
     setLayout(new BorderLayout());
     add(rootPanel, BorderLayout.CENTER);
     appendElements(this, rootPanel);
@@ -55,6 +60,18 @@ public abstract class AbstractWindow extends JFrame {
     final int x = dimension.width / 2 - getWidth() / 2;
     final int y = dimension.height / 2 - getHeight() / 2;
     return new Point(x, y);
+  }
+
+  private Optional<Image> getLogo() {
+    final URL iconURL = AbstractWindow.class.getResource("/assets/logo.png");
+    if (iconURL == null) {
+      return Optional.empty();
+    }
+    try {
+      return Optional.of(ImageIO.read(iconURL));
+    } catch (IOException e) {
+      return Optional.empty();
+    }
   }
 
   abstract void appendElements(JFrame frame, JPanel rootPanel);

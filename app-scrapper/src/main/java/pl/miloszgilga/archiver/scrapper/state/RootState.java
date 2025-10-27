@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import pl.miloszgilga.archiver.scrapper.db.DataHandler;
+import pl.miloszgilga.archiver.scrapper.soup.BrowserManager;
 import pl.miloszgilga.archiver.scrapper.soup.TvChannel;
 import pl.miloszgilga.archiver.scrapper.soup.TvChannelDetails;
 
@@ -26,8 +27,11 @@ public class RootState extends AbstractDisposableProvider {
   private Dotenv dotenv;
   @Getter
   private DataHandler dataHandler;
+  @Getter
+  private BrowserManager browserManager;
 
-  public RootState() {
+  public RootState(BrowserManager browserManager) {
+    this.browserManager = browserManager;
     try {
       dotenv = Dotenv.load();
     } catch (Exception ignored) {
@@ -127,5 +131,6 @@ public class RootState extends AbstractDisposableProvider {
     if (dataHandler != null) {
       dataHandler.close();
     }
+    browserManager.close();
   }
 }

@@ -112,7 +112,8 @@ public class ChannelDetailsController {
       .getAlreadyPersistedPerYear(channel.slug());
 
     // scrap tv channel details (count of records, start and end date)
-    final var tvChannelCalendarSource = new TvChannelCalendarSource(channel.slug());
+    final var tvChannelCalendarSource = new TvChannelCalendarSource(rootState.getBrowserManager(),
+      channel.slug());
     final TvChannelDetails details = tvChannelCalendarSource.getSelectedTvChannelDetails();
 
     final Map<Integer, Long> persistedYears = alreadyPersistedPerYear.stream()

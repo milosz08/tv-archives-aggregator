@@ -40,7 +40,8 @@ public class DataScrapperThread extends Thread {
     minDelayMs = minDelay * 1000L;
     maxDelayMs = rootState.getRandomness() * 1000L;
     random = new Random();
-    dayScheduleSource = new TvChannelDayScheduleSource(selectedChannel.slug());
+    dayScheduleSource = new TvChannelDayScheduleSource(rootState.getBrowserManager(),
+      selectedChannel.slug());
     selectedYear = rootState.getSelectedYear();
     tvChannelDetails = rootState.getTvChannelDetails();
     totalFetchedCount = rootState.getTotalFetchedCount();
