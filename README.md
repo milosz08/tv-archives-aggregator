@@ -91,8 +91,13 @@ This command should create 3 docker containers:
    with embedded JVM) for macOS (dmg), Linux (rpm, deb) and Windows (msi) and install it via
    standard installer procedure.
 
-4. Alternative you can build binaries by you own directly from sources (for Windows, you must have
+4. Alternatively you can build binaries by you own directly from sources (for Windows, you must have
    [wix3](https://github.com/wixtoolset/wix3/releases) in your environment PATH):
+
+> [!NOTE]
+> On Unix-like systems (macOS and Linux), you must make build scripts executable using
+> `$ chmod +x <script-name>`. On macOS, you also need to grant the necessary permissions for `jlink`
+> and `jpackage` in the Privacy settings.
 
 > [!NOTE]
 > The build command (`$ ./mvnw clean package -pl app-scrapper`) must be run on the target operating
