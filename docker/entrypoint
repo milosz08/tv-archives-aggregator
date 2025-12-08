@@ -3,5 +3,5 @@
 exec java \
 	-Xms$TV_ARCHIVES_AGGREGATOR_XMS \
 	-Xmx$TV_ARCHIVES_AGGREGATOR_XMX \
-	-Dspring.profiles.active=prod,docker \
+	-Dspring.profiles.active=prod \
 	-jar $JAR_NAME
