@@ -29,8 +29,13 @@
     </encoder>
   </appender>
 
-  <root level="info">
-    <appender-ref ref="STDOUT"/>
-    <appender-ref ref="FILE"/>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
   </root>
+
+  <springProfile name="!docker">
+    <root level="INFO">
+      <appender-ref ref="FILE"/>
+    </root>
+  </springProfile>
 </configuration>
