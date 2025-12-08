@@ -11,13 +11,13 @@ public class FrameTaskbar {
   private final JFrame rootFrame;
 
   public void setProgressState(Taskbar.State state) {
-    if (taskbar != null) {
+    if (taskbar != null && taskbar.isSupported(Taskbar.Feature.PROGRESS_STATE_WINDOW)) {
       taskbar.setWindowProgressState(rootFrame, state);
     }
   }
 
   public void setProgress(Double percentage) {
-    if (taskbar != null) {
+    if (taskbar != null && taskbar.isSupported(Taskbar.Feature.PROGRESS_STATE_WINDOW)) {
       taskbar.setWindowProgressValue(rootFrame, percentage.intValue());
     }
   }

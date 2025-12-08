@@ -24,7 +24,7 @@ call "%JAVA_HOME%\bin\jpackage" ^
   --type %INSTALLER_TYPE% ^
   --dest target/installer ^
   --input target/installer/input/libs ^
-  --name "Archives Aggregator Scrapper" ^
+  --name "TV Scrapper" ^
   --main-class pl.miloszgilga.archiver.scrapper.AppScrapperMain ^
   --main-jar %MAIN_JAR% ^
   --java-options -Xmx2048m ^
