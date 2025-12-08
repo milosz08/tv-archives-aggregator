@@ -34,16 +34,23 @@ ENV JAR_NAME=tv-archives-aggregator-client.jar
 
 WORKDIR $ENTRY_DIR
 
-COPY --from=build $BUILD_DIR/.bin/$JAR_NAME $ENTRY_DIR/$JAR_NAME
+RUN addgroup -S tvagroup && \
+    adduser -S tvaauser -G tvagroup
+
+COPY --chown=tvaauser:tvagroup --from=build $BUILD_DIR/.bin/$JAR_NAME $ENTRY_DIR/$JAR_NAME
 COPY --from=build $BUILD_DIR/docker/entrypoint $ENTRY_DIR/entrypoint
 
 RUN sed -i \
   -e "s/\$JAR_NAME/$JAR_NAME/g" \
   entrypoint
 
-RUN chmod +x entrypoint
+RUN chmod +x entrypoint && \
+    chown tvaauser:tvagroup entrypoint
 
 LABEL maintainer="Miłosz Gilga <miloszgilga@gmail.com>"
 
 EXPOSE 8080
+
+USER tvaauser
+
 ENTRYPOINT [ "./entrypoint" ]
